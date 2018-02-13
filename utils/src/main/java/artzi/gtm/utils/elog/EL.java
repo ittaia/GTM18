@@ -19,7 +19,6 @@ public class EL {
 		try {
 			config = Config.getInstance();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		String logPath = new File (config.getMainPath (), "log4j2.xml").getAbsolutePath() ; 
