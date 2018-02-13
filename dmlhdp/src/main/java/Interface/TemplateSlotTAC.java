@@ -3,16 +3,16 @@ package Interface;
 import java.io.File;
 import java.util.ArrayList;
 
-import DataObjects.ComponentFeatures;
-import DataObjects.InstanceTemplate;
-import Elog.EL ; 
-import Gen.SaveObject;
 import Interface.String2IntegerFeatures;
 import Interface.Template;
 import Interface.Template2Excel;
 import MLHDP.MLHDPData;
 import MLHDP.MLHDPModel;
 import MLHDP.MLHDPParms;
+import artzi.gtm.topicModelInfra.dataObjects.ComponentFeatures;
+import artzi.gtm.topicModelInfra.dataObjects.InstanceTemplate;
+import artzi.gtm.utils.elog.EL;
+import artzi.gtm.utils.io.SaveObject;
 
 public class TemplateSlotTAC {
 	static final  String _S = ("\\") ; 

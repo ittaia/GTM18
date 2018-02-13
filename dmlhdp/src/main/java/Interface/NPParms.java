@@ -14,5 +14,3 @@ public class NPParms {
 	public static double minTestClusterF1 = 0.1; 
 	
 }
-
-

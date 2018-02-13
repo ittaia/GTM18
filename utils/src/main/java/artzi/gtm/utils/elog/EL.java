@@ -86,4 +86,8 @@ public class EL {
 		ee.fillInStackTrace();
 		throw ee;
 	}
+
+	public static void ELClose() {
+				
+	}
 }
