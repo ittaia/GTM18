@@ -239,5 +239,3 @@ public class HDPRoot {
 		stickBreakingWeights.sumWeights (hdpThread.getStickBreakingWeights() , mapMixtureComponents , numOfThreads ) ; 
 	}
 }
-
-	
