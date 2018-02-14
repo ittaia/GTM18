@@ -1,8 +1,9 @@
 package MLHDP;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import DHDP.HDPRoot;
-import DHDP.HDPThread;
+
+import artzi.gtm.dmlhdp.dhdp.HDPRoot;
+import artzi.gtm.dmlhdp.dhdp.HDPThread;
 import artzi.gtm.topicModelInfra.dataObjects.ContentObject;
 import artzi.gtm.topicModelInfra.dataObjects.GInstance;
 import artzi.gtm.topicModelInfra.logProportions.LogProportion;

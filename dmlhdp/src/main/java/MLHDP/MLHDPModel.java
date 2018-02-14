@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-import DHDP.HDPRoot;
+import artzi.gtm.dmlhdp.dhdp.HDPRoot;
 import artzi.gtm.topicModelInfra.counters.FeatureCount;
 import artzi.gtm.topicModelInfra.dataObjects.ComponentFeatures;
 import artzi.gtm.topicModelInfra.dataObjects.GInstance;
