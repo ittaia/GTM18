@@ -3,9 +3,9 @@ package artzi.gtm.dmlhdp.appInterface;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import Xlsx.ExRow;
-import Xlsx.ExWriteTable;
 import artzi.gtm.dmlhdp.mlhdp.MLHDPModel;
+import artzi.gtm.utils.xlsx.ExRow;
+import artzi.gtm.utils.xlsx.ExWriteTable;
 
 public class Template2Excel {
 
@@ -53,7 +53,7 @@ public class Template2Excel {
 		int numOfValues = template.getNumOfValues(valueId) ; 
 		ValueProb [] valueProb = new ValueProb [numOfValues] ; 
 		for (int i = 0 ; i < numOfValues ;  i++ ) { 
-			valueProb [i] = new ValueProb (i , template.getValueLists().getValueList(valueId).getText(i),
+			valueProb [i] = new ValueProb (i , template.getValueLists().getValueList(valueId).getTerm(i),
 										   multFeatures.get(valueId)[templateId][i])  ;  
 		}
 		Arrays.sort (valueProb , new CompareValueProb()) ; 
