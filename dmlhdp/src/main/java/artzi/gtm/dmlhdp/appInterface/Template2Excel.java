@@ -3,9 +3,9 @@ package artzi.gtm.dmlhdp.appInterface;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import MLHDP.MLHDPModel;
 import Xlsx.ExRow;
 import Xlsx.ExWriteTable;
+import artzi.gtm.dmlhdp.mlhdp.MLHDPModel;
 
 public class Template2Excel {
 

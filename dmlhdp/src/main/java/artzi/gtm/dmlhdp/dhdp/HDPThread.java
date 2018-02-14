@@ -3,8 +3,7 @@ package artzi.gtm.dmlhdp.dhdp;
 
 import java.util.ArrayList;
 
-
-import MLHDP.MLHDPParms;
+import artzi.gtm.dmlhdp.mlhdp.MLHDPParms;
 import artzi.gtm.topicModelInfra.counters.Counters;
 import artzi.gtm.topicModelInfra.counters.FeatureCount;
 import artzi.gtm.topicModelInfra.dataObjects.ComponentFeatures;

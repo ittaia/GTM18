@@ -1,4 +1,4 @@
-package MLHDP;
+package artzi.gtm.dmlhdp.mlhdp;
 
 import java.io.File;
 import java.io.IOException;

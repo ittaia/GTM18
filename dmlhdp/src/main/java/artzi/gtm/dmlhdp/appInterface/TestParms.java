@@ -3,7 +3,7 @@ package artzi.gtm.dmlhdp.appInterface;
 import java.io.File;
 import java.io.IOException;
 
-import MLHDP.MLHDPParms;
+import artzi.gtm.dmlhdp.mlhdp.MLHDPParms;
 import artzi.gtm.utils.elog.EL;
 
 public class TestParms {

@@ -1,4 +1,4 @@
-package MLHDP;
+package artzi.gtm.dmlhdp.mlhdp;
 
 import java.io.IOException;
 import java.util.ArrayList;

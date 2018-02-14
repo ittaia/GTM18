@@ -3,8 +3,8 @@ package artzi.gtm.dmlhdp.driver;
 import java.util.ArrayList;
 import java.util.Random;
 
-import MLHDP.MLHDPData;
-import MLHDP.MLHDPModel;
+import artzi.gtm.dmlhdp.mlhdp.MLHDPData;
+import artzi.gtm.dmlhdp.mlhdp.MLHDPModel;
 import artzi.gtm.topicModelInfra.dataObjects.ComponentFeatures;
 import artzi.gtm.topicModelInfra.dataObjects.InstanceTemplate;
 import artzi.gtm.utils.aMath.DirichletSample;

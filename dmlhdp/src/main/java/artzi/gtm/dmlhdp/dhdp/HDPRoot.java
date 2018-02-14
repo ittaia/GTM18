@@ -2,8 +2,8 @@ package artzi.gtm.dmlhdp.dhdp;
 
 import java.util.ArrayList;
 
-import MLHDP.MLHDPLevelData;
-import MLHDP.MLHDPParms;
+import artzi.gtm.dmlhdp.mlhdp.MLHDPLevelData;
+import artzi.gtm.dmlhdp.mlhdp.MLHDPParms;
 import artzi.gtm.topicModelInfra.counters.Counters;
 import artzi.gtm.topicModelInfra.dataObjects.ObservedComponent;
 import artzi.gtm.topicModelInfra.gibbsMath.HDPHyperParms;

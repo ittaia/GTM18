@@ -1,4 +1,4 @@
-package MLHDP;
+package artzi.gtm.dmlhdp.mlhdp;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 

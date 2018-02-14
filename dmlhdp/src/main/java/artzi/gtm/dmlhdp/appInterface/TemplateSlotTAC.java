@@ -3,12 +3,12 @@ package artzi.gtm.dmlhdp.appInterface;
 import java.io.File;
 import java.util.ArrayList;
 
-import MLHDP.MLHDPData;
-import MLHDP.MLHDPModel;
-import MLHDP.MLHDPParms;
 import artzi.gtm.dmlhdp.appInterface.String2IntegerFeatures;
 import artzi.gtm.dmlhdp.appInterface.Template;
 import artzi.gtm.dmlhdp.appInterface.Template2Excel;
+import artzi.gtm.dmlhdp.mlhdp.MLHDPData;
+import artzi.gtm.dmlhdp.mlhdp.MLHDPModel;
+import artzi.gtm.dmlhdp.mlhdp.MLHDPParms;
 import artzi.gtm.topicModelInfra.dataObjects.ComponentFeatures;
 import artzi.gtm.topicModelInfra.dataObjects.InstanceTemplate;
 import artzi.gtm.utils.elog.EL;
