@@ -1,4 +1,4 @@
-package artzi.gtm.dmlhdp.appInterface;
+package Interface;
 
 import java.io.Serializable;
 import java.util.ArrayList;

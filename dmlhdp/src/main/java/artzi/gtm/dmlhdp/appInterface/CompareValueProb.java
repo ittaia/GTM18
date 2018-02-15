@@ -1,7 +1,7 @@
 package artzi.gtm.dmlhdp.appInterface;
 import java.util.Comparator;
 
-public class CompareValueProb implements Comparator {
+public class CompareValueProb implements Comparator<Object> {
 
 	public int compare  (Object a1 , Object a2) {
 		ValueProb ip1 = (ValueProb) a1 ;
