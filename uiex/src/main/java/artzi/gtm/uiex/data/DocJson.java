@@ -30,7 +30,7 @@ public class  DocJson{
 	 
 				
 	public static void main(String[] args) throws Exception {  
-		Config c = Config.getInstance(path) ; 
+		Config.getInstance(path) ; 
 		processDocs () ; 
 	}
 	

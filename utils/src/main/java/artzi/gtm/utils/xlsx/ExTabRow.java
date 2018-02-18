@@ -1,7 +1,5 @@
 package artzi.gtm.utils.xlsx;
  
-import java.util.Date;
-
 import org.apache.poi.ss.usermodel.*;
 
 public class ExTabRow {
@@ -43,7 +41,7 @@ public class ExTabRow {
 						rowIntValues [i] = 0 ; 
 					}	
 					else if (c.getCellType() == Cell.CELL_TYPE_NUMERIC ) {
-						Double  d = new Double (c.getNumericCellValue())   ; 
+						Double  d = c.getNumericCellValue()  ; 
 						 
 						rowFieldValues [i] = Double.toString (d)  ; 
 						rowDoubleValues [i] = d ; 

@@ -8,7 +8,6 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 public class ExRow {
@@ -25,7 +24,7 @@ public class ExRow {
 	
 	public void setCell (int indx , int value) { 
 		Cell c = row.createCell(indx , Cell.CELL_TYPE_NUMERIC) ; 
-		Integer iv = new Integer (value) ; 
+		Integer iv = value ; 
 		c.setCellValue ( iv.doubleValue ()) ; 
 	}
 	public void setCellWrap (int indx , String text) { 

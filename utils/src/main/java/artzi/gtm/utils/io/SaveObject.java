@@ -27,6 +27,7 @@ public class SaveObject {
 			FileInputStream ObjectFile = new FileInputStream (fileName) ; 
 			ObjectInputStream ObjectIN = new ObjectInputStream (ObjectFile) ; 
 			rObject = ObjectIN.readObject () ; 
+			ObjectIN.close () ; 
 			} 
 		catch (IOException e) {
 			// TODO Auto-generated catch block

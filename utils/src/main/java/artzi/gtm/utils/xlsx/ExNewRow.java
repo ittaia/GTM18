@@ -63,7 +63,7 @@ public class ExNewRow  {
 			}
 			else if ( rowFieldFormat [i] == "I") {			 
 				Cell c = r.createCell(i , Cell.CELL_TYPE_NUMERIC) ; 
-				Integer iv = new Integer (rowIntValues [i]) ; 
+				Integer iv = rowIntValues [i] ; 
 				c.setCellValue ( iv.doubleValue ()) ; 
 			}
 		}

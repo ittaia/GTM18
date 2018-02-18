@@ -91,7 +91,7 @@ public class DocDriver {
 		int ownerId = -1 ; 
 		if (owner != null ) ownerId = owner.getId() ; 
 		if (level < DParms.levels -1) { 
-			int docIndx = mlhdpData.addInstance (level , Id , ownerId ,new ArrayList<ComponentFeatures>()) ;  
+			mlhdpData.addInstance (level , Id , ownerId ,new ArrayList<ComponentFeatures>()) ;  
 			int members = Distributions.PoissoSample(DParms.instances[level])+1 ; 
 			for (int i = 0 ; i < members ; i ++ ) { 
 				addDI (level+1 , i , instance)  ; 
@@ -104,7 +104,7 @@ public class DocDriver {
 				featureLists.add( generateCompFeatures (template , compId)) ; 
 			}
 			instancesFeatures.add(featureLists   ) ; 
-			int docIndx = mlhdpData.addInstance (level , Id , ownerId ,featureLists) ;  
+			mlhdpData.addInstance (level , Id , ownerId ,featureLists) ;  
 		}
 	}
 	 
@@ -124,6 +124,7 @@ public class DocDriver {
 		mlhdpModel.infer () ; 
 		eval () ; 		 
 	}
+	/*
 	private static void inferLevel1() throws Exception {
 		MLHDPData mlhdpData1 = new MLHDPData (1) ; 
 		for (int compId = 0 ; compId< DParms.comps ; compId ++) { 
@@ -137,6 +138,7 @@ public class DocDriver {
 		mlhdpModel.infer () ; 	
 		eval1 () ; 
 	}
+	*/
 
 	private static void eval ()  {
 		for (int level = 0 ; level < DParms.levels ; level ++ ) { 		
@@ -157,6 +159,7 @@ public class DocDriver {
 			cm.VMeasure() ;
 		}
 	}
+	/*
 	private static void eval1 ()  {
 		String [] gold = new String [DParms.templates[1]] ; 
 		for (int i = 0 ; i < DParms.templates[1] ; i ++ ) gold [i] = "Gold:"+i+ " " ; 
@@ -173,5 +176,6 @@ public class DocDriver {
 		//cm.ManyTo1measure() ; 
 		cm.VMeasure() ;
 	}
+	*/
 
 }
