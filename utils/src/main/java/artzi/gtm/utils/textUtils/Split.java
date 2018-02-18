@@ -59,7 +59,7 @@ public class Split {
 	 * @param str = text to split
 	 * @return = array list of tokens
 	 */
-	private static ArrayList <String> split (String str) { 
+	public static ArrayList <String> split (String str) { 
 		ArrayList <String> rList = new ArrayList <String> () ; 
 
 		final String token  = "[^\\s][^\\s]*[\\s]" ; 		 

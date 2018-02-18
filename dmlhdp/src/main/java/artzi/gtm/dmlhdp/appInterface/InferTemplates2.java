@@ -22,7 +22,7 @@ import artzi.gtm.utils.config.Config;
 import artzi.gtm.utils.elog.EL;
 
 public class InferTemplates2 {
-	static String path = "C:\\TestDir\\MACUIE" ;  
+	static String path = "C:\\TestDir\\MUCUIE" ;  
 	static int docId = 0 ;
 	static int docCnt = 0 ;	 
 	
@@ -61,7 +61,6 @@ public class InferTemplates2 {
 	}
 
 	private static void  processDocs  () throws Exception { 
-
 		String docsjson =  config.getPath ("DocsFeatures") ; 
 		System.out.println ("Load docs - json " + docsjson); 
 		evalDocList = new ArrayList <DocFeatures2> () ; 
@@ -111,7 +110,8 @@ public class InferTemplates2 {
 		mlhdp.infer () ; 
 		String objectPath = config.getPath ("obj") ; 
 		mlhdp.save(objectPath) ; 
-		mlhdp.saveRan(objectPath) ; 
+		String ranPath = config.getPath ("ran") ; 
+		mlhdp.saveRan(ranPath) ; 
 		
 		saveModelDocs () ; 
 		String xlPath =   config.getPath("xls") ; 

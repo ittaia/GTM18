@@ -1,6 +1,5 @@
 package artzi.gtm.utils.xlsx;
 
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -20,8 +19,7 @@ public class ExRow {
 	public void setCell (int indx , String value) { 
 		Cell c = row.createCell(indx , Cell.CELL_TYPE_STRING) ; 
 		c.setCellValue(value) ; 
-	}
-	
+	}	
 	public void setCell (int indx , int value) { 
 		Cell c = row.createCell(indx , Cell.CELL_TYPE_NUMERIC) ; 
 		Integer iv = value ; 

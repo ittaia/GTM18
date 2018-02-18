@@ -74,7 +74,7 @@ public class EL {
 	public static void WE (int errorCode, String s ) {  
 		if (logger==null) initLogger() ; 	
 		String cls = getCaller();
-		logger.error("*** "+errorCode+" *** "+"("+cls+") "+s);
+		logger.info("*** "+errorCode+" *** "+"("+cls+") "+s);
 	}	
 	
 	public static void WF (int errorCode, String s) throws Exception {
