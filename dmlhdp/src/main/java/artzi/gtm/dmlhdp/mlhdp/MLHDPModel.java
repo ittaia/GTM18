@@ -66,6 +66,7 @@ public class MLHDPModel {
 			threads[threadId].start() ; 
 		}		
 		for (int iter = 0 ; iter <  parms.maxIters;  iter++ ) { 
+			System.out.println ("iter - "+ iter) ; 
 			EL.WE (99, " Start Iter-" + iter  + " HS " + GetHeapSpace.HS()/1000000 ) ; 			
 			for (int threadId = 0 ; threadId < parms.numOfThreads ; threadId ++ ) { 
 				threads [threadId].copyCounters (hdps ) ;  				
@@ -291,10 +292,10 @@ public class MLHDPModel {
 		fileName  = new File (dir   , "result" ).getPath()  ; 
 		SaveObject.write(fileName , results ) ; 
 	}
-	public void saveRun (String dir) throws IOException { 
+	public void saveRan (String dir) throws IOException { 
 		run.setNumOfMixes(results.getNumOfTemplates()) ; 
 		run.setLikelihood (computeLogLikelihood()) ; 
-		String fileName  = new File (dir   , "run.txt" ).getPath()  ; 
+		String fileName  = new File (dir   , "ran.txt" ).getPath()  ; 
 		run.save(fileName) ; 
 	}
 	

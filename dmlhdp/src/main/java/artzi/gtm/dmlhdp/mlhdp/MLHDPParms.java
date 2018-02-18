@@ -2,14 +2,22 @@ package artzi.gtm.dmlhdp.mlhdp;
 
 import java.io.IOException;
 import java.io.Serializable;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import artzi.gtm.utils.elog.EL;
 import artzi.gtm.utils.io.JsonIO;
 
-public class MLHDPParms implements Serializable {
+public class MLHDPParms implements Serializable{
 	
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
+	public int levels = 2 ; 
+	public String [] templates = {"Template" , "Slot"} ; 
+	public String [][] valueLists = {{} , {"Predicates" , "Entities" , "SemCodes"}}  ; 
+	
 	public double gammaTop = 0; 
 	public double [] gamma = {0 , 0 , 0} ;  
 	public double [] alpha0 = {0 , 0, 0} ;  
@@ -24,11 +32,9 @@ public class MLHDPParms implements Serializable {
 	public int checkPoint = 0 ;
 	public int likelihood = 0; 
 	public double minEditProb = 0 ;
+	public double [][] beta ; 
 	public int updateBeta = 0 ;
-	public boolean inverse = false ; 
-	public double betaP = 0; 
-	public double betaE = 0 ; 
-	public double betaS = 0 ; 
+	public boolean inverse = false ;	
 	public double minInverseLogProportion = 1  ; 
 	public double inverseMatchPenalty = 1   ;
 	

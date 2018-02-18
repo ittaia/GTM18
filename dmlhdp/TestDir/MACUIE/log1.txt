@@ -1,0 +1,4 @@
+2018-02-18 10:55:07,446 INFO a.g.u.e.EL [main] --------------------------------------------- 
+2018-02-18 10:55:07,446 INFO a.g.u.e.EL [main] ----------------- start*log ----------------- 
+2018-02-18 10:55:07,446 INFO a.g.u.e.EL [main] (TestParms/main) Start read
+2018-02-18 10:55:07,446 INFO a.g.u.e.EL [main] (MLHDPParms/print) {"levels":2,"templates":["Template","Slot"],"valueLists":[[],["Predicates","Entities","SemCodes"]],"gammaTop":3.0,"gamma":[5.0,5.0,5.0],"alpha0":[1.0,1.0,1.0],"aGammaTop":5.0,"bGammaTop":0.1,"aGamma":[5.0,5.0,5.0],"bGamma":[0.1,0.1,0.1],"aAlpha0":[1.0,1.0,1.0],"bAlpha0":[10.0,10.0,10.0],"maxIters":401,"numOfThreads":2,"checkPoint":10,"likelihood":10,"minEditProb":0.03,"beta":[[],[0.01,0.03,0.05]],"updateBeta":99999,"inverse":false,"minInverseLogProportion":-1.0,"inverseMatchPenalty":-10.0}

@@ -176,7 +176,7 @@ public class HDPRoot {
 			for (int nextLevelMixId = 0 ; nextLevelMixId < state.numOfNextLevelMixs ; nextLevelMixId ++ ) { 
 				if (nextLevelMixObjectCount [nextLevelMixId] > 0) activeNextLevelMixs ++ ; 				
 			}
-			stickBreakingWeights.updateWeights(state.numOfMixs , state.numOfNextLevelMixs, mixNextLevelMixObjectCount,
+			stickBreakingWeights.updateWeights(state.numOfNextLevelMixs , state.numOfMixs ,  mixNextLevelMixObjectCount,
 					state.alpha0, state.gamma) ; 
 			int nextLevelObjects = stickBreakingWeights.getTotMixTables() ; 	
 			//String s = "Stick Breaking Weights " ; 

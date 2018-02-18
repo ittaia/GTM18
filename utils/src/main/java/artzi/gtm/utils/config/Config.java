@@ -53,5 +53,13 @@ public class Config {
 	}
 	public String getMainPath() {
 		return this.mainPath ; 
-	}	
+	}
+	public String getPath(String _key)  {
+		String path = "" ; 
+		if (configJson.has(_key)) {
+			String fileName = configJson.get(_key).getAsString();
+			path = new File (this.mainPath , fileName).getAbsolutePath() ; 
+		}
+		return path ;
+	}
 }

@@ -3,7 +3,7 @@ package artzi.gtm.dmlhdp.appInterface;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class DocFeatures implements Serializable {
+public class DocFeatures2 implements Serializable {
 
 	/**
 	 * 
@@ -13,7 +13,7 @@ public class DocFeatures implements Serializable {
 	String docName ; 
 	boolean evalList ; 
 	ArrayList <InstanceFeatures> instances ; 	
-	public DocFeatures (int docId , String docName ) { 	
+	public DocFeatures2 (int docId , String docName ) { 	
 		this.docId = docId  ; 
 		this.docName = docName ; 
 		this.evalList = false ; 

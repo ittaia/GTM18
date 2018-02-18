@@ -10,8 +10,10 @@ public class Template {
 		this.name = name ; 
 		valueLists = new ValueLists () ; 
 	}
-	public void addValueList (String name) { 
-		valueLists.addList(name) ; 
+	public void addValueList (String [] names) { 
+		for (String name : names) {  
+			valueLists.addList(name) ; 
+		}
 	}
 	public ValueLists getValueLists() {
 		return this.valueLists ; 
