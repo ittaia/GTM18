@@ -72,7 +72,7 @@ public class HDPRoot {
 		return state.mixs.size () ; 
 	}	
 
-	public void validateCounters(HDPRoot [] hdps ) {
+	public void validateCounters(HDPRoot [] hdps ) throws Exception {
 		int totObjects = 0 ; 
 		int totNextLevelObjects = 0 ; 
 		int [] nextLevelMixObjects = null ; 
@@ -95,12 +95,12 @@ public class HDPRoot {
 			}
 		}
 		if (totObjects != state.numOfContentObjects) { 
-			EL.WE(8877 , " Bad Object count " + state.level ) ; 
+			EL.WF(8877 , " Bad Object count " + state.level ) ; 
 		}
 		
 		if (state.level < state.levels-1) { 
 			if (totNextLevelObjects != hdps [state.level+1].getNumOfContentObjects() ) { 
-				EL.WE(8877 , " Bad Tot Next Level Object count " + state.level + " - " + totNextLevelObjects + " - " + 
+				EL.WF(8877 , " Bad Tot Next Level Object count " + state.level + " - " + totNextLevelObjects + " - " + 
 						hdps [state.level+1].getNumOfContentObjects()) ; 
 			}
 			int sum1 = 0 , sum2 = 0; 
@@ -108,7 +108,7 @@ public class HDPRoot {
 				sum1 += nextLevelMixObjects [m1] ; 
 				sum2 += hdps [state.level+1].getNumOfContentObjects(m1) ; 
 				if ( nextLevelMixObjects [m1] != hdps [state.level+1].getNumOfContentObjects(m1) ) { 
-					EL.WE(8877 , " Bad Next Level Customer count " + m1 + " - " + state.level + " - " +  nextLevelMixObjects [m1] + " - " 
+					EL.WF(8877 , " Bad Next Level Customer count " + m1 + " - " + state.level + " - " +  nextLevelMixObjects [m1] + " - " 
 						+ 	hdps [state.level+1].getNumOfContentObjects(m1))  ; 
 				}
 			}

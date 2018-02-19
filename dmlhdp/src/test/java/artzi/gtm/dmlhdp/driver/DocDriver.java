@@ -78,7 +78,7 @@ public class DocDriver {
 		}		
 	}
 	
-	private static void addDI(int level ,int Id , DInstance owner ) {
+	private static void addDI(int level ,int Id , DInstance owner ) throws Exception {
 		int template ; 
 		if (level == 0 ) { 
 			template = generator.nextInt (DParms.templates [0] ) ;  

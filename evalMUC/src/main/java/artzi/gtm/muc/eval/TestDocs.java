@@ -1,6 +1,7 @@
 package artzi.gtm.muc.eval;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,8 +26,10 @@ public class TestDocs {
 		this.path = path ; 
 		testDocs = new ArrayList <TestDoc> () ; 
 		for (int i = 0 ; i < TemplateNames.numOfTemplates ; i ++) templateCount [i] = 0 ; 
-		load  (path + "key-tst3.v2")  ; 
-		load  (path + "key-tst4.v2")  ; 
+		String pathKey = new File (path ,"key-tst3.v2" ).getAbsolutePath() ; 
+		load  (pathKey)  ; 
+		pathKey = new File (path ,"key-tst4.v2" ).getAbsolutePath() ; 
+		load  (pathKey)  ; 
 		for (int i = 0 ; i < TemplateNames.numOfTemplates ; i ++) { 
 			EL.WE( 8876 , " Tempaltes - " + i + " - " + templateCount [i] )    ;  
 		}

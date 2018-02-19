@@ -23,6 +23,7 @@ public class Config {
 	
 	private Config () throws IOException {
 		this.mainPath = new File(".").getAbsolutePath() ; 
+		System.out.println ("Config main path: "+ mainPath) ; 
 		String configPath = new File (mainPath, "config.json").getAbsolutePath() ; 
 		configJson = JsonIO.read(configPath).getAsJsonObject() ; 		
 	}

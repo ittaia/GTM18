@@ -60,7 +60,7 @@ public class MLHDPModel {
 		results = new MLHDPResults () ;  
 	}		
 
-	public void infer () throws InterruptedException { 	
+	public void infer () throws Exception { 	
 		EL.WE(7777,  " Start Infer ;  Iters " + parms.maxIters) ;  
 		for  (int threadId = 0 ; threadId < parms.numOfThreads ;  threadId ++) { 
 			threads[threadId].start() ; 
@@ -207,7 +207,6 @@ public class MLHDPModel {
 		double logLikelihood = 0 ;  
 		for (int instanceIndx = 0 ; instanceIndx < data.getLevelData(0).getInstanceList().size () ; instanceIndx ++ ) { 				
 			logLikelihood += instanceLogLikelihood (0 , -1 ,  instanceIndx   )  ; 
-
 		}		
 		return logLikelihood ; 
 	}
@@ -292,11 +291,10 @@ public class MLHDPModel {
 		fileName  = new File (dir   , "result" ).getPath()  ; 
 		SaveObject.write(fileName , results ) ; 
 	}
-	public void saveRan (String dir) throws IOException { 
+	public void saveRan (String path) throws IOException { 
 		run.setNumOfMixes(results.getNumOfTemplates()) ; 
 		run.setLikelihood (computeLogLikelihood()) ; 
-		String fileName  = new File (dir   , "ran.txt" ).getPath()  ; 
-		run.save(fileName) ; 
+		run.save(path) ; 
 	}
 	
 	public void load (String dir) { 
@@ -322,7 +320,7 @@ public class MLHDPModel {
 		return results.multFeatures ; 	
 	}
 
-	private void validateCounters () { 
+	private void validateCounters () throws Exception { 
 		for (int level = 0 ; level < data.levels ; level++ ) { 
 			hdps[level].validateCounters (hdps) ; 
 		}

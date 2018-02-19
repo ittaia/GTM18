@@ -23,15 +23,15 @@ public class MLHDPData  implements Serializable{
 	public void addComponent (int level , int Id , int numOfFeatures , double beta) { 
 		levelsData.get(level).addComponent (Id , numOfFeatures , beta)  ; 		
 	}
-	public int addInstance (int level , int Id , int ownerIndx ,  ArrayList<ComponentFeatures> featureLists) { 
-		if (level > levels -1 ) EL.WE (9870 , "Wrong level " + level ) ;
+	public int addInstance (int level , int Id , int ownerIndx ,  ArrayList<ComponentFeatures> featureLists) throws Exception { 
+		if (level > levels -1 ) EL.WF (9870 , "Wrong level " + level ) ;
 		ArrayList <GInstance> instanceList = levelsData.get(level).getInstanceList() ; 
 		GInstance owner = null ;  
 		int indx = instanceList.size () ; 
 		if (level > 0) { 
-			if (ownerIndx < 0 )   EL.WE (9871 , "Wrong owner " + ownerIndx  + "Level " + level) ; 			 
+			if (ownerIndx < 0 )   EL.WF (9871 , "Wrong owner " + ownerIndx  + "Level " + level) ; 			 
 			ArrayList <GInstance> ownerInstanceList = levelsData.get(level-1).getInstanceList()  ;
-			if (ownerIndx >=   ownerInstanceList.size())   EL.WE (9871 , "Wrong owner " + ownerIndx  + "Level " + level) ; 
+			if (ownerIndx >=   ownerInstanceList.size())   EL.WF (9871 , "Wrong owner " + ownerIndx  + "Level " + level) ; 
 			owner = ownerInstanceList.get (ownerIndx) ; 
 		}		
 		GInstance instance = new GInstance (level , Id , indx ,  ownerIndx , featureLists) ; 
@@ -40,13 +40,13 @@ public class MLHDPData  implements Serializable{
 		return indx ; 		
 	}
 	public int addInstance (int level , int Id , int ownerIndx ,  ArrayList<ComponentFeatures> featureLists , 
-			ArrayList <ComponentFeatures> inversFeatureLists) { 
-		if (level > levels -1 ) EL.WE (9870 , "Wrong level " + level ) ;
+			ArrayList <ComponentFeatures> inversFeatureLists) throws Exception { 
+		if (level > levels -1 ) EL.WF (9870 , "Wrong level " + level ) ;
 		ArrayList <GInstance> instanceList = levelsData.get(level).getInstanceList() ; 
 		GInstance owner = null ;  
 		int indx = instanceList.size () ; 
 		if (level > 0) { 
-			if (ownerIndx < 0 )   EL.WE (9871 , "Wrong owner " + ownerIndx  + "Level " + level) ; 			 
+			if (ownerIndx < 0 )   EL.WF (9871 , "Wrong owner " + ownerIndx  + "Level " + level) ; 			 
 			ArrayList <GInstance> ownerInstanceList = levelsData.get(level-1).getInstanceList()  ;
 			if (ownerIndx >=   ownerInstanceList.size())   EL.WE (9871 , "Wrong owner " + ownerIndx  + "Level " + level) ; 
 			owner = ownerInstanceList.get (ownerIndx) ; 

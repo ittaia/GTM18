@@ -26,7 +26,7 @@ public class EvalMainN {
 			t.print () ; 
 			ml.getDoc(t.getID()).print () ; 
 		}
-		for (int i = 0 ; i < 1; i ++ ) { 
+		for (int i = 0 ; i < 5; i ++ ) { 
 			double minProb = Parms.minProb + (i*0.2) ; 
 			System.out.println(minProb) ; 
 			EL.W(" ----- Match ----" + minProb );

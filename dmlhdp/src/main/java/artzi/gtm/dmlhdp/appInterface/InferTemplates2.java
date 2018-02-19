@@ -34,10 +34,11 @@ public class InferTemplates2 {
 	static String parmsPath ; 
 	static MLHDPParms parms = null ;  
 	static Config config ; 
-	static Gson gson = new Gson () ; 
+	static Gson gson ; 
 						
 	public static void main(String[] args) throws Exception {  
-		config = Config.getInstance(path) ; 
+		gson = new Gson () ; 
+		config = Config.getInstance(/*path*/) ; 
 		System.out.println ("Work on Dir :"+ config.getMainPath()) ; 	
 		EL.W(" ****** Start - DIR "+ config.getMainPath());
 		parmsPath = config.getPath("MLHDPParms") ; 
@@ -84,7 +85,7 @@ public class InferTemplates2 {
 	}	
 	
 
-	private static void addDoc(DocFeatures2 docFeatures) {
+	private static void addDoc(DocFeatures2 docFeatures) throws Exception {
 		int docIndx = mlhdpData.addInstance (0 , docFeatures.getDocId() , -1 ,new ArrayList<ComponentFeatures>()) ;  
 		for (InstanceFeatures instance : docFeatures.getInstances()) { 
 			ArrayList<ComponentFeatures> featureLists = String2IntegerFeatures.get (instance.getFeatures() , templates[1]) ; 
