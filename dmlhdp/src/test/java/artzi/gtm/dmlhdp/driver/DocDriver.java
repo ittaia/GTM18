@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import artzi.gtm.dmlhdp.mlhdp.MLHDPData;
-import artzi.gtm.dmlhdp.mlhdp.MLHDPModel;
+import artzi.gtm.dmlhdp.mlhdp.MLHDPModelSaveAssignment;
 import artzi.gtm.topicModelInfra.dataObjects.ComponentFeatures;
 import artzi.gtm.topicModelInfra.dataObjects.InstanceTemplate;
 import artzi.gtm.utils.aMath.DirichletSample;
@@ -18,7 +18,7 @@ public class DocDriver {
 	static ArrayList <ArrayList<ComponentFeatures> > instancesFeatures  ; 
 	static Random generator ; 
 	static MLHDPData mlhdpData ; 
-	static MLHDPModel mlhdpModel ; 
+	static MLHDPModelSaveAssignment mlhdpModel ; 
 	static ArrayList <double [][]> templateMult ; 
 	static ArrayList <double [][]> featureMult ; 	
 	static String path ="D:\\TestDIr\\MLHDP" ; 
@@ -120,7 +120,7 @@ public class DocDriver {
 	}
 	
 	private static void infer() throws Exception {
-		mlhdpModel = new MLHDPModel (mlhdpData , parmsPath) ; 		
+		mlhdpModel = new MLHDPModelSaveAssignment (mlhdpData , parmsPath) ; 		
 		mlhdpModel.infer () ; 
 		eval () ; 		 
 	}

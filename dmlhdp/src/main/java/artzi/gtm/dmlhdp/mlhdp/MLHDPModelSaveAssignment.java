@@ -7,6 +7,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 import artzi.gtm.dmlhdp.dhdp.HDPRoot;
+import artzi.gtm.topicModelInfra.assignments.Assignment;
+import artzi.gtm.topicModelInfra.assignments.Assignments;
 import artzi.gtm.topicModelInfra.counters.FeatureCount;
 import artzi.gtm.topicModelInfra.dataObjects.ComponentFeatures;
 import artzi.gtm.topicModelInfra.dataObjects.GInstance;
@@ -16,22 +18,23 @@ import artzi.gtm.utils.elog.EL;
 import artzi.gtm.utils.gen.GetHeapSpace;
 import artzi.gtm.utils.io.SaveObject;
 
-public class MLHDPModel {
+public class MLHDPModelSaveAssignment {
 
 	HDPRoot [] hdps ; 
 	MLHDPData data ; 
+	Assignments assignments ; 
 	MLHDPResults results ; 
-	MLHDPRan run ; 
+	MLHDPRan ran ; 
 	
 	MLHDPThread [] threads ; 
 	BlockingQueue<Integer> queue ; 
 	MLHDPParms parms = null ; 	
-	public MLHDPModel (MLHDPData data , String parmsPath ) throws Exception { 
+	public MLHDPModelSaveAssignment (MLHDPData data , String parmsPath ) throws Exception { 
 		parms = MLHDPParms.getInstance () ;   
 				
 		this.data = data ; 
 		this.data.initObjectComponentCount() ; 
-		run = new MLHDPRan (data.levels) ; 
+		ran = new MLHDPRan (data.levels) ; 
 		threads = new  MLHDPThread [parms.numOfThreads] ; 
 		queue = new ArrayBlockingQueue<Integer> (parms.numOfThreads) ; 
 		hdps = new HDPRoot [data.levels] ; 
@@ -57,7 +60,13 @@ public class MLHDPModel {
 		aggregateThreads (0) ; 
 		validateCounters () ; 
 		printCounters () ; 
+		assignments = new Assignments (data.levels) ; 
+		for (int level = 0 ; level < data.levels ; level ++ ) { 
+			int numOfInstances = data.getLevelData(level).getInstanceList().size(); 
+			assignments.setNumOfInstances (level , numOfInstances) ; 
+		}
 		results = new MLHDPResults () ;  
+		
 	}		
 
 	public void infer () throws Exception { 	
@@ -83,9 +92,15 @@ public class MLHDPModel {
 				numOfThreadMsg ++ ; 
 			}
 			aggregateThreads (iter) ; 
+			
+			if (iter >= parms.burnIn & ((iter-parms.burnIn)% parms.skipIters == 0)) { 
+				sampleAssignments () ; 
+				EL.WE (99 , "Save Assignment ");
+				System.out.println("Save Assignment ") ; 
+			}
 
 			EL.WE (99, " After Iter-" + iter  ) ; 
-			
+						
 			if ((iter< parms.checkPoint) | (iter % parms.checkPoint == 0))  {
 				validateCounters () ; 	
 				printCounters () ;
@@ -96,7 +111,7 @@ public class MLHDPModel {
 					EL.WE (990, " Iter-" + iter + " likelihood " +  likelihood  ) ; 
 					System.out.println ("Likelihood "+ likelihood + 
 							" Mixes 0 " + hdps[0].getNumOfMixs() + " Mixes 1 " + hdps[1].getNumOfMixs()) ; 
-					run.addLikelihood(likelihood) ; 
+					ran.addLikelihood(likelihood) ; 
 				}								
 			}
 			printCounters () ; 
@@ -106,7 +121,7 @@ public class MLHDPModel {
 		}
 		setResults () ; 	
 		//printMult () ; 
-	}	
+	}		
 
 	private void aggregateThreads(int iter) {
 
@@ -140,8 +155,7 @@ public class MLHDPModel {
 				else { 
 					hdps[level].sumDelta 
 					( threads[threadId].getHDP(level) , hdps[level].getMapMixs(threadId), null) ; 
-				}
-				
+				}				
 			}
 		}
 		for (int level = 0 ; level < data.levels ; level ++ ) { 
@@ -156,7 +170,7 @@ public class MLHDPModel {
 		}
 		hdps[data.levels-1].sampleGammaAlpha0(null) ; 
 		*/
-	}
+	}	
 
 	private void computeMultinomials () { 
 
@@ -257,36 +271,47 @@ public class MLHDPModel {
 		}		 	
 		return prob;
 	}
+	private void sampleAssignments() {
+		Assignment assignment = assignments.addAssignment () ; 
+		for (int instanceIndx = 0 ; instanceIndx < data.getLevelData(0).getInstanceList().size () ; instanceIndx ++ ) { 
+			setInstanceAssignments (assignment , 0 , instanceIndx ) ; 
+		}
+	}
+	private void setInstanceAssignments (Assignment assignment , int level, int instanceIndx ) {
+		GInstance instance =  data.getLevelData(level).getInstanceList().get(instanceIndx) ; 
+		int instanceTemplate  = getInstanceTemplate (level , instance) ; 
+		assignment.set (level , instanceIndx , instanceTemplate) ; 		
+		if (level < data.levels-1) {  
+			for (int indx1 = instance.getFromMember() ; indx1 <= instance.getToMember() ;  indx1 ++) { 
+				setInstanceAssignments (assignment , level+1 , indx1 )  ;  
+			}
+		}
+	}	
+
 	private void setResults () {
 		results.numOfTemplates = new int [data.levels]; 
 		for (int level = 0 ; level < data.levels ; level ++ )  { 
 			results.numOfTemplates [level] = hdps [level].getNumOfMixs() ; 
 		}
 		computeMultinomials () ; 
+		Assignment maxAssignment  = assignments.getMaxAssignment() ;  
 		results.instanceTemplates = new ArrayList <InstanceTemplate[]> () ; 
 		for (int level = 0 ; level < data.levels ; level ++) { 
-			results.instanceTemplates.add (new InstanceTemplate [ data.getLevelData(level).getInstanceList().size()]) ; 				
+			results.instanceTemplates.add (new InstanceTemplate [ data.getLevelData(level).getInstanceList().size()]) ;
+			for (int instanceIndx = 0 ; instanceIndx < data.getLevelData(level).getInstanceList().size () ; instanceIndx ++ ) {			
+				GInstance instance =  data.getLevelData(level).getInstanceList().get(instanceIndx) ; 
+				int instanceTemplate = maxAssignment.get(level , instanceIndx) ; 		 
+				double prob = 0 ; 
+				if (level ==  data.levels-1) { 
+					prob = computeInstanceLogProbability (instance ,instanceTemplate  , level) ; 
+				}
+				results.instanceTemplates.get(level) [instanceIndx] = new InstanceTemplate 
+						(level , instanceIndx , prob , instanceTemplate) ;  
+			}		
 		}
-		for (int instanceIndx = 0 ; instanceIndx < data.getLevelData(0).getInstanceList().size () ; instanceIndx ++ ) { 
-			setInstanceTemplates (0 , instanceIndx ) ; 
-		}		
 	}
-	
-	private void setInstanceTemplates(int level, int instanceIndx ) {
-		GInstance instance =  data.getLevelData(level).getInstanceList().get(instanceIndx) ; 
-		int instanceTemplate  = getInstanceTemplate (level , instance) ; 
-		
-		double prob = 0 ; 
-		if (level ==  data.levels-1) { 
-			prob = computeInstanceLogProbability (instance ,instanceTemplate  , level) ; 
-		}
-		results.instanceTemplates.get(level) [instanceIndx] = new InstanceTemplate (level , instanceIndx , prob , instanceTemplate) ;  
-		if (level < data.levels-1) {  
-			for (int indx1 = instance.getFromMember() ; indx1 <= instance.getToMember() ;  indx1 ++) { 
-				setInstanceTemplates (level+1 , indx1 )  ;  
-			}
-		}
-	}	
+
+
 	public void save (String dir) throws IOException { 
 		String fileName  = new File (dir   , "data" ).getPath()  ; 
 		SaveObject.write(fileName , data ) ;  
@@ -294,9 +319,9 @@ public class MLHDPModel {
 		SaveObject.write(fileName , results ) ; 
 	}
 	public void saveRan (String path) throws IOException { 
-		run.setNumOfMixes(results.getNumOfTemplates()) ; 
-		run.setLikelihood (computeLogLikelihood()) ; 
-		run.save(path) ; 
+		ran.setNumOfMixes(results.getNumOfTemplates()) ; 
+		ran.setLikelihood (computeLogLikelihood()) ; 
+		ran.save(path) ; 
 	}
 	
 	public void load (String dir) { 

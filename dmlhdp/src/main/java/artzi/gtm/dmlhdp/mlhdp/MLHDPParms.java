@@ -28,6 +28,8 @@ public class MLHDPParms implements Serializable{
 	public double [] aAlpha0 = {0 , 0 ,0}; 
 	public double [] bAlpha0 = {0 , 0 , 0} ; 
 	public int maxIters = 0 ; 
+	public int burnIn = 0 ; 
+	public int skipIters = 0 ; 
 	public int numOfThreads = 0;
 	public int checkPoint = 0 ;
 	public int likelihood = 0; 
