@@ -51,7 +51,7 @@ public class HDPThread {
 		return indx ; 		
 	}
 	
-	public void copyCounters (HDPRoot rootHdp ,  HDPRoot nextLevelHdp  ) { 
+	public void copyCounters (HDPRoot rootHdp ,  HDPRoot nextLevelHdp  ) throws Exception { 
 			 
 		numOfRootContentObjects = rootHdp.getNumOfContentObjects() ; 
 		state.gammaTop = rootHdp.getGammaTop() ; 
@@ -87,7 +87,7 @@ public class HDPThread {
 	public int getNumOfNextLevelContentObjects(int mixId) {
 		return state.mixs.get(mixId).getNumOfNextLevelContentObjects();
 	}
-	public int getNumOfNextLevelContentObjects(int mixId, int nextLevelmixId) {
+	public int getNumOfNextLevelContentObjects(int mixId, int nextLevelmixId) throws Exception {
 		return state.mixs.get(mixId).getNumOfNextLevelContentObjects(nextLevelmixId); 
 	}
 	public int getComponentCount (int mixId , int componentId) { 
@@ -107,7 +107,7 @@ public class HDPThread {
 		return state.mixs.get(mixId) ; 
 	}
 
-	public LogProportion getDPLogProportion(int mixId, int  contentObjectIndx , HDPThread[] hdps) {
+	public LogProportion getDPLogProportion(int mixId, int  contentObjectIndx , HDPThread[] hdps) throws Exception {
 		double logPropVal ;  
 		boolean zero ; 
 		if (mixId < state.mixs.size ()) { 
@@ -134,7 +134,7 @@ public class HDPThread {
 		return logProportion ; 
 	}
 
-	public LogProportion getHDPLogProportion(int ownermixId, int mixId , int  contentObjectIndx , HDPThread[] hdps) {
+	public LogProportion getHDPLogProportion(int ownermixId, int mixId , int  contentObjectIndx , HDPThread[] hdps) throws Exception {
 		double logPropVal ;  
 		boolean zero ; 
 		if (mixId < state.mixs.size ()) { 
@@ -167,7 +167,7 @@ public class HDPThread {
 	private double getAlpha0() {
 		return state.alpha0 ; 
 	}
-	private LogProportion contentObjectLogProportion(MixtureComponent mix , int contentObjectIndx  ) {
+	private LogProportion contentObjectLogProportion(MixtureComponent mix , int contentObjectIndx  ) throws Exception {
 		double logPropVal = 0 ; 
 		boolean zero = false ; 
 		ContentObject contentObject = state.contentObjects.get(contentObjectIndx) ; 
@@ -253,7 +253,7 @@ public class HDPThread {
 		return logProportion ; 
 	}
 
-	public void assignContentObject(int contentObjectIndx, int mixId , HDPThread[] hdps) {
+	public void assignContentObject(int contentObjectIndx, int mixId , HDPThread[] hdps) throws Exception {
 		ContentObject contentObject = state.contentObjects.get (contentObjectIndx) ; 
 		HDPThread ownerLevelHDP = null , memberLevelHDP = null ; 
 		if (state.level > 0 ) ownerLevelHDP = hdps[state.level-1] ; 
@@ -291,7 +291,7 @@ public class HDPThread {
 		}
 	}
 
-	private void add1NextLevelObject (int contentObjectIndx , int memberMixIndx ) {
+	private void add1NextLevelObject (int contentObjectIndx , int memberMixIndx ) throws Exception {
 		ContentObject contentObject = state.contentObjects.get(contentObjectIndx) ; 
 		contentObject.addMemberMix (memberMixIndx) ; 
 		int mixId = contentObject.getMix() ; 
@@ -366,7 +366,7 @@ public class HDPThread {
 		}
 	}
 	
-	public void validateCounters(HDPThread [] hdps ) {
+	public void validateCounters(HDPThread [] hdps ) throws Exception {
 		int totObjects = 0 ; 
 		
 		if (state.level < state.levels-1) { 

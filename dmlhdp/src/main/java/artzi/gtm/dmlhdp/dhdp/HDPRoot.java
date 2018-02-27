@@ -56,7 +56,7 @@ public class HDPRoot {
 	public int getNumOfNextLevelContentObjects(int mixId) {
 		return state.mixs.get(mixId).getNumOfNextLevelContentObjects();
 	}
-	public int getNumOfNextLevelContentObjects(int mixId, int nextLevelmixId) {
+	public int getNumOfNextLevelContentObjects(int mixId, int nextLevelmixId) throws Exception {
 		return state.mixs.get(mixId).getNumOfNextLevelContentObjects(nextLevelmixId); 
 	}	
 	public int getObservedComponentCount (int mixId , int componentId) { 
@@ -126,13 +126,13 @@ public class HDPRoot {
 		return state.mixs.get(mixId) ; 
 	}
 	
-	public void saveCounters() {
+	public void saveCounters() throws Exception {
 		for (MixtureComponent mix : state.mixs) { 
 			mix.saveCounters() ; 
 		}		
 	}
 
-	public void sumDelta( HDPThread hdpThread, MapMixtureComponents mapMixs , MapMixtureComponents nextLevelMapMixs) {		
+	public void sumDelta( HDPThread hdpThread, MapMixtureComponents mapMixs , MapMixtureComponents nextLevelMapMixs) throws Exception {		
 		for (MixtureComponent mix : state.mixs) { 
 			int threadMixId = mapMixs.getThreadMix( mix.getId())  ; 			 
 			mix.sumDelta (hdpThread.getMix(threadMixId) , mapMixs , nextLevelMapMixs ) ; 
@@ -142,7 +142,7 @@ public class HDPRoot {
 	public void setNumOfObjects(int totObjects) {
 		state.numOfContentObjects = totObjects ; 		
 	}
-	public void sampleParms (int iter) {
+	public void sampleParms (int iter) throws Exception {
 		int activeMixs = 0 ; 
 		for (int t = 0 ; t < state.mixs.size () ; t ++ ) { 
 			if (state.mixs.get(t).getNumOfContentObjects() > 0) activeMixs ++ ; 

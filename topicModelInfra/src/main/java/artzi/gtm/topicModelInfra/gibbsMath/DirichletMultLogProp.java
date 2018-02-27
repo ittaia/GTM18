@@ -52,10 +52,11 @@ public class DirichletMultLogProp {
 		}
 		return logProp ; 
 	}
-	/******  article  ******/
+	/******  article  
+	 * @throws Exception ******/
 	public  static double  contentObjectComponentMixLogProportion ( ComponentFeatures  contentObjectComponentFeatures , 
 			int mixfeaturesSum ,
-			DCounters mixfeaturesCounter , double [] stickBreakingWeights , double alpha0  ) { 
+			DCounters mixfeaturesCounter , double [] stickBreakingWeights , double alpha0  ) throws Exception { 
 
 		/*********************  Current topic  == current mix's topic          *************/ 
 

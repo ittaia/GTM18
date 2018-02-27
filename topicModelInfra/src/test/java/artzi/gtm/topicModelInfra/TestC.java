@@ -6,8 +6,9 @@ public class TestC {
 
 	/**
 	 * @param args
+	 * @throws Exception 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		DCounters s = new DCounters (1,1) ; 
 		int g = s.get(5,5) ; 
 		System.out.println(g) ; 

@@ -1,6 +1,9 @@
 package artzi.gtm.topicModelInfra.counters; 
 import java.io.Serializable;
+
 import artzi.gtm.utils.elog.EL;
+
+
 
 public class DCounters implements Serializable{	
 	private static final int chunkLen = 20 ; 
@@ -70,28 +73,28 @@ public class DCounters implements Serializable{
 			}
 		}		
 	}
-	public void add1 (int x , int y ) { 		
+	public void add1 (int x , int y ) throws Exception { 		
 		if (dimention != 2 ) { 
-			EL.WE(6661 ,  " Counter dimention error " ) ; 
+			EL.WF(6661 ,  " Counter dimention error " ) ; 
 		}
 		extendMat (x , y) ; 
 		mat[x][y]++ ; 
 	}	
-	public  void add1(int y) {
+	public  void add1(int y) throws Exception {
 		if (dimention != 1 ) { 
-			EL.WE(6662 ,  " Counter dimention error " ) ; 
+			EL.WF(6662 ,  " Counter dimention error " ) ; 
 		}
 		extendMat (0 , y) ; 
 		mat[0][y] ++ ; 
 	}
-	public void dec1(int x, int y) {
+	public void dec1(int x, int y) throws Exception {
 		if (dimention != 2 ) { 
-			EL.WE(6663 ,  " Counter dimention error " ) ; 
+			EL.WF(6663 ,  " Counter dimention error " ) ; 
 		}
 		extendMat (x , y) ; 
 		mat[x][y] -- ; 
 		if (mat[x][y] < 0 ) { 
-			EL.WE(6771 , " Negative Counter " +  x + " - " + y);
+			EL.WF(6771 , " Negative Counter " +  x + " - " + y);
 		}
 	}
 	public void dec1(int y) throws Exception {
@@ -101,53 +104,59 @@ public class DCounters implements Serializable{
 		extendMat (0 , y) ; 		 
 		mat[0][y] -- ; 
 		if (mat[0][y] < 0 ) { 
-			EL.WE(6772 , " Negative Counter " +  y);
+			EL.WF(6772 , " Negative Counter " +  y);
 		}
 	}
-	public void addZ (int x , int y ,  int z) { 
+	public void addZ (int x , int y ,  int z) throws Exception { 
 		if (dimention != 2 ) { 
-			EL.WE(6665 ,  " Counter dimention error " ) ; 
+			EL.WF(6665 ,  " Counter dimention error " ) ; 
 		}
 		extendMat (x , y) ; 
 		mat[x][y] += z ; 
+		if (mat[x][y] < 0 ) { 
+			EL.WF(6773 , " Negative Counter " +  x + " - " + y);
+		}
 	}	 
-	public  void addZ(int y , int z) {
+	public  void addZ(int y , int z) throws Exception {
 		if (dimention != 1 ) { 
-			EL.WE(6665 ,  " Counter dimention error " ) ; 
+			EL.WF(6665 ,  " Counter dimention error " ) ; 
 		}
 		extendMat (0 , y) ; 
-		mat[0][y] += z ; 		
+		mat[0][y] += z ; 
+		if (mat[0][y] < 0 ) { 
+			EL.WF(6784 , " Negative Counter " +  y);
+		}	
 	}
-	public void decZ(int x, int y , int z) {
+	public void decZ(int x, int y , int z) throws Exception {
 		if (dimention != 2 ) { 
-			EL.WE(6666 ,  " Counter dimention error " ) ; 
+			EL.WF(6666 ,  " Counter dimention error " ) ; 
 		}
 		extendMat (x , y) ; 
 		mat[x][y] -= z ; 
 		if (mat[x][y] < 0 ) { 
-			EL.WE(6773 , " Negative Counter " +  x + " - " + y);
+			EL.WF(6783 , " Negative Counter " +  x + " - " + y);
 		}
 	}
-	public void decZ(int y , int z) {
+	public void decZ(int y , int z) throws Exception {
 		if (dimention != 1 ) { 
-			EL.WE(6667 ,  " Counter dimention error " ) ; 
+			EL.WF(6667 ,  " Counter dimention error " ) ; 
 		}
 		extendMat (0 , y) ; 
 		mat[0][y] -= z ; 
 		if (mat[0][y] < 0 ) { 
-			EL.WE(6774 , " Negative Counter " +  y);
+			EL.WF(6774 , " Negative Counter " +  y);
 		}
 	}
-	public int get(int x, int y) {
+	public int get(int x, int y) throws Exception {
 		if (x > 0 & dimention != 2 ) { 
-			EL.WE(666 ,  " Counter dimention error " ) ; 
+			EL.WF(666 ,  " Counter dimention error " ) ; 
 		}
 		if (x > maxX | y > maxY ) return 0 ; 
 		return mat[x][y] ; 
 	}
-	public int get(int y) {
+	public int get(int y) throws Exception {
 		if (dimention != 1 ) { 
-			EL.WE(6660 ,  " Counter dimention error " ) ; 
+			EL.WF(6660 ,  " Counter dimention error " ) ; 
 		}
 		if (y > maxY  ) return 0 ; 
 		return mat[0][y]   ; 
@@ -186,7 +195,7 @@ public class DCounters implements Serializable{
 	public int getYSize(int x) {
 		return mat[x].length ; 
 	}
-	public void copy(DCounters inCounters) {
+	public void copy(DCounters inCounters) throws Exception {
 		int maxInX = inCounters.getMaxX() ; 
 		int maxInY = inCounters.getMaxY() ; 
 		extendMat (maxInX , maxInY) ; 
@@ -196,14 +205,14 @@ public class DCounters implements Serializable{
 			}				
 		}		
 	}
-	public void copyCell(int targetY, DCounters inCounters , int sourceY) {
+	public void copyCell(int targetY, DCounters inCounters , int sourceY) throws Exception {
 		extendMat (0 , targetY) ; 
 		if (dimention != 1 ) { 
 			EL.WE(6661 ,  " Counter dimention error " ) ; 
 		}
 		mat[0][targetY] = inCounters.get(sourceY) ; 	
 	}
-	public void copyCell(int targetX , int targetY , DCounters inCounters , int sourceX , int sourceY) { 
+	public void copyCell(int targetX , int targetY , DCounters inCounters , int sourceX , int sourceY) throws Exception { 
 		extendMat (targetX , targetY) ;
 		if (dimention != 2 ) { 
 			EL.WE(6669 ,  " Counter dimention error " ) ; 
@@ -211,7 +220,7 @@ public class DCounters implements Serializable{
 		mat[targetX][targetY] =  inCounters.get(sourceX , sourceY) ; 	
 	}	
 	
-	public void addDelta(DCounters newCounters ,DCounters baseCounters  ) {
+	public void addDelta(DCounters newCounters ,DCounters baseCounters  ) throws Exception {
 		int maxInX = newCounters.getMaxX () ;  
 		int maxInY = newCounters.getMaxY() ; 
 		extendMat (maxInX , maxInY) ; 
@@ -224,6 +233,8 @@ public class DCounters implements Serializable{
 	}
 	public int[][] getMat() {
 		return this.mat ; 
-	}	
+	}
+	public int getDim() {
+		return this.dimention ; 		 
+	}
 }
-

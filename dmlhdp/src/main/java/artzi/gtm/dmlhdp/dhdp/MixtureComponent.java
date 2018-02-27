@@ -49,7 +49,7 @@ public class MixtureComponent {
 	public int getNumOfNextLevelContentObjects ()  {
 		return this.numOfNextLevelContentObjects ;   
 	}
-	public int getNumOfNextLevelContentObjects(int nextLevelMixId) {
+	public int getNumOfNextLevelContentObjects(int nextLevelMixId) throws Exception {
 		return nextLevelMixObjectsCounter.get (nextLevelMixId) ; 
 	}
 	public DCounters getNextLevelMixObjectsCounter() {
@@ -71,7 +71,7 @@ public class MixtureComponent {
 		featuresCounters.get(componentId).add1 (feature) ;   		
 	}
 	
-	public void add1NextLevelContentObject(int nextLevelMixId) {
+	public void add1NextLevelContentObject(int nextLevelMixId) throws Exception {
 		numOfNextLevelContentObjects ++ ; 
 		nextLevelMixObjectsCounter.add1(nextLevelMixId) ; 
 	}
@@ -97,7 +97,7 @@ public class MixtureComponent {
 		
 	}
 	public void copyCounters(MixtureComponent rootMix , MapMixtureComponents mapMixs , 
-			MapMixtureComponents nextLevelMapMixs) {
+			MapMixtureComponents nextLevelMapMixs) throws Exception {
 		numOfContentObjects = rootMix.getNumOfContentObjects(); 
 		numOfNextLevelContentObjects = rootMix.getNumOfNextLevelContentObjects() ; 
 		if (nextLevelMapMixs != null ) { 
@@ -112,7 +112,7 @@ public class MixtureComponent {
 		}		
 	}
 	
-	public void saveCounters() {
+	public void saveCounters() throws Exception {
 		countersCopy.numOfObjects = this.numOfContentObjects ; 
 		countersCopy.numOfNextLevelContentObjects = this.numOfNextLevelContentObjects ;  
 		countersCopy.nextLevelMixObjectsCounter.copy (this.nextLevelMixObjectsCounter) ; 
@@ -122,7 +122,7 @@ public class MixtureComponent {
 		}
 	}
 
-	public void sumDelta(MixtureComponent threadMix , MapMixtureComponents mapMixs ,MapMixtureComponents nextLevelMapMixs) {
+	public void sumDelta(MixtureComponent threadMix , MapMixtureComponents mapMixs ,MapMixtureComponents nextLevelMapMixs) throws Exception {
 		this.numOfContentObjects += threadMix.getNumOfContentObjects() - countersCopy.numOfObjects ; 
 		this.numOfNextLevelContentObjects += threadMix.getNumOfNextLevelContentObjects() - countersCopy.numOfNextLevelContentObjects ; 	
 		if (nextLevelMapMixs != null ) { 

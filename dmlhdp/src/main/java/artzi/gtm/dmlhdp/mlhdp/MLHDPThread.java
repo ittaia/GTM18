@@ -59,7 +59,7 @@ public class MLHDPThread extends Thread{
 	public BlockingQueue<Integer> getQueue() {
 		return this.threadQueue ; 
 	}
-	public void copyCounters(HDPRoot[] rootHdps ) {
+	public void copyCounters(HDPRoot[] rootHdps ) throws Exception {
 		for (int level  = 0 ; level < data.levels; level ++) { 
 			if (level < data.levels-1) {
 				hdps [level].copyCounters(rootHdps [level] , rootHdps [level+1] ) ;			 
@@ -119,7 +119,7 @@ public class MLHDPThread extends Thread{
 		hdps[level].assignContentObject (contentObjectIndx, tableIndx , hdps   ) ; 	 
 	}
 
-	private void setLogProportions(int level , int  contentObjectIndx  , LogProportions logProportions) {
+	private void setLogProportions(int level , int  contentObjectIndx  , LogProportions logProportions) throws Exception {
 
 		ContentObject contentObject = hdps [level].getContentObject(contentObjectIndx) ;
 		int ownerIndx = contentObject.getOwnerIndx() ; 
@@ -152,7 +152,7 @@ public class MLHDPThread extends Thread{
 		}
 		*/		
 	}
-	private void validateCounters () { 
+	private void validateCounters () throws Exception { 
 		for (int level = 0 ; level < data.levels ; level++ ) { 
 			hdps[level].validateCounters (hdps) ; 
 		}

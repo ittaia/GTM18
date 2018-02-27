@@ -18,6 +18,15 @@ public class StickBreakingWeights {
 		this.weights = new double [1] ; 
 		this.weights [0] = 1. ; 		
 	}
+	public  StickBreakingWeights (double gamma) { 
+		this.numOfMixs = 1 ; 
+		this.mixTables = new int [1] ; 
+		this.mixTables [0] = 1 ; 
+		this.gamma = gamma ; 		
+		this.weights = new double [1] ; 
+		this.weights [0] = 1. ; 		
+	}
+	
 	public void updateWeights (int numOfMixs , int numOfUpperLevelMixs , int [][] mixCount , double alpha0 , double gamma ) { 
 		double sw = 0 ; 
 		for (double w : weights) sw+= w ; 
@@ -120,7 +129,7 @@ public class StickBreakingWeights {
 		return tot ; 
 	}
 	public void resetWeights() {
-		for (int i = 0 ; i < numOfMixs ; i ++ ) { 
+		for (int i = 0 ; i <= numOfMixs ; i ++ ) { 
 			weights [i] = 0 ; 
 		}		
 	}
@@ -129,6 +138,7 @@ public class StickBreakingWeights {
 			int threadMixId = mapMixs.getRootMix(rootMixId) ; 
 			weights [rootMixId] += threadStickBreakingWeights.getWeights()[threadMixId]/numOfThreads ; 
 		}
+		weights [numOfMixs] += threadStickBreakingWeights.getWeights()[numOfMixs]/numOfThreads ; 
 	}
 	
 	

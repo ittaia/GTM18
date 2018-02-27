@@ -123,7 +123,7 @@ public class MLHDPModelSaveAssignment {
 		//printMult () ; 
 	}		
 
-	private void aggregateThreads(int iter) {
+	private void aggregateThreads(int iter) throws Exception {
 
 		for (int level = 0 ; level < data.levels ; level++) { 
 			int maxMixsInLevel = hdps[level].getNumOfMixs() ; 		 
@@ -172,7 +172,7 @@ public class MLHDPModelSaveAssignment {
 		*/
 	}	
 
-	private void computeMultinomials () { 
+	private void computeMultinomials () throws Exception { 
 
 		results.multL0 = new double [hdps[0].getNumOfMixs()] ; 
 		for (int m = 0 ; m < hdps[0].getNumOfMixs() ; m ++ ) { 
@@ -217,7 +217,7 @@ public class MLHDPModelSaveAssignment {
 		}
 	}
 	
-	private double  computeLogLikelihood() {
+	private double  computeLogLikelihood() throws Exception {
 		computeMultinomials () ; 
 		results.printMult() ; 
 		double logLikelihood = 0 ;  
@@ -288,7 +288,7 @@ public class MLHDPModelSaveAssignment {
 		}
 	}	
 
-	private void setResults () {
+	private void setResults () throws Exception {
 		results.numOfTemplates = new int [data.levels]; 
 		for (int level = 0 ; level < data.levels ; level ++ )  { 
 			results.numOfTemplates [level] = hdps [level].getNumOfMixs() ; 
@@ -318,7 +318,7 @@ public class MLHDPModelSaveAssignment {
 		fileName  = new File (dir   , "result" ).getPath()  ; 
 		SaveObject.write(fileName , results ) ; 
 	}
-	public void saveRun (String path) throws IOException { 
+	public void saveRun (String path) throws Exception { 
 		run.setNumOfMixes(results.getNumOfTemplates()) ; 
 		run.setLikelihood (computeLogLikelihood()) ; 
 		run.save(path) ; 
