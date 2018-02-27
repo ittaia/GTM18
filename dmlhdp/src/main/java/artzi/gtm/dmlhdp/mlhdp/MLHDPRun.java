@@ -6,13 +6,13 @@ import com.google.gson.Gson;
 
 import artzi.gtm.utils.io.JsonIO;
 
-public class MLHDPRan {	 
+public class MLHDPRun {	 
     
 	int levels ; 
 	int [] numOfMixes ; 
 	double likelihood ; 
 	ArrayList <Double> likelihoods ;  
-	public MLHDPRan(int levels) {
+	public MLHDPRun(int levels) {
 		super();		 
 		this.levels = levels;
 		numOfMixes = new int [levels] ; 

@@ -111,8 +111,8 @@ public class InferTemplates2 {
 		mlhdp.infer () ; 
 		String objectPath = config.getPath ("obj") ; 
 		mlhdp.save(objectPath) ; 
-		String ranPath = config.getPath ("ran") ; 
-		mlhdp.saveRan(ranPath) ; 
+		String runPath = config.getPath ("run") ; 
+		mlhdp.saveRun(runPath) ; 
 		
 		saveModelDocs () ; 
 		String xlPath =   config.getPath("xls") ; 

@@ -21,7 +21,7 @@ public class MLHDPModel {
 	HDPRoot [] hdps ; 
 	MLHDPData data ; 
 	MLHDPResults results ; 
-	MLHDPRan run ; 
+	MLHDPRun run ; 
 	
 	MLHDPThread [] threads ; 
 	BlockingQueue<Integer> queue ; 
@@ -31,7 +31,7 @@ public class MLHDPModel {
 				
 		this.data = data ; 
 		this.data.initObjectComponentCount() ; 
-		run = new MLHDPRan (data.levels) ; 
+		run = new MLHDPRun (data.levels) ; 
 		threads = new  MLHDPThread [parms.numOfThreads] ; 
 		queue = new ArrayBlockingQueue<Integer> (parms.numOfThreads) ; 
 		hdps = new HDPRoot [data.levels] ; 
@@ -293,7 +293,7 @@ public class MLHDPModel {
 		fileName  = new File (dir   , "result" ).getPath()  ; 
 		SaveObject.write(fileName , results ) ; 
 	}
-	public void saveRan (String path) throws IOException { 
+	public void saveRun (String path) throws IOException { 
 		run.setNumOfMixes(results.getNumOfTemplates()) ; 
 		run.setLikelihood (computeLogLikelihood()) ; 
 		run.save(path) ; 

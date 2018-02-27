@@ -24,7 +24,7 @@ public class MLHDPModelSaveAssignment {
 	MLHDPData data ; 
 	Assignments assignments ; 
 	MLHDPResults results ; 
-	MLHDPRan ran ; 
+	MLHDPRun run ; 
 	
 	MLHDPThread [] threads ; 
 	BlockingQueue<Integer> queue ; 
@@ -34,7 +34,7 @@ public class MLHDPModelSaveAssignment {
 				
 		this.data = data ; 
 		this.data.initObjectComponentCount() ; 
-		ran = new MLHDPRan (data.levels) ; 
+		run = new MLHDPRun (data.levels) ; 
 		threads = new  MLHDPThread [parms.numOfThreads] ; 
 		queue = new ArrayBlockingQueue<Integer> (parms.numOfThreads) ; 
 		hdps = new HDPRoot [data.levels] ; 
@@ -111,7 +111,7 @@ public class MLHDPModelSaveAssignment {
 					EL.WE (990, " Iter-" + iter + " likelihood " +  likelihood  ) ; 
 					System.out.println ("Likelihood "+ likelihood + 
 							" Mixes 0 " + hdps[0].getNumOfMixs() + " Mixes 1 " + hdps[1].getNumOfMixs()) ; 
-					ran.addLikelihood(likelihood) ; 
+					run.addLikelihood(likelihood) ; 
 				}								
 			}
 			printCounters () ; 
@@ -318,10 +318,10 @@ public class MLHDPModelSaveAssignment {
 		fileName  = new File (dir   , "result" ).getPath()  ; 
 		SaveObject.write(fileName , results ) ; 
 	}
-	public void saveRan (String path) throws IOException { 
-		ran.setNumOfMixes(results.getNumOfTemplates()) ; 
-		ran.setLikelihood (computeLogLikelihood()) ; 
-		ran.save(path) ; 
+	public void saveRun (String path) throws IOException { 
+		run.setNumOfMixes(results.getNumOfTemplates()) ; 
+		run.setLikelihood (computeLogLikelihood()) ; 
+		run.save(path) ; 
 	}
 	
 	public void load (String dir) { 

@@ -15,7 +15,7 @@ public class EvalMainN {
 		Config config = Config.getInstance(path) ; 
 		TestDocs tl = new TestDocs (config.getPath("eval")) ; 
 		ModelDocs ml = new ModelDocs () ;  
-		JsonElement je = JsonIO.read(config.getPath("ran"));
+		JsonElement je = JsonIO.read(config.getPath("run"));
 		JsonObject jo = je.getAsJsonObject();
 		JsonArray numOfMixesArray = jo.get("numOfMixes").getAsJsonArray() ;  
 		int numOfTemplates, numOfSlots ; 
