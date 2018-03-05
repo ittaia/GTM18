@@ -1,7 +1,5 @@
 package artzi.gtm.utils.termList;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 /**
  * word object
@@ -19,10 +17,10 @@ public class Term {
 	private int docCount ; 
 	private int docID ;
 	private int indx  ;
+	private int activeTermIndx ; 
 
  /**
   * initial constructor
-  * 
   * @param _text = word
   * @param _docId = ID of current document
   * @param _indx = index of current term
@@ -33,20 +31,9 @@ public class Term {
 		this.count = 1 ; 
 		this.docCount = 1 ; 
 		this.indx = _indx ; 
+		this.activeTermIndx = -1 ; 
  }
- /**
-  * constructor from a json element
-  * @param je = json
-  */
- public Term(JsonElement je){
-	 JsonObject jo = je.getAsJsonObject();
-		this.docID = jo.get("docID").getAsInt(); 
-		this.text = jo.get("text").getAsString() ; 
-		this.count = jo.get("count").getAsInt() ; 
-		this.docCount = jo.get("docCount").getAsInt() ; 
-		this.indx = jo.get("indx").getAsInt() ; 
- }
- 
+  
  /**
   * constructor for active terms
   * @param _oldterm = term from full term list
@@ -58,6 +45,7 @@ public class Term {
 		this.docCount = _oldterm.docCount ; 
 		this.docID = _oldterm.docID ;
 		this.indx = _newindex  ;
+		this.activeTermIndx = -1 ; 
 
  }
  /**
@@ -78,27 +66,18 @@ public class Term {
 	public int getDocID () {return this.docID ; }
 	public int getDocCount() { return this.docCount ; } 
 	public int getIndx ( ) {return this.indx ; } 
+	public int getActiveTermIndx () {return this.activeTermIndx ; }
 	
-	/**
-	 * get json element of this term
-	 * 
-	 * @return = JsonElement
-	 */
-	public JsonElement toJson(){
-		JsonObject jo = new JsonObject();
-		jo.addProperty("text", this.text);
-		jo.addProperty("count", this.count);
-		jo.addProperty("docCount", this.docCount);
-		jo.addProperty("docID", this.docID);
-		jo.addProperty("indx", this.indx);
-		
-		JsonElement je = jo;
-		return je;
+	public void setActiveTermIndx (int activeTermIndx) { 
+		this.activeTermIndx = activeTermIndx ; 
 	}
+	
+	
 
 	@Override
 	public String toString() {
-		String str = this.text + ", count="+this.count + ", doc count="+this.docCount + ", index="+this.indx;
+		String str = this.text + ", count="+this.count + ", doc count="+this.docCount + ", index="+this.indx  + 
+				", activeIndx=" +  this.activeTermIndx ;
 		return str  ;
 
 	}
