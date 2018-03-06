@@ -1,0 +1,58 @@
+package artzi.gtm.mltm.train;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import artzi.gtm.mltm.mlshdp.MLSHDPParms;
+import artzi.gtm.utils.config.Config;
+import artzi.gtm.utils.elog.EL;
+import artzi.gtm.utils.io.Dirs;
+
+public class TrainMain {
+	
+	static String path = "C:\\TestDir\\MLTM" ;  
+		
+	static MLTMTrain mltmTrain ; 
+	static MLSHDPParms parms ;
+	static Config config ; 
+	static Gson gson ; 
+	
+	public static void main(String[] args) throws Exception {
+		gson = new Gson () ; 
+		config = Config.getInstance(path) ; 
+		System.out.println ("Work on Dir :"+ config.getMainPath()) ; 	
+		EL.W(" ****** Start - DIR "+ config.getMainPath());
+		String parmsPath = config.getPath("MLSHDPParms") ; 
+		mltmTrain = new MLTMTrain (parmsPath) ; 
+		loadData () ; 
+		mltmTrain.trainModel();
+		MLTMTrainedModel tmodel = mltmTrain.save (config.getPath("Model")) ; 
+		tmodel.printTopics () ; 
+	}
+	private static void loadData () throws JsonSyntaxException, IOException, Exception { 
+		String dataPath =  config.getPath ("Data") ;
+		System.out.println ("Load data " + dataPath);
+		String [] filter = {"json"} ; 
+		ArrayList <File> datafiles = Dirs.FilesInDir(dataPath , filter) ; 
+		for (File file : datafiles) { 			
+			loadDocs (file) ; 
+		}
+	}
+	private static void loadDocs (File file) throws JsonSyntaxException, IOException, Exception { 
+		int cnt = 0 ; 
+		System.out.println ("Load docs - json " + file.getAbsolutePath());
+		BufferedReader in  = new BufferedReader(new FileReader(file));
+		String line ; 
+		while ((line = in.readLine()) != null) { 
+			DocData docData = gson.fromJson(line, DocData.class) ; 
+			mltmTrain.addDoc(docData.getFile_id() ,  docData.getTitle(),docData.getText() ) ;
+			cnt ++ ; 
+		}
+		in.close(); 
+		System.out.println (file.getAbsolutePath() + "cnt " + cnt  ) ; 	
+	}
+}

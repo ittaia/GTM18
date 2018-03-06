@@ -16,7 +16,7 @@ public class MLTMTrain {
 	MLSHDPParms parms ; 
 	ArrayList <LDADoc> ldaDocList ; 
 	ArrayList <DocWords> docWordsList ; 
-	MLSHDPModel mlhdpModel ; 
+	MLSHDPModel mlshdpModel ; 
 	TermList terms , activeTerms  ;
 	public MLTMTrain (String parmPath) throws IOException { 
 		parms = MLSHDPParms.getInstance(parmPath) ; 
@@ -34,22 +34,23 @@ public class MLTMTrain {
 	public void trainModel () throws Exception  { 
 		activeTerms = terms.initActive (parms.minWordCount , parms.maxDf) ; 
 		for (LDADoc ldaDoc : ldaDocList ) { 
-			ldaDoc.initWordVector(activeTerms) ; 
+			ldaDoc.initWordVector(terms) ; 
 			if (ldaDoc.isEmpty() ) { 
 				EL.WE( 777 ,  "Empty doc "  + ldaDoc.getName()     ) ; 
 			}
-			DocWords docWords = new DocWords (ldaDoc.getDocID() , ldaDoc.getWordArray()) ; 
-			docWordsList.add(docWords) ; 
-		}	
+			else { 
+				DocWords docWords = new DocWords (ldaDoc.getDocID() , ldaDoc.getWordArray()) ; 
+				docWordsList.add(docWords) ; 
+			}
+		}		
 		
-		
-		mlhdpModel = new MLSHDPModel (docWordsList ,  activeTerms.getSize()) ; 
-		mlhdpModel.infer(parms.iters) ; 
+		mlshdpModel = new MLSHDPModel (docWordsList ,  activeTerms.getSize()) ; 
+		mlshdpModel.infer(parms.iters) ; 
 		EL.W ("End MLTM Train") ;
 	}
 
 	public int[] getNumOfTopics() {
-		return mlhdpModel.getNumOfMixs () ; 
+		return mlshdpModel.getNumOfMixs () ; 
 	}
 
 	public TermList getActiveTermList() {
@@ -57,20 +58,19 @@ public class MLTMTrain {
 	}
 
 	public ArrayList <double [][]> getMultinomilas() {
-		return mlhdpModel.getMultinomials() ; 
+		return mlshdpModel.getMultinomials() ; 
 	}
 	public double getLambda () { 
-		return mlhdpModel.getLambda() ; 
+		return mlshdpModel.getLambda() ; 
 	}	
-	public void save(String path) throws IOException {
+	public MLTMTrainedModel save(String path) throws IOException {
 		String termPath = new File (path, "terms.json").getPath() ; 
 		activeTerms.toFile(termPath);
-		MLTMTrainedModel tmodel = MLTMTrainedModel.getInstance (parms.levels , mlhdpModel.getNumOfMixs() , mlhdpModel.getMultinomials() , 
-				mlhdpModel.getMixVtermsCounters() , mlhdpModel.getMixVtermsSum() , 
-				mlhdpModel.getAlpha0() , mlhdpModel.getMixWeights()) ;  
+		MLTMTrainedModel tmodel =MLTMTrainedModel.getInstance  (activeTerms , parms.levels , mlshdpModel.getNumOfMixs() , mlshdpModel.getMultinomials() , 
+				mlshdpModel.getMixVtermsCounters() , mlshdpModel.getMixVtermsSum() , 
+				mlshdpModel.getAlpha0() , mlshdpModel.getMixWeights()) ;  
 		String tmodelPath = new File (path, "tmodel.json").getPath() ; 
 		tmodel.toFile(tmodelPath);
-		
-		//tmodel.print();		
+		return tmodel ; 
 	}
 }

@@ -21,15 +21,12 @@ import artzi.gtm.utils.io.JsonIO;
  */
 
 public class TermList {
-	private static TermList termList;
-	Gson gson = new Gson () ; 
+	private static TermList termList;	
 	private Hashtable<String, Integer> termHash;
 	private ArrayList<Term> termArray;
 	private int maxTerm;
-
 	private int lastDocId;
 	private float totalDocCount;
-
 	private  TermList activeTermList = null;
 
 	/**
@@ -82,12 +79,13 @@ public class TermList {
 			trm.addCount(docID);
 			return termHash.get(term);
 		}
+		int newTermId = maxTerm ; 
 
-		Term trm = new Term(term, docID, maxTerm);
-		termHash.put(term, maxTerm);
+		Term trm = new Term(term, docID, newTermId);
+		termHash.put(term, newTermId);
 		termArray.add(trm);
 		maxTerm++;
-		return maxTerm  ; 
+		return newTermId ;  
 	}
 
 
@@ -132,6 +130,7 @@ public class TermList {
 	 * @throws IOException   
 	 */
 	public void   toFile(String _path) throws IOException{
+		Gson gson = new Gson () ; 
 		String str = gson.toJson (this , this.getClass()) ; 
 		JsonIO.write(_path , str);
 	}	

@@ -28,7 +28,7 @@ public class Dirs {
 	 *                  
 	 * @return = array list of files, or null if none found
 	 */
-	public static ArrayList<File> FilesInDir(String _path, String[] _filter)
+	public static ArrayList<File> FilesInDir(String _path, String [] _filter)
 	{
 		files = new ArrayList<File>();
 		
