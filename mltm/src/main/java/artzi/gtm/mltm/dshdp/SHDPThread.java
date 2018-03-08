@@ -86,7 +86,7 @@ public class SHDPThread extends Thread{
 				}				
 			}
 		}
-		if (parms.efficientGibbs )  { 
+		if (useEfficientGibbs())  { 
 			efficientGibbs = new EfficientGibbs (level , upperLevelHDP.getMixVTermCounters() , mixVTermCounters , mixVTermSum) ; 
 		}
 	}
@@ -104,7 +104,7 @@ public class SHDPThread extends Thread{
 		if (level < parms.modelLevels) { 
 			stickBreakingWeights.extendMixs(numOfVTerms) ; 	
 		}
-		if (parms.efficientGibbs & parms.modelLevels ==1 & level ==1) efficientGibbs.extendVTerms(numOfVTerms);
+		if (useEfficientGibbs() & level ==1) efficientGibbs.extendVTerms(numOfVTerms);
 	}
 
 	public void copyCounters(SHDPRoot hdpRoot, SHDPRoot nextLevelHdp) throws Exception {
@@ -143,7 +143,7 @@ public class SHDPThread extends Thread{
 		}
 		
 		upperLevelAlpha0StickBreakingWeights = hdps [level-1].getAlpha0StickBreakingWeights() ; 
-		if (parms.efficientGibbs ) { 
+		if (useEfficientGibbs()) { 
 			if (level == 1) { 				
 				efficientGibbs.initIteration
 				(numOfMixs, numOfVTerms, alpha0, lambda, lambdaNumOfVTerms, upperLevelAlpha0StickBreakingWeights);
@@ -164,7 +164,7 @@ public class SHDPThread extends Thread{
 				VTermArray = hdps[level+1].getWordMixArray(docIndx) ; 
 			}
 			int numOfDocWords = VTermArray.length ;  
-			if (parms.efficientGibbs &  level==1) efficientGibbs.initDoc(docIndx) ; 
+			if (useEfficientGibbs() &  level==1) efficientGibbs.initDoc(docIndx) ; 
 			for (int wordIndx = 0 ; wordIndx < numOfDocWords ; wordIndx ++) { 
 				int vtermId = VTermArray[wordIndx] ; 
 				int lastMixId = wordMixArray[wordIndx] ; 
@@ -172,7 +172,7 @@ public class SHDPThread extends Thread{
 				mixVTermSum.dec1(lastMixId) ;
 				hdps[level-1].dec1VMix(docIndx , wordIndx ,  lastMixId) ;
 				int newMixId ; 
-				if (parms.efficientGibbs ) { 
+				if (useEfficientGibbs() ) { 
 					if (level == 1) { 
 						efficientGibbs.updateCounters(docIndx, lastMixId, vtermId);
 					}
@@ -186,7 +186,7 @@ public class SHDPThread extends Thread{
 				mixVTermCounters.add1(newMixId , vtermId) ; 
 				mixVTermSum.add1(newMixId) ; 
 				hdps[level-1].add1VMix(docIndx , wordIndx ,  newMixId) ; 
-				if (parms.efficientGibbs ) { 
+				if (useEfficientGibbs()) { 
 					if (level == 1) { 
 						efficientGibbs.updateCounters(docIndx, lastMixId, vtermId);
 					}
@@ -222,7 +222,7 @@ public class SHDPThread extends Thread{
 
 	private int inferNewMix(int docIndx, int wordIndx, int vtermId,  SHDPThread upperLevelHdp ) throws Exception {
 		int newMixId = -1 ,  sampleMixId = -1 ; 		 
-		if (parms.efficientGibbs ) {
+		if (useEfficientGibbs() ) {
 			if (level == 1) { 
 				sampleMixId = efficientGibbs.inferNewMix(vtermId) ; 
 			}
@@ -293,7 +293,7 @@ public class SHDPThread extends Thread{
 			numOfMixs ++ ;					
 			upperLevelHdp.extendVMixs(numOfMixs) ; 
 			upperLevelAlpha0StickBreakingWeights = upperLevelHdp.getAlpha0StickBreakingWeights() ; 
-			if (parms.efficientGibbs ) {
+			if ( useEfficientGibbs() ) {
 				efficientGibbs.extendMixs(upperLevelAlpha0StickBreakingWeights, numOfMixs);
 			}
 		}
@@ -311,6 +311,10 @@ public class SHDPThread extends Thread{
 				EL.WF(2234 , "level: " + level +  " Bad mix Term Counter. mix: " + mixId +  " sumCounter: "  + mixVTermSum.get(mixId) + " sum: " + sum) ; 
 			}
 		}
+	}
+	
+	private boolean useEfficientGibbs () { 
+		return (parms.efficientGibbs & level == parms.modelLevels ) ;  
 	}
 
 	public DCounters getMixVTermCounters() {

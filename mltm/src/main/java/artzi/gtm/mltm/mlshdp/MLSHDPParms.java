@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
 import artzi.gtm.utils.elog.EL;
+import artzi.gtm.utils.format.FormatJson;
 import artzi.gtm.utils.io.JsonIO;
 
 public class MLSHDPParms  {
@@ -48,6 +49,8 @@ public class MLSHDPParms  {
 	
 	public  void print ()   { 
 		if (gson ==null) gson = new Gson();
-		EL.W( gson.toJson(parmsInstance)) ; 
+		String s = FormatJson.setNewLines( gson.toJson(parmsInstance))  ; 
+		EL.W( s) ; 
+		System.out.println (s) ; 
 	}	
 }

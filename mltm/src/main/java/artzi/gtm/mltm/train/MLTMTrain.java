@@ -20,6 +20,7 @@ public class MLTMTrain {
 	TermList terms , activeTerms  ;
 	public MLTMTrain (String parmPath) throws IOException { 
 		parms = MLSHDPParms.getInstance(parmPath) ; 
+		parms.print(); 
 		terms = TermList.GetInstance() ; 
 		ldaDocList = new ArrayList <LDADoc> () ; 
 		docWordsList = new ArrayList <DocWords> () ; 
@@ -32,7 +33,9 @@ public class MLTMTrain {
 	}
 	
 	public void trainModel () throws Exception  { 
-		activeTerms = terms.initActive (parms.minWordCount , parms.maxDf) ; 
+		System.out.println ("Terms "+ terms.getMaxTerm()) ; 
+		activeTerms = terms.initActive (parms.minWordCount , parms.maxDf) ;
+		System.out.println ("Active Terms "+ activeTerms.getMaxTerm()) ; 
 		for (LDADoc ldaDoc : ldaDocList ) { 
 			ldaDoc.initWordVector(terms) ; 
 			if (ldaDoc.isEmpty() ) { 

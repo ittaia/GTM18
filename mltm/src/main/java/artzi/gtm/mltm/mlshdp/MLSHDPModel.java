@@ -94,8 +94,12 @@ public class MLSHDPModel {
 			threads[threadId].start() ; 
 		}		
 		for (int iter = 0 ; iter <  parms.iters;  iter++ ) { 
-			System.out.println(" Start Iter-" + iter  + " HS " + GetHeapSpace.HS()/1000000 );
-			EL.W (" Start Iter-" + iter  + " HS " + GetHeapSpace.HS()/1000000 ) ; 			
+			String mixs = " Mixes: " ; 
+			for (int level = 1 ; level < parms.levels ; level ++ ) { 
+				mixs += " " + level + "-" + hdps[level].getNumOfMixs()  ; 
+			}
+			System.out.println(" Start Iter-" + iter  + " HS " + GetHeapSpace.HS()/1000000  + mixs) ;  
+			EL.W (" Start Iter-" + iter  + " HS " + GetHeapSpace.HS()/1000000 + mixs) ; 			
 			for (int threadId = 0 ; threadId < parms.numOfThreads ; threadId ++ ) { 
 				threads [threadId].copyCounters (hdps ) ;  				
 				threads [threadId].getQueue().put (iter) ;   

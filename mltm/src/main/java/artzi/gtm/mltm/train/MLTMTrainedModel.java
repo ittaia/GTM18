@@ -183,7 +183,7 @@ public class MLTMTrainedModel {
 				int termIndx = termProbArray [i].getIndx() ; 
 				double p = termProbArray[i].getProb() ; 
 				if (p > 0.001) { 
-					EL.W ( " term -" + termIndx + " prob - " +   p + termList.getTerm(termIndx) ) ; 
+					EL.W ( " term -" + termIndx + " prob - " +   p + " - "+ termList.getTerm(termIndx) ) ; 
 				}
 			}		
 		} 	
@@ -205,7 +205,7 @@ public class MLTMTrainedModel {
 			String topTerms = "" ; 				
 			for (int i = 0 ; i < Math.min (numOfTerms,10) ; i ++ ) {
 				int termIndx = termProbArray[i].getIndx() ; 
-				topTerms += termIndx+"-"+  termList.getTerm(termProbArray[0].getIndx()) ; 					
+				topTerms += " "+ termIndx+"-"+  termList.getTerm(termProbArray[i].getIndx()) ; 					
 			}
 			topicTopTerms [topicIndx] = topTerms ; 
 		}		

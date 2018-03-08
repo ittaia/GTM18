@@ -145,12 +145,14 @@ public class SHDPRoot {
 	
 	public void copmuteStickBreakingWeights() {
 		stickBreakingWeights.updateWeights(numOfVTerms, numOfMixs , mixVTermCounters.getMat() ,  alpha0 , gamma) ; 
+		/*
 		double [] w = stickBreakingWeights.getWeights() ; 
 		String s = "Level " + level +  " Stick Breaking Weights " ; 
 		for (int i = 0 ; i < w.length ; i ++ ) { 
 			s += i +":"+ w [i] ; 
 		}
 		EL.W(s) ; 
+		*/
 	}
 	public void resetStickBreakingWeights() {
 		if (level < parms.modelLevels) stickBreakingWeights.resetWeights () ; 			 

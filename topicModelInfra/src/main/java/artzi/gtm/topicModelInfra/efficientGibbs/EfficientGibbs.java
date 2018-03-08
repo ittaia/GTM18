@@ -19,7 +19,8 @@ public class EfficientGibbs {
 	double [] sArray ; 
 	double [] rUpperLevelMix ;
 	double [][] qFactorMat , rMat ; 
-	double []   qFactorArray , rArray ;
+	Integer [][] sortMixMat ; 
+	double []   qFactorArray , rArray ;  
 	Integer [] sortMix ; 
 	Random generator ;	
 	
@@ -38,6 +39,7 @@ public class EfficientGibbs {
 		this.numOfVTerms = numOfVTerms ; 
 		this.alpha0 = alpha0 ; 
 		this.lambda = lambda ; 
+		System.out.println ( "Init iteration "+ level + "lambda "+ lambda ) ; 
 		this.lambdaNumOfVTerms = lambdaNumOfVTerms ; 
 		this.upperLevelAlpha0StickBreakingWeights = upperLevelAlpha0StickBreakingWeights ; 	
 		initS() ; 
@@ -52,30 +54,20 @@ public class EfficientGibbs {
 		this.lambdaNumOfVTerms = lambdaNumOfVTerms ; 
 		this.upperLevelAlpha0StickBreakingWeights = upperLevelAlpha0StickBreakingWeights ; 	
 		initS() ; 
-		initRUpperLevelMix () ; 
+		initRMat () ; 
 		initQFactorMat () ; 
+		initSortMat () ; 
 	}
-	public void initDoc (int upperLevelMixId) throws Exception { 
+	public void initDoc (int upperLevelMixId) throws Exception { 		
 		initR  (upperLevelMixId) ; 
 		initQFactor (upperLevelMixId) ;
 		sortMix = new Integer [numOfMixs+1] ; 
-		for (int m = 0 ; m <= numOfMixs ;  m ++ ) sortMix [m] = m ; 
-		Arrays.sort(sortMix , (Integer i1, Integer i2) ->		
-			 {
-				try {
-					return Integer.signum ( upperLevelMix_MixCounters.get(upperLevelMixId,i2) 
-										   -upperLevelMix_MixCounters.get(upperLevelMixId,i1));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return 0;
-			}
-		 ) ;
+		initSortMix (upperLevelMixId , sortMix) ; 
 	}
 	public int inferNewMix ( int upperLevelMixId , int vtermId) throws Exception {
 		rArray = rMat [upperLevelMixId] ; 
 		qFactorArray = qFactorMat [upperLevelMixId] ; 
+		sortMix = sortMixMat [upperLevelMixId] ; 
 		r = rUpperLevelMix [upperLevelMixId ] ; 
 		return inferNewMix (vtermId) ; 
 	}
@@ -128,6 +120,7 @@ public class EfficientGibbs {
 		if (level > 1) { 
 			rArray = rMat [upperLevelMixId] ; 
 			qFactorArray = qFactorMat [upperLevelMixId] ; 
+			sortMix = sortMixMat [upperLevelMixId] ; 
 			r = rUpperLevelMix [upperLevelMixId] ; 
 		}
 		updateS (mixId ) ; 
@@ -137,13 +130,13 @@ public class EfficientGibbs {
 		int end = numOfMixs ; 
 		while (end > 0) { 
 			boolean replace = false ; 
-			for (int m = 0 ; m < end ; m ++ ) { 			
+			for (int m = 0 ; m < end ; m ++ ) { 
 				if (upperLevelMix_MixCounters.get(upperLevelMixId,sortMix[m]) < upperLevelMix_MixCounters.get(upperLevelMixId,sortMix[m+1])) { 
 					int save =  sortMix [m] ; 
 					sortMix [m] = sortMix[m+1] ; 
 					sortMix [m+1] = save ; 
 					replace = true ; 					
-				}
+				}				
 			}
 			if (!replace) break ; 
 			end -- ; 
@@ -153,50 +146,60 @@ public class EfficientGibbs {
 		this.upperLevelAlpha0StickBreakingWeights = upperLevelAlpha0StickBreakingWeights ; 
 		int oldNumOfMixs = numOfMixs ; 
 		numOfMixs = newMaxMixs ;  
-		double [] sNew = new double[numOfMixs+1] ; 		
-		Integer [] sortNew = new Integer [numOfMixs+1] ;		
+		double [] sNew = new double[numOfMixs+1] ; 	
+			
 		for (int mixId = 0 ; mixId <= oldNumOfMixs ; mixId ++ ) { 
 			sNew [mixId] = sArray [mixId] ; 
-			sortNew [mixId] = sortMix [mixId] ; 
+			
 		}		 
 		sArray = sNew ; 		
-		sortMix = sortNew ;		
+		
 		for (int mixId = oldNumOfMixs +1 ; mixId <= numOfMixs ; mixId ++ ) { 
 			sArray [mixId] = 0 ;		
-			updateS(mixId) ; 
-			sortMix [mixId] = mixId ;
+			updateS(mixId) ;		
 		}
 		if (level ==1 ) {
 			double [] rNew = new double[numOfMixs] ; 
 			double [] qNew = new double[numOfMixs] ; 
+			Integer [] sortNew = new Integer [numOfMixs+1] ;		
 			for (int mixId = 0 ; mixId < oldNumOfMixs ; mixId ++ ) { 					
 				rNew [mixId] = rArray[mixId] ; 
 				qNew [mixId] = qFactorArray [mixId] ; 
+				sortNew [mixId] = sortMix [mixId] ; 
 			}
 			rArray = rNew ; 
 			qFactorArray = qNew ; 
+			sortMix = sortNew ;		
 			for (int mixId = oldNumOfMixs  ; mixId < numOfMixs ; mixId ++ ) { 			 
 				rArray [mixId] = 0 ; 
-				qFactorArray [mixId] = 0 ; 			 
+				qFactorArray [mixId] = 0 ; 	
+				sortMix[mixId] = mixId ; 
 			}
+			sortMix[numOfMixs] = numOfMixs ; 
 		}
 		else { 
 			double [][] rNewMat = new double [numOfUpperLevelMixs][numOfMixs] ; 
 			double [][] qNewMat = new double [numOfUpperLevelMixs][numOfMixs] ; 
+			Integer [][] sortNewMat = new Integer [numOfUpperLevelMixs][numOfMixs+1] ; 
 			for (int upperLevelMixId = 0 ; upperLevelMixId < numOfUpperLevelMixs ; upperLevelMixId ++) { 
 				for (int mixId = 0 ; mixId < oldNumOfMixs ; mixId ++ ) { 					
 					rNewMat [upperLevelMixId][mixId] = rMat[upperLevelMixId][mixId] ; 
 					qNewMat [upperLevelMixId][mixId]= qFactorMat [upperLevelMixId][mixId] ; 
+					sortNewMat [upperLevelMixId][mixId] = sortMixMat [upperLevelMixId][mixId] ; 
 				}
 				for (int mixId = oldNumOfMixs  ; mixId < numOfMixs ; mixId ++ ) { 			 
 					rNewMat [upperLevelMixId][mixId] = 0 ; 
-					qNewMat [upperLevelMixId][mixId]= 0 ; 	 
+					qNewMat [upperLevelMixId][mixId]= 0 ; 
+					sortNewMat [upperLevelMixId][mixId] = mixId ; 
 				}
+				sortNewMat [upperLevelMixId][numOfMixs] = numOfMixs ; 
 			}
 			rMat = rNewMat ; 
 			qFactorMat = qNewMat ; 
+			sortMixMat = sortNewMat ; 
 			rArray = null ; 
 			qFactorArray = null ; 
+			sortMix = null ; 
 			r = -10 ; 
 		}		 
 	}
@@ -220,7 +223,7 @@ public class EfficientGibbs {
 		s+= sArray[mixId] ; 		
 	}
 	
-	private void initRUpperLevelMix () throws Exception {
+	private void initRMat () throws Exception {
 		rUpperLevelMix = new double [numOfUpperLevelMixs] ; 
 		rMat = new double [numOfUpperLevelMixs][numOfMixs] ; 
 		for (int upperLevelMixId = 0 ; upperLevelMixId < numOfUpperLevelMixs ; upperLevelMixId ++ ) { 
@@ -228,9 +231,10 @@ public class EfficientGibbs {
 			for (int mixId = 0 ;mixId  < numOfMixs ; mixId ++ ) { 
 				rMat[upperLevelMixId][mixId] = (upperLevelMix_MixCounters.get(upperLevelMixId , mixId) *lambda)
 						/ (lambdaNumOfVTerms +  mixVTermSum.get(mixId)) ; 
-				rUpperLevelMix [upperLevelMixId] += rArray[mixId] ; 
+				rUpperLevelMix [upperLevelMixId] += rMat[upperLevelMixId][mixId] ; 
 			}		
 		}
+		rArray = null ; 
 	}
 	
 
@@ -251,14 +255,7 @@ public class EfficientGibbs {
 			rUpperLevelMix [upperLevelMixId] = r ; 
 		}
 	}
-	private void initQFactor (int upperLevelMix_Id) throws Exception { 
-		qFactorArray = new double [numOfMixs] ; 
-		for (int mixId = 0 ; mixId < numOfMixs ; mixId ++ ) { 
-			qFactorArray [mixId] = 
-					(upperLevelAlpha0StickBreakingWeights [mixId]+ upperLevelMix_MixCounters.get(upperLevelMix_Id , mixId) )
-					/(lambdaNumOfVTerms +  mixVTermSum.get(mixId)) ; 
-		}
-	}
+	
 	private void initQFactorMat () throws Exception { 
 		qFactorMat = new double [numOfUpperLevelMixs][numOfMixs] ; 
 		for (int upperLevelMixId = 0 ;  upperLevelMixId < numOfUpperLevelMixs ;  upperLevelMixId ++) {
@@ -268,9 +265,41 @@ public class EfficientGibbs {
 					/(lambdaNumOfVTerms +  mixVTermSum.get(mixId)) ; 
 			}
 		}
+		qFactorArray = null ; 
+	}
+	private void initQFactor (int upperLevelMixId) throws Exception { 
+		qFactorArray = new double [numOfMixs] ; 
+		for (int mixId = 0 ; mixId < numOfMixs ; mixId ++ ) { 
+			qFactorArray [mixId] = 
+					(upperLevelAlpha0StickBreakingWeights [mixId]+ upperLevelMix_MixCounters.get(upperLevelMixId , mixId) )
+					/(lambdaNumOfVTerms +  mixVTermSum.get(mixId)) ; 
+		}
 	}
 	private void updateQFactor (int mixId , int upperLevelMix_MixCount) throws Exception { 
 		qFactorArray [mixId] = (upperLevelAlpha0StickBreakingWeights [mixId]+ upperLevelMix_MixCount  )
 				/(lambdaNumOfVTerms +  mixVTermSum.get(mixId)) ; 
 	}
+	private void initSortMat () { 
+		sortMixMat = new Integer[numOfUpperLevelMixs] [numOfMixs+1] ; 
+		int upperLevelMixId ; 
+		for ( upperLevelMixId = 0 ;  upperLevelMixId < numOfUpperLevelMixs ;  upperLevelMixId ++) {
+			initSortMix (upperLevelMixId ,sortMixMat [upperLevelMixId]) ; 			
+		}
+	}
+	private void initSortMix (int upperLevelMixId , Integer [] mixArray ) { 
+		for (int mixId = 0 ; mixId <= numOfMixs ;  mixId ++ ) mixArray[mixId] = mixId ; 
+		Arrays.sort(mixArray , (Integer i1, Integer i2) ->		
+		{
+			try {
+				return Integer.signum ( upperLevelMix_MixCounters.get(upperLevelMixId,i2) 
+						-upperLevelMix_MixCounters.get(upperLevelMixId,i1));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return 0;
+		}
+				) ;
+	}
+
 }

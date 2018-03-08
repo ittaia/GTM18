@@ -20,10 +20,11 @@ public class TrainMain {
 	static MLSHDPParms parms ;
 	static Config config ; 
 	static Gson gson ; 
+	static int totFiles = 0 ; 
 	
 	public static void main(String[] args) throws Exception {
 		gson = new Gson () ; 
-		config = Config.getInstance(path) ; 
+		config = Config.getInstance(/*path*/) ; 
 		System.out.println ("Work on Dir :"+ config.getMainPath()) ; 	
 		EL.W(" ****** Start - DIR "+ config.getMainPath());
 		String parmsPath = config.getPath("MLSHDPParms") ; 
@@ -31,7 +32,7 @@ public class TrainMain {
 		loadData () ; 
 		mltmTrain.trainModel();
 		MLTMTrainedModel tmodel = mltmTrain.save (config.getPath("Model")) ; 
-		tmodel.printTopics () ; 
+		tmodel.print2Levels();  
 	}
 	private static void loadData () throws JsonSyntaxException, IOException, Exception { 
 		String dataPath =  config.getPath ("Data") ;
@@ -39,20 +40,23 @@ public class TrainMain {
 		String [] filter = {"json"} ; 
 		ArrayList <File> datafiles = Dirs.FilesInDir(dataPath , filter) ; 
 		for (File file : datafiles) { 			
-			loadDocs (file) ; 
+			int cnt = loadDocs (file) ;
+			totFiles += cnt ; 
 		}
 	}
-	private static void loadDocs (File file) throws JsonSyntaxException, IOException, Exception { 
+	private static int loadDocs (File file) throws JsonSyntaxException, IOException, Exception { 
 		int cnt = 0 ; 
 		System.out.println ("Load docs - json " + file.getAbsolutePath());
 		BufferedReader in  = new BufferedReader(new FileReader(file));
 		String line ; 
 		while ((line = in.readLine()) != null) { 
 			DocData docData = gson.fromJson(line, DocData.class) ; 
-			mltmTrain.addDoc(docData.getFile_id() ,  docData.getTitle(),docData.getText() ) ;
+			String text = docData.getTitle() + " "+ docData.getText() ; 
+			mltmTrain.addDoc(docData.getFile_id() ,  docData.getTitle(),text ) ;
 			cnt ++ ; 
 		}
 		in.close(); 
 		System.out.println (file.getAbsolutePath() + "cnt " + cnt  ) ; 	
+		return cnt ; 
 	}
 }
