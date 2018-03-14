@@ -82,7 +82,7 @@ public class StickBreakingWeights {
 		double [] dirichletParms = new double [numOfMixs+1] ;  
 		for (int m = 0 ; m < numOfMixs ; m ++ ) { 
 			dirichletParms [m] = mixTables [m] ; 
-			if (dirichletParms [m] <= 0 )   dirichletParms [m] = 0.0001 ;  
+			if (dirichletParms [m] <= 0 )   dirichletParms [m] = 0.00000001 ;  
 		}
 		dirichletParms [numOfMixs] = gamma ; 
 		DirichletSample dirichlet = new DirichletSample (dirichletParms) ; 			

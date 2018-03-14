@@ -37,4 +37,13 @@ public class Proportions {
 		}
 		EL.W( s) ; 		
 	}
+	public void printP1() {
+		String s = " prop: Len:"+ proportions.length ;  
+		for (int i = 0 ; i < proportions.length ; i ++ ) { 
+			if (proportions[i] > 0.000001 | i >= proportions.length -1 ) { 
+				s += " " + i + " Index " + indexes.get (i) + ":"+ proportions[i] ; 
+			}
+		}
+		EL.W( s) ; 		
+	}
 }

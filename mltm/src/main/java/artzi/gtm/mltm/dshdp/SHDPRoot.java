@@ -145,14 +145,13 @@ public class SHDPRoot {
 	
 	public void copmuteStickBreakingWeights() {
 		stickBreakingWeights.updateWeights(numOfVTerms, numOfMixs , mixVTermCounters.getMat() ,  alpha0 , gamma) ; 
-		/*
 		double [] w = stickBreakingWeights.getWeights() ; 
 		String s = "Level " + level +  " Stick Breaking Weights " ; 
 		for (int i = 0 ; i < w.length ; i ++ ) { 
-			s += i +":"+ w [i] ; 
+			s += " " + i +":"+ w [i] ; 
 		}
 		EL.W(s) ; 
-		*/
+
 	}
 	public void resetStickBreakingWeights() {
 		if (level < parms.modelLevels) stickBreakingWeights.resetWeights () ; 			 
@@ -160,7 +159,7 @@ public class SHDPRoot {
 	public void sampleParms (int iter) { 
 		/******  sample  model parameters *******/
 		if (level == parms.modelLevels) {  
-			if (iter > parms.burninIters & iter % parms.sampleLambdaIters == 0 ) { 
+			if (iter > parms.burninIters & iter % parms.sampleParmsIters == 0 ) { 
 				double lambdaNew = LDAHyperParms.sampleBeta(mixVTermCounters.getMat () , lambda ) ; 
 				EL.W(" sample lambda - old "  + lambda + " new - " + lambdaNew ) ; 
 				lambda = lambdaNew ; 
@@ -168,15 +167,17 @@ public class SHDPRoot {
 			}
 		}
 		else { 
-			EL.W("Level:" + level + " VTerms " +numOfVTerms  + " Tot mix tables  " +  stickBreakingWeights.getTotMixTables()) ;  
-			double gammaNew = HDPHyperParms.sampleGamma(gamma, numOfVTerms , stickBreakingWeights.getTotMixTables() , 
-					parms.aGamma[level] , parms.bGamma[level]  ) ; 
-			EL.W(" Sample Gamma  - Old :  " + gamma  + " new - "   + gammaNew ) ; 
-			gamma  = gammaNew ; 
-			double alpha0New = HDPHyperParms.sampleAlpha0 (alpha0,   stickBreakingWeights.getTotMixTables() , numOfMixs ,mixVTermSum.getMat()[0] , 
-					parms.aAlpha0[level] ,parms.bAlpha0[level]) ; 
-			EL.W(" Sample Alpha0  - Old :  " + alpha0  + " new - "   + alpha0New ) ; 
-			alpha0  = alpha0New ; 
+			if  ( iter < 20  |iter % parms.sampleParmsIters == 0 ) { 
+				EL.W("Level:" + level + " VTerms " +numOfVTerms  + " Tot mix tables  " +  stickBreakingWeights.getTotMixTables()) ;  
+				double gammaNew = HDPHyperParms.sampleGamma(gamma, numOfVTerms , stickBreakingWeights.getTotMixTables() , 
+						parms.aGamma[level] , parms.bGamma[level]  ) ; 
+				EL.W(" Sample Gamma  - Old :  " + gamma  + " new - "   + gammaNew ) ; 
+				gamma  = gammaNew ; 
+				double alpha0New = HDPHyperParms.sampleAlpha0 (alpha0,   stickBreakingWeights.getTotMixTables() , numOfMixs ,mixVTermSum.getMat()[0] , 
+						parms.aAlpha0[level] ,parms.bAlpha0[level]) ; 
+				EL.W(" Sample Alpha0  - Old :  " + alpha0  + " new - "   + alpha0New ) ; 
+				alpha0  = alpha0New ;
+			}
 		}
 	}	 
 	public StickBreakingWeights getStickBreakingWeights() {

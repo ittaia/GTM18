@@ -37,7 +37,7 @@ public class HDPHyperParms {
 	public static double sampleAlpha0  (double alpha0Old ,  int numOfNextLevelMixs , 
 			int numOfDocs , int [] numOfDocWords , double aAlpha0 , double bAlpha0 ) { 
 		/***** a - shape ; b - scale *****/
-		final int iters = 30 , burnin = 10; 		
+		final int iters = 5 , burnin = 2; 		
 		double alpha0New = alpha0Old ; 
 		double T = numOfNextLevelMixs ;  
 		double sumAlpha0New = 0 ; 

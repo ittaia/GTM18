@@ -89,6 +89,7 @@ public class MLSHDPModel {
 	}
 	
 	public void infer (int iters ) throws Exception { 
+		long time , start ; 
 		EL.W(  " Start Infer ;  Iters " + parms.iters ) ;  
 		for  (int threadId = 0 ; threadId < parms.numOfThreads ;  threadId ++) { 
 			threads[threadId].start() ; 
@@ -99,7 +100,8 @@ public class MLSHDPModel {
 				mixs += " " + level + "-" + hdps[level].getNumOfMixs()  ; 
 			}
 			System.out.println(" Start Iter-" + iter  + " HS " + GetHeapSpace.HS()/1000000  + mixs) ;  
-			EL.W (" Start Iter-" + iter  + " HS " + GetHeapSpace.HS()/1000000 + mixs) ; 			
+			EL.W (" Start Iter-" + iter  + " HS " + GetHeapSpace.HS()/1000000 + mixs) ; 
+			start = System.currentTimeMillis() ;
 			for (int threadId = 0 ; threadId < parms.numOfThreads ; threadId ++ ) { 
 				threads [threadId].copyCounters (hdps ) ;  				
 				threads [threadId].getQueue().put (iter) ;   
@@ -114,11 +116,15 @@ public class MLSHDPModel {
 				EL.W ( "Take " + " ID - " + threadID + "Iter-" + iter  ) ; 
 				numOfThreadMsg ++ ; 
 			}
+			time = System.currentTimeMillis() - start ; 
+			System.out.println("level: "+ "Threads time "+ time);
+			start = System.currentTimeMillis() ;
 			aggregateThreads (iter) ; 
 			if (iter > parms.burninIters & iter % parms.skipIters == 0 ) { 
 				sumCounters () ; 
 			}
-			
+			time = System.currentTimeMillis() - start ; 
+			System.out.println("level: "+ " Aggregate Time "+ time);
 			EL.W ( " After Iter-" + iter  ) ; 
 			if ((iter< parms.printIters) | (iter % parms.printIters == 0))  {
 				validateCounters () ; 	
@@ -180,13 +186,21 @@ public class MLSHDPModel {
 			}
 		}
 		/********  Compute Stick breaking weights ********/ 
+		long start = System.currentTimeMillis() ;
 		for (int level = 0 ; level < parms.modelLevels ; level ++ ) { 
 			hdps[level].copmuteStickBreakingWeights();		 
 		}
+		long time = System.currentTimeMillis() - start ; 
+		System.out.println("level: "+ " Steak Breaking Weights time "+ time);
+		
 		/********  sample model parameters ********/ 
+		start = System.currentTimeMillis() ;
 		for (int level = 0 ; level < parms.levels ; level ++ ) { 
 			hdps[level].sampleParms (iter) ; 			 
 		}
+		time = System.currentTimeMillis() - start ; 
+		System.out.println("level: "+ " Sample model Parameters "+ time);
+		
 	}
 	private void sumCounters () throws Exception { 
 		for (int level = 0 ; level < parms.levels ; level ++) { 

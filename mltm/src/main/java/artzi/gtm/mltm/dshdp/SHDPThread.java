@@ -232,7 +232,7 @@ public class SHDPThread extends Thread{
 			}
 		}
 		else { 
-			Proportions proportions = new Proportions () ; 
+			Proportions proportions = new Proportions () ; 			
 			for (int mixId = 0 ; mixId < numOfMixs ; mixId ++ ) { 
 				if (mixVTermSum.get(mixId)  > 0) { 
 					int upperLevelMixId = upperLevelHdp.getMixId(docIndx, wordIndx) ; 
@@ -258,12 +258,18 @@ public class SHDPThread extends Thread{
 			}
 			proportions.add(numOfMixs , newMixProp) ;			
 			sampleMixId = proportions.sample() ;
+			/*
+			 
+			if (level ==1 & sampleMixId >= numOfMixs) {
+				proportions.printP1();
+				EL.W("Sampled Mix " +sampleMixId );
+			}	
+			*/ 	 
 		}
-		//EL.W(" level" + level +"New Mix " + mixId );
-		//logProportions.printP() ; 
+		
 		if (sampleMixId < numOfMixs) { 	 
 			newMixId = sampleMixId ; 
-		}
+		}  
 		else { 
 			newMixId = openNewMix (upperLevelHdp) ; 
 		}		

@@ -26,7 +26,7 @@ public class MLSHDPParms  {
 	public int printIters = 10;	
 	public int burninIters =300 ; 
 	public int skipIters = 10 ; 
-	public int sampleLambdaIters = 20 ;
+	public int sampleParmsIters = 10 ;
 	public int classifyIters = 50 ; 
 	public int classifyBurnInIters = 5 ;
 	public boolean efficientGibbs = false;  

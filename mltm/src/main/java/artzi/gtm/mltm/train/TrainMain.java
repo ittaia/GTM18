@@ -24,7 +24,7 @@ public class TrainMain {
 	
 	public static void main(String[] args) throws Exception {
 		gson = new Gson () ; 
-		config = Config.getInstance(/*path*/) ; 
+		config = Config.getInstance(path) ; 
 		System.out.println ("Work on Dir :"+ config.getMainPath()) ; 	
 		EL.W(" ****** Start - DIR "+ config.getMainPath());
 		String parmsPath = config.getPath("MLSHDPParms") ; 
