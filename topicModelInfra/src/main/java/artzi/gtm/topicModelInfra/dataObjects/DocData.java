@@ -1,4 +1,4 @@
-package artzi.gtm.mltm.train;
+package artzi.gtm.topicModelInfra.dataObjects;
 
 public class DocData {
 	String file_id = "" ; 

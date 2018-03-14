@@ -16,7 +16,7 @@ public class LDADoc implements Serializable{
 	int [] wordArray ; 
 	ArrayList <Integer> termIds ; 
 	String name ; 
-	public LDADoc (int docID , String name , String header ,  String words , TermList terms) throws Exception  { 
+	public LDADoc (int docID , String name , String header ,  String words , TermList terms)   { 
 		this.docID= docID ; 
 		this.name = name ; 
 		this.header = header ; 

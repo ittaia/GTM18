@@ -23,7 +23,7 @@ public class Split {
 	 * @return = array list of words
 	 * @throws Exception 
 	 */
-	public static ArrayList <String> Str2WordList (String str) throws Exception { 
+	public static ArrayList <String> Str2WordList (String str)  { 
 		ArrayList <String> rList = new ArrayList <String> () ; 
 		ArrayList <String> w1 =  split(str) ; 
 		for (String w : w1) {

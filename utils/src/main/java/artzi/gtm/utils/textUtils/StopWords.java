@@ -52,7 +52,7 @@ public class StopWords {
 	 * @return = true if stop-word, false otherwise
 	 * @throws Exception 
 	 */
-	public  static boolean isStopWord (String word) throws Exception { 
+	public  static boolean isStopWord (String word)  { 
 		if (stopHash == null){
 			initStopHash () ;  
 		}
@@ -145,17 +145,8 @@ public class StopWords {
 	 * if failed - use static list
 	 * @throws Exception 
 	 */
-	private static  void initStopHash () throws Exception {
+	private static  void initStopHash ()  {
 		stopHash = new Hashtable <Object, Integer> (120) ; 
-		String path = "A"; //Config.getFullPath();
-		File file = new File(path+"StopWords.json");
-		if (file.exists())
-		{
-			if (readStopFile(file))
-			{
-				return;
-			}
-		}
 		String [] vsw = StopWordString.split(",") ; 
 		for (String sw : vsw   ) {
 			stopHash.put(sw,I) ; 
