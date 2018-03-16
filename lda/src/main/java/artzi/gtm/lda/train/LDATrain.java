@@ -45,12 +45,15 @@ public class LDATrain {
 	public void trainModel () throws Exception  { 
 		activeTerms = terms.initActive(parms.minWordCount, parms.maxDF) ; 
 		EL.W( " Number of active terms: "+ activeTerms.getSize());
+		ArrayList <LDADoc> activeDocs = new ArrayList <> () ; 
 		for (LDADoc doc : docList ) { 
 			doc.initWordVector(terms) ; 
 			if (doc.isEmpty()) { 
 				EL.W(   "Empty doc "  + doc.getName()     ) ; 
 			}
+			else activeDocs.add(doc) ; 
 		}	
+		docList = activeDocs ; 
 		mAlphabet = new Malphabet() ; 
 		mAlphabet.init (activeTerms) ; 
 		MInstanceList mInstanceList = new MInstanceList (mAlphabet) ; 
@@ -60,7 +63,7 @@ public class LDATrain {
 		}
 		ldaModel = new LDAModel (mInstanceList ,parms.numOfLDATopics , parms.alpha , parms.beta ) ; 
 		
-		results = new LDAResults (terms ,  parms.numOfLDATopics, parms.alpha , ldaModel.getBeta() ,
+		results = new LDAResults (activeTerms ,  parms.numOfLDATopics, parms.alpha , ldaModel.getBeta() ,
 				ldaModel.getTopicTermProb() , ldaModel.getTopicCount () , ldaModel.getTopicTermCount ()) ; 
 		results.print () ; 	
 		ldaDocs = new LDADocs (parms.numOfLDATopics, mInstanceList , ldaModel.getDocTopicProb()) ; 

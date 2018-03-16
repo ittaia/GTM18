@@ -33,7 +33,8 @@ public class TrainMain {
 		loadData () ; 
 		mltmTrain.trainModel();
 		MLTMTrainedModel tmodel = mltmTrain.save (config.getPath("Model")) ; 
-		tmodel.print2Levels();  
+		tmodel.printTopics();
+		//tmodel.print2Levels();  
 	}
 	private static void loadData () throws JsonSyntaxException, IOException, Exception { 
 		String dataPath =  config.getPath ("Data") ;

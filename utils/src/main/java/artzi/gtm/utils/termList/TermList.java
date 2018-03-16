@@ -111,6 +111,7 @@ public class TermList {
 			if (term.getCount() < _minCount || termdf > _maxDocFrequency){
 				continue;
 			}
+			
 
 			int activeTermIndx =  this.activeTermList.maxTerm ; 
 			this.activeTermList.termHash.put(term.getText(), activeTermIndx);
@@ -137,6 +138,9 @@ public class TermList {
 
 	public String getTerm(int _index){
 		return termArray.get(_index).getText();
+	}
+	public double  getTermDC(int _index){
+		return termArray.get(_index).getDocCount() ; 
 	}
 	public int getActiveTermIndx(int _index){
 		return termArray.get(_index).getActiveTermIndx() ; 

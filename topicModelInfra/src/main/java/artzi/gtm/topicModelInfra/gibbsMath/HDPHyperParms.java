@@ -15,7 +15,7 @@ public class HDPHyperParms {
 	public static double sampleGamma  (double gammaOld , int numOfMixs , int numOfNextLevelMixs ,double aGamma , double bGamma ) { 
 		
 		/***** a - shape ; b - scale *****/
-		final int iters = 30 , burnin = 10 ; 		
+		final int iters = 5 , burnin = 2 ; 		
 		double gammaNew = gammaOld ; 
 		double K = numOfMixs ; 
 		double T = numOfNextLevelMixs ;  

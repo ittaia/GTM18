@@ -24,6 +24,6 @@ public class PrintModelMain {
 		String s = Dirs.file2String(f) ; 
 		MLTMTrainedModel tmodel = gson.fromJson(s, MLTMTrainedModel.class) ; 
 		tmodel.printTopics();
-		tmodel.print2Levels();  
+		//tmodel.print2Levels();  
 	}	
 }

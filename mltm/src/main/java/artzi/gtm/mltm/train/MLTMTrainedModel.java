@@ -94,8 +94,8 @@ public class MLTMTrainedModel {
 	
 	public static MLTMTrainedModel  getInstance ( TermList termList , int levels, int[] numOfMixs, ArrayList<double[][]> multinomials , 
 			ArrayList <int [][] > mixVTermCounters , ArrayList <int []> mixVTermSum , double [] alpha0,
-							ArrayList <double []> mixWeights) {
-		modelInstance = new  MLTMTrainedModel (termList , levels , numOfMixs , multinomials , mixVTermCounters , mixVTermSum , alpha0 , mixWeights) ; 
+							ArrayList <double []> mixWeights) {	
+		modelInstance = new MLTMTrainedModel (termList , levels , numOfMixs , multinomials , mixVTermCounters , mixVTermSum , alpha0 , mixWeights)  ; 
 		return modelInstance ; 		
 	}
 	
@@ -183,7 +183,8 @@ public class MLTMTrainedModel {
 				int termIndx = termProbArray [i].getIndx() ; 
 				double p = termProbArray[i].getProb() ; 
 				if (p > 0.001) { 
-					EL.W ( " term -" + termIndx + " prob - " +   p + " - "+ termList.getTerm(termIndx) ) ; 
+					EL.W ( " term -" + termIndx + " prob - " +   p + " - "+ termList.getTerm(termIndx) + "- "+
+				termList.getTermDC (termIndx) ) ; 
 				}
 			}		
 		} 	
