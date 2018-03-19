@@ -12,7 +12,7 @@ public class LDAParms {
 	public double minWordCount =  8;
 	public double alpha = 0.01 ; 
 	public double beta = 0.01 ; 
-	public double maxDF = 0.3 ;
+	public double maxDf = 0.3 ;
 	public int iterations = 2000 ;
 	public int optimezeInterval = 20 ;
 	public int burninIters = 1500 ;  

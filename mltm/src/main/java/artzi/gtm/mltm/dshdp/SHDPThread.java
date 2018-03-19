@@ -258,13 +258,13 @@ public class SHDPThread extends Thread{
 			}
 			proportions.add(numOfMixs , newMixProp) ;			
 			sampleMixId = proportions.sample() ;
-			/*
+			 
 			 
 			if (level ==1 & sampleMixId >= numOfMixs) {
 				proportions.printP1();
 				EL.W("Sampled Mix " +sampleMixId );
 			}	
-			*/ 	 
+			  
 		}
 		
 		if (sampleMixId < numOfMixs) { 	 

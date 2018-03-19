@@ -43,7 +43,7 @@ public class LDATrain {
 		textList.add(text) ; 
 	}
 	public void trainModel () throws Exception  { 
-		activeTerms = terms.initActive(parms.minWordCount, parms.maxDF) ; 
+		activeTerms = terms.initActive(parms.minWordCount, parms.maxDf) ; 
 		EL.W( " Number of active terms: "+ activeTerms.getSize());
 		ArrayList <LDADoc> activeDocs = new ArrayList <> () ; 
 		for (LDADoc doc : docList ) { 

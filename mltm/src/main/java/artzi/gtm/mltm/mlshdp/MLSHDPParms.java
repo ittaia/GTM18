@@ -25,11 +25,13 @@ public class MLSHDPParms  {
 	public int iters = 400 ; 
 	public int printIters = 10;	
 	public int burninIters =300 ; 
+	public int startSampleLambdaIter = 5000 ; 
 	public int skipIters = 10 ; 
 	public int sampleParmsIters = 10 ;
 	public int classifyIters = 50 ; 
 	public int classifyBurnInIters = 5 ;
-	public boolean efficientGibbs = false;  
+	public boolean efficientGibbs = false;
+	public int initParmsIters = 0;  
 	
 	static MLSHDPParms parmsInstance = null ; 
 	static Gson gson = null ; 	 

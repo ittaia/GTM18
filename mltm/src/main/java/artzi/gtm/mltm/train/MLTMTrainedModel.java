@@ -179,7 +179,7 @@ public class MLTMTrainedModel {
 				termProbArray [termIndx] = new IndxProb (termIndx, topicTermProb[topicIndx][termIndx]   ) ;
 			}
 			Arrays.sort ( termProbArray  ,  new CompareProb()) ; 
-			for (int i = 0 ; i < numOfTopics ; i ++ ) { 
+			for (int i = 0 ; i < Math.min(numOfTerms,100); i ++ ) { 
 				int termIndx = termProbArray [i].getIndx() ; 
 				double p = termProbArray[i].getProb() ; 
 				if (p > 0.001) { 
@@ -194,7 +194,7 @@ public class MLTMTrainedModel {
 		int numOfTopics = numOfMixs[levels-1] ;		
 		double [][] topicTermProb = multinomials.get(levels-1) ; 
 		int numOfTerms = topicTermProb[0].length ;	
-		int numOfMixs0 = numOfMixs[levels-1] ;		
+		int numOfMixs0 = numOfMixs[levels-2] ;			
 		double [][] mix0TopicProb = multinomials.get(levels-2) ; 
 		String [] topicTopTerms = new String [numOfTopics] ;  
 		IndxProb [] termProbArray  = new IndxProb [numOfTerms] ; 
@@ -212,7 +212,7 @@ public class MLTMTrainedModel {
 		}		
 
 		EL.W (" Topics level 0 --->  Topics level 1 " ); 
-		IndxProb [] mixProbArray  = new IndxProb [numOfMixs0] ;
+		IndxProb [] mixProbArray  = new IndxProb [numOfTopics] ;
 		for (int mixIndx = 0 ; mixIndx < numOfMixs0  ; mixIndx ++) { 
 			EL.W (" Mix -" + mixIndx  ) ; 
 			for (int topicIndx = 0 ; topicIndx < numOfTopics ; topicIndx ++ ) {

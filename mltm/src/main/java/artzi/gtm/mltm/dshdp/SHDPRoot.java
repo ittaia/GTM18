@@ -159,7 +159,7 @@ public class SHDPRoot {
 	public void sampleParms (int iter) { 
 		/******  sample  model parameters *******/
 		if (level == parms.modelLevels) {  
-			if (iter > parms.burninIters & iter % parms.sampleParmsIters == 0 ) { 
+			if (iter > parms.burninIters &  iter > parms.startSampleLambdaIter  & iter % parms.sampleParmsIters == 0 ) { 
 				double lambdaNew = LDAHyperParms.sampleBeta(mixVTermCounters.getMat () , lambda ) ; 
 				EL.W(" sample lambda - old "  + lambda + " new - " + lambdaNew ) ; 
 				lambda = lambdaNew ; 
@@ -167,11 +167,12 @@ public class SHDPRoot {
 			}
 		}
 		else { 
-			if  ( iter < 20  |iter % parms.sampleParmsIters == 0 ) { 
+			if  ( iter < parms.initParmsIters  |(iter > 0 & iter % parms.sampleParmsIters == 0 )) { 
+				System.out.println ("Sample Parms "+ iter) ; 
 				EL.W("Level:" + level + " VTerms " +numOfVTerms  + " Tot mix tables  " +  stickBreakingWeights.getTotMixTables()) ;  
 				double gammaNew = HDPHyperParms.sampleGamma(gamma, numOfVTerms , stickBreakingWeights.getTotMixTables() , 
 						parms.aGamma[level] , parms.bGamma[level]  ) ; 
-				EL.W(" Sample Gamma  - Old :  " + gamma  + " new - "   + gammaNew ) ; 
+				EL.W(" Sample Gamma ***  - Old :  " + gamma  + " new - "   + gammaNew ) ; 
 				gamma  = gammaNew ; 
 				double alpha0New = HDPHyperParms.sampleAlpha0 (alpha0,   stickBreakingWeights.getTotMixTables() , numOfMixs ,mixVTermSum.getMat()[0] , 
 						parms.aAlpha0[level] ,parms.bAlpha0[level]) ; 
