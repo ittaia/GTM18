@@ -52,6 +52,7 @@ public class LDATrainMain {
 		String line ; 
 		while ((line = in.readLine()) != null) { 
 			DocData docData = gson.fromJson(line, DocData.class) ; 
+			docData.toLow();
 			String text = docData.getTitle() + " "+ docData.getText() ; 
 			ldaTrain.addDoc(docData.getFile_id() ,  docData.getTitle(),text ) ;
 			cnt ++ ; 
