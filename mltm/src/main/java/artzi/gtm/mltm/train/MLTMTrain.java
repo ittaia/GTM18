@@ -8,6 +8,7 @@ import artzi.gtm.mltm.mlshdp.MLSHDPModel;
 import artzi.gtm.mltm.mlshdp.MLSHDPParms;
 import artzi.gtm.topicModelInfra.dataObjects.DocWords;
 import artzi.gtm.topicModelInfra.dataObjects.LDADoc;
+import artzi.gtm.topicModelInfra.trainedModel.TrainedMLModel;
 import artzi.gtm.utils.elog.EL;
 import artzi.gtm.utils.termList.TermList;
 
@@ -66,10 +67,10 @@ public class MLTMTrain {
 	public double getLambda () { 
 		return mlshdpModel.getLambda() ; 
 	}	
-	public MLTMTrainedModel save(String path) throws IOException {
+	public TrainedMLModel save(String path) throws IOException {
 		String termPath = new File (path, "terms.json").getPath() ; 
 		activeTerms.toFile(termPath);
-		MLTMTrainedModel tmodel =MLTMTrainedModel.getInstance  (activeTerms , parms.levels , mlshdpModel.getNumOfMixs() , mlshdpModel.getMultinomials() , 
+		TrainedMLModel tmodel =TrainedMLModel.getInstance  (activeTerms , parms.levels , mlshdpModel.getNumOfMixs() , mlshdpModel.getMultinomials() , 
 				mlshdpModel.getMixVtermsCounters() , mlshdpModel.getMixVtermsSum() , 
 				mlshdpModel.getAlpha0() , mlshdpModel.getMixWeights()) ;  
 		String tmodelPath = new File (path, "tmodel.json").getPath() ; 

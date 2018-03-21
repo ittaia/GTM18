@@ -1,4 +1,4 @@
-package artzi.gtm.mltm.train;
+package artzi.gtm.topicModelInfra.trainedModel;
 
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -21,7 +21,7 @@ import artzi.gtm.utils.termList.TermList;
  * Trained model
  */
 
-public class MLTMTrainedModel {
+public class TrainedMLModel {
 	
 	private TermList termList ; 
 	
@@ -67,9 +67,9 @@ public class MLTMTrainedModel {
 			
 	
 	
-	private static MLTMTrainedModel modelInstance = null ; 
+	private static TrainedMLModel modelInstance = null ; 
 	
-	private MLTMTrainedModel(TermList termList , int levels, int[] numOfMixs, ArrayList<double[][]> multinomials , ArrayList <int [][]> mixVTermCounters , 
+	private TrainedMLModel(TermList termList , int levels, int[] numOfMixs, ArrayList<double[][]> multinomials , ArrayList <int [][]> mixVTermCounters , 
 			ArrayList <int []> mixVTermSum , double [] alpha0, ArrayList <double []> mixWeights) {
 		super();
 		this.termList = termList ; 
@@ -92,10 +92,10 @@ public class MLTMTrainedModel {
 	 * @param mixWeights
 	 */
 	
-	public static MLTMTrainedModel  getInstance ( TermList termList , int levels, int[] numOfMixs, ArrayList<double[][]> multinomials , 
+	public static TrainedMLModel  getInstance ( TermList termList , int levels, int[] numOfMixs, ArrayList<double[][]> multinomials , 
 			ArrayList <int [][] > mixVTermCounters , ArrayList <int []> mixVTermSum , double [] alpha0,
 							ArrayList <double []> mixWeights) {	
-		modelInstance = new MLTMTrainedModel (termList , levels , numOfMixs , multinomials , mixVTermCounters , mixVTermSum , alpha0 , mixWeights)  ; 
+		modelInstance = new TrainedMLModel (termList , levels , numOfMixs , multinomials , mixVTermCounters , mixVTermSum , alpha0 , mixWeights)  ; 
 		return modelInstance ; 		
 	}
 	
@@ -106,11 +106,11 @@ public class MLTMTrainedModel {
 	 * @throws IOException 
 	 */
 	
-	public static MLTMTrainedModel getInstance(String _path ) throws IOException {
+	public static TrainedMLModel getInstance(String _path ) throws IOException {
 		  
 		Gson gson = new Gson () ; 
 		JsonReader reader = new JsonReader (new InputStreamReader (new FileInputStream (_path))) ;  
-		modelInstance =  gson.fromJson(reader,MLTMTrainedModel.class) ; 	
+		modelInstance =  gson.fromJson(reader,TrainedMLModel.class) ; 	
 		return modelInstance ; 
 	}
 	
@@ -118,7 +118,7 @@ public class MLTMTrainedModel {
 	 * get instance 
 	 */
 	
-	public static MLTMTrainedModel getInstance () { 
+	public static TrainedMLModel getInstance () { 
 		return modelInstance ; 
 	}
 	
@@ -132,7 +132,7 @@ public class MLTMTrainedModel {
 		Gson gson = new Gson () ; 
 		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(_path)));
 		out.newLine();
-		String json = gson.toJson(modelInstance , MLTMTrainedModel.class);
+		String json = gson.toJson(modelInstance , TrainedMLModel.class);
 		out.write(json);
 		out.close(); 
 		System.out.println("Save "+_path);

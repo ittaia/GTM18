@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import artzi.gtm.mltm.mlshdp.MLSHDPParms;
 import artzi.gtm.topicModelInfra.dataObjects.DocData;
+import artzi.gtm.topicModelInfra.trainedModel.TrainedMLModel;
 import artzi.gtm.utils.config.Config;
 import artzi.gtm.utils.elog.EL;
 import artzi.gtm.utils.io.Dirs;
@@ -32,7 +33,7 @@ public class TrainMain {
 		mltmTrain = new MLTMTrain (parmsPath) ; 
 		loadData () ; 
 		mltmTrain.trainModel();
-		MLTMTrainedModel tmodel = mltmTrain.save (config.getPath("Model")) ; 
+		TrainedMLModel tmodel = mltmTrain.save (config.getPath("Model")) ; 
 	}
 	private static void loadData () throws JsonSyntaxException, IOException, Exception { 
 		String dataPath =  config.getPath ("Data") ;
