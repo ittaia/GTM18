@@ -18,7 +18,7 @@ import artzi.gtm.utils.sortProb.IndxProb;
 import artzi.gtm.utils.termList.TermList;
 
 /**
- * Trained model
+ * Trained multi level model
  */
 
 public class TrainedMLModel {
