@@ -25,7 +25,7 @@ public class TrainMain {
 	
 	public static void main(String[] args) throws Exception {
 		gson = new Gson () ; 
-		config = Config.getInstance(path) ; 
+		config = Config.getInstance() ; 
 		System.out.println ("Work on Dir :"+ config.getMainPath()) ; 	
 		EL.W(" ****** Start - DIR "+ config.getMainPath());
 		String parmsPath = config.getPath("MLSHDPParms") ; 
@@ -52,6 +52,7 @@ public class TrainMain {
 		String line ; 
 		while ((line = in.readLine()) != null) { 
 			DocData docData = gson.fromJson(line, DocData.class) ; 
+			docData.toLow();
 			String text = docData.getTitle() + " "+ docData.getText() ; 
 			mltmTrain.addDoc(docData.getFile_id() ,  docData.getTitle(),text ) ;
 			cnt ++ ; 

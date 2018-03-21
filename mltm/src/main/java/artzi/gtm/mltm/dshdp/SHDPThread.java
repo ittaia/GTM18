@@ -198,7 +198,7 @@ public class SHDPThread extends Thread{
 			}			
 		}
 		long time = System.currentTimeMillis() - start ; 
-		System.out.println("level: "+ level +  "Thread time "+ time);
+		//System.out.println("level: "+ level +  "Thread time "+ time);
 	}	
 
 	private void add1VMix(int docIndx, int wordIndx , int nextLevelMixId) throws Exception {

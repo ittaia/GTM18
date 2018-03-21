@@ -90,7 +90,7 @@ public class MLSHDPThread extends Thread{
 
 	private void iterations ()   throws Exception{ 
 		int iter ;  
-		System.out.println ("Start Iters " + threadId) ;  
+		//System.out.println ("Start Iters " + threadId) ;  
 		iter = threadQueue.take () ;
 		while (iter > -1) { 
 			EL.W( "Start Iter - " + iter + " Thread- " + threadId ) ; 

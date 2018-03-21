@@ -39,7 +39,6 @@ public class EfficientGibbs {
 		this.numOfVTerms = numOfVTerms ; 
 		this.alpha0 = alpha0 ; 
 		this.lambda = lambda ; 
-		System.out.println ( "Init iteration "+ level + "lambda "+ lambda ) ; 
 		this.lambdaNumOfVTerms = lambdaNumOfVTerms ; 
 		this.upperLevelAlpha0StickBreakingWeights = upperLevelAlpha0StickBreakingWeights ; 	
 		initS() ; 
