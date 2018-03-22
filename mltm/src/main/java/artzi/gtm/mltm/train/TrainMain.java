@@ -16,7 +16,7 @@ import artzi.gtm.utils.io.Dirs;
 
 public class TrainMain {
 	
-	static String path = "C:\\TestDir\\MLTM" ;  
+	static String path = "C:\\TestDir\\MLTM1" ;  
 		
 	static MLTMTrain mltmTrain ; 
 	static MLSHDPParms parms ;
@@ -26,7 +26,7 @@ public class TrainMain {
 	
 	public static void main(String[] args) throws Exception {
 		gson = new Gson () ; 
-		config = Config.getInstance() ; 
+		config = Config.getInstance(path) ; 
 		System.out.println ("Work on Dir :"+ config.getMainPath()) ; 	
 		EL.W(" ****** Start - DIR "+ config.getMainPath());
 		String parmsPath = config.getPath("MLSHDPParms") ; 
