@@ -62,26 +62,26 @@ public class LDAModel {
 			docTopicProb [doc] = model.getTopicProbabilities(doc);				
 		}
 		topicTermProb = new double [numTopics][numTerms] ; 		
-		for (int i = 0 ; i < numTopics ; i++ ) {
-			for (int j = 0 ; j < numTerms ; j ++ )
-				topicTermProb[i][j] = 0  ; 
-		}
 		double numTermsInTopic ; 
 		IDSorter idCountPair ;
 		ArrayList<TreeSet<IDSorter>> topicSortedTerms = model.getSortedWords();
 		for (int topic = 0; topic < numTopics; topic++) {
 			numTermsInTopic = 0 ; 
 			Iterator<IDSorter> iterator = topicSortedTerms.get(topic).iterator();
-
 			while (iterator.hasNext() ) {
 				idCountPair = iterator.next () ;  
 				numTermsInTopic += idCountPair.getWeight()  ; 
 			}
-
+			for (int j = 0 ; j < numTerms ; j ++ )
+				topicTermProb[topic][j] = 
+				  beta_w  /
+				(numTermsInTopic + beta_w * numTerms) ; 
 			iterator = topicSortedTerms.get(topic).iterator();
 			while (iterator.hasNext() ) {
 				idCountPair = iterator.next();
-				topicTermProb [topic][idCountPair.getID()] = idCountPair.getWeight()/numTermsInTopic  ; 
+				topicTermProb [topic][idCountPair.getID()] = 
+						(idCountPair.getWeight() + beta_w) /
+						(numTermsInTopic + beta_w * numTerms) ; 
 			}
 		}		
 	}

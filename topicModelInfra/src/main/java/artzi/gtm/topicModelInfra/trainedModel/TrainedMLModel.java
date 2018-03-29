@@ -64,6 +64,8 @@ public class TrainedMLModel {
 	 */
 	ArrayList <double []> mixWeights ; 
 	
+	String [] topicTopTerms = null ; 
+	
 			
 	
 	
@@ -167,50 +169,40 @@ public class TrainedMLModel {
 	}
 	public void printTopics  () {
 		int numOfTopics = numOfMixs[levels-1] ;		
-		double [][] topicTermProb = multinomials.get(levels-1) ; 
-		int numOfTerms = topicTermProb[0].length ;	
-			
+		 
 
 		EL.W (" Topics " ); 
-		IndxProb [] termProbArray  = new IndxProb [numOfTerms] ;
-		for (int topicIndx = 0 ; topicIndx < numOfTopics  ; topicIndx ++) { 
-			EL.W (" Topic -" + topicIndx  ) ; 
-			for (int termIndx = 0 ; termIndx < numOfTerms ; termIndx ++ ) {
-				termProbArray [termIndx] = new IndxProb (termIndx, topicTermProb[topicIndx][termIndx]   ) ;
-			}
-			Arrays.sort ( termProbArray  ,  new CompareProb()) ; 
-			for (int i = 0 ; i < Math.min(numOfTerms,100); i ++ ) { 
-				int termIndx = termProbArray [i].getIndx() ; 
-				double p = termProbArray[i].getProb() ; 
-				if (p > 0.001) { 
-					EL.W ( " term -" + termIndx + " prob - " +   p + " - "+ termList.getTerm(termIndx) + "- "+
-				termList.getTermDC (termIndx) ) ; 
-				}
-			}		
+		 
+		for (int topicId = 0 ; topicId < numOfTopics  ; topicId++) { 
+			printTopic (topicId , 9999) ; 			 		
 		} 	
+	}
+	public void printTopic  (int topicId, int maxTerms) {
+		
+		double [][] topicTermProb = multinomials.get(levels-1) ; 
+		int numOfTerms = topicTermProb[0].length ;	
+		IndxProb [] termProbArray  = new IndxProb [numOfTerms] ;
+		EL.W (" Topic -" + topicId  ) ; 
+		for (int termIndx = 0 ; termIndx < numOfTerms ; termIndx ++ ) {
+			termProbArray [termIndx] = new IndxProb (termIndx, topicTermProb[topicId][termIndx]   ) ;
+		}
+		Arrays.sort ( termProbArray  ,  new CompareProb()) ; 
+		for (int i = 0 ; i < Math.min(numOfTerms,100); i ++ ) { 
+			int termIndx = termProbArray [i].getIndx() ; 
+			double p = termProbArray[i].getProb() ; 
+			if (p > 0.001) { 
+				EL.W ( " term -" + termIndx + " prob - " +   p + " - "+ termList.getTerm(termIndx) + "- "+
+						termList.getTermDC (termIndx) ) ; 
+			}
+			if (i > maxTerms ) break ; 
+		}	
 	}
 	
 	public void print2Levels  () {
 		int numOfTopics = numOfMixs[levels-1] ;		
-		double [][] topicTermProb = multinomials.get(levels-1) ; 
-		int numOfTerms = topicTermProb[0].length ;	
 		int numOfMixs0 = numOfMixs[levels-2] ;			
 		double [][] mix0TopicProb = multinomials.get(levels-2) ; 
-		String [] topicTopTerms = new String [numOfTopics] ;  
-		IndxProb [] termProbArray  = new IndxProb [numOfTerms] ; 
-		for (int topicIndx = 0 ; topicIndx <numOfTopics  ; topicIndx ++) { 
-			for (int termIndx = 0 ; termIndx < numOfTerms ; termIndx ++ ) {
-				termProbArray [termIndx] = new IndxProb (termIndx,topicTermProb [topicIndx][termIndx]) ;
-			}			
-			Arrays.sort ( termProbArray  ,  new CompareProb()) ;
-			String topTerms = "" ; 				
-			for (int i = 0 ; i < Math.min (numOfTerms,10) ; i ++ ) {
-				int termIndx = termProbArray[i].getIndx() ; 
-				topTerms += " "+ termIndx+"-"+  termList.getTerm(termProbArray[i].getIndx()) ; 					
-			}
-			topicTopTerms [topicIndx] = topTerms ; 
-		}		
-
+		if (topicTopTerms == null) initTopTerms () ; 
 		EL.W (" Topics level 0 --->  Topics level 1 " ); 
 		IndxProb [] mixProbArray  = new IndxProb [numOfTopics] ;
 		for (int mixIndx = 0 ; mixIndx < numOfMixs0  ; mixIndx ++) { 
@@ -227,5 +219,30 @@ public class TrainedMLModel {
 				}
 			}		
 		} 	
+	}
+
+	private void initTopTerms() {
+		int numOfTopics = numOfMixs[levels-1] ;		
+		double [][] topicTermProb = multinomials.get(levels-1) ; 
+		int numOfTerms = topicTermProb[0].length ;	
+		topicTopTerms = new String [numOfTopics] ;  
+		IndxProb [] termProbArray  = new IndxProb [numOfTerms] ; 
+		for (int topicIndx = 0 ; topicIndx <numOfTopics  ; topicIndx ++) { 
+			for (int termIndx = 0 ; termIndx < numOfTerms ; termIndx ++ ) {
+				termProbArray [termIndx] = new IndxProb (termIndx,topicTermProb [topicIndx][termIndx]) ;
+			}			
+			Arrays.sort ( termProbArray  ,  new CompareProb()) ;
+			String topTerms = "" ; 				
+			for (int i = 0 ; i < Math.min (numOfTerms,10) ; i ++ ) {
+				int termIndx = termProbArray[i].getIndx() ; 
+				topTerms += " "+ termIndx+"-"+  termList.getTerm(termProbArray[i].getIndx()) ; 					
+			}
+			topicTopTerms [topicIndx] = topTerms ; 
+		}		
+	}
+
+	public String getHeader(int topicId) {
+		if (topicTopTerms == null) initTopTerms () ; 
+		return topicTopTerms [topicId] ; 
 	}
 }
