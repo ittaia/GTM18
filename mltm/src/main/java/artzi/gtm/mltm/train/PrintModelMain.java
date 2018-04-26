@@ -10,7 +10,7 @@ import artzi.gtm.utils.io.Dirs;
 
 public class PrintModelMain {
 	
-	static String path = "C:\\TestDir\\MLTM" ;  
+	static String path = "C:\\TestDir\\MLTMNIPS" ;  
 		
 	static MLTMTrain mltmTrain ; 
 	static MLSHDPParms parms ;
