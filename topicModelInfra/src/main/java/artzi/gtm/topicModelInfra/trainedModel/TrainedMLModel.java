@@ -63,8 +63,11 @@ public class TrainedMLModel {
 	 * 
 	 */
 	ArrayList <double []> mixWeights ; 
+	static int numOfTopTerms = 50 ; 
+	String [][] topicTopTerms = null ; 
 	
-	String [] topicTopTerms = null ; 
+	String [] topicHeaders = null ;
+	String [] topicHeaders1 = null ; 
 	
 			
 	
@@ -225,24 +228,40 @@ public class TrainedMLModel {
 		int numOfTopics = numOfMixs[levels-1] ;		
 		double [][] topicTermProb = multinomials.get(levels-1) ; 
 		int numOfTerms = topicTermProb[0].length ;	
-		topicTopTerms = new String [numOfTopics] ;  
+		topicTopTerms = new String [numOfTopics][numOfTopTerms] ; 
+		topicHeaders = new String [numOfTopics] ; 
+		topicHeaders1 = new String [numOfTopics] ; 
 		IndxProb [] termProbArray  = new IndxProb [numOfTerms] ; 
 		for (int topicIndx = 0 ; topicIndx <numOfTopics  ; topicIndx ++) { 
 			for (int termIndx = 0 ; termIndx < numOfTerms ; termIndx ++ ) {
 				termProbArray [termIndx] = new IndxProb (termIndx,topicTermProb [topicIndx][termIndx]) ;
 			}			
 			Arrays.sort ( termProbArray  ,  new CompareProb()) ;
-			String topTerms = "" ; 				
-			for (int i = 0 ; i < Math.min (numOfTerms,10) ; i ++ ) {
-				int termIndx = termProbArray[i].getIndx() ; 
-				topTerms += " "+ termIndx+"-"+  termList.getTerm(termProbArray[i].getIndx()) ; 					
+			String topTerms = "" ; 	
+			String topTerms1 = "" ;
+			for (int i = 0 ; i < Math.min (numOfTerms,numOfTopTerms) ; i ++ ) {
+				int termIndx = termProbArray[i].getIndx() ; 	
+				topicTopTerms [topicIndx][i] = termList.getTerm(termProbArray[i].getIndx()) ; 	
+				if (i < 10) { 
+					topTerms += " "+ termIndx+"-"+  termList.getTerm(termIndx) ; 
+					if (topTerms1.length() < 15)
+						topTerms1 += termList.getTerm(termIndx) + " "; 
+				}
 			}
-			topicTopTerms [topicIndx] = topTerms ; 
+			topicHeaders [topicIndx] = topTerms ; 
+			topicHeaders1 [topicIndx] = topTerms1 ; 
 		}		
+	}
+	public String [] getTopTerms (int topicId) { 
+		return topicTopTerms [topicId] ; 
 	}
 
 	public String getHeader(int topicId) {
 		if (topicTopTerms == null) initTopTerms () ; 
-		return topicTopTerms [topicId] ; 
+		return topicHeaders [topicId] ; 
+	}
+	public String getHeader1(int topicId) {
+		if (topicTopTerms == null) initTopTerms () ; 
+		return topicHeaders1 [topicId] ; 
 	}
 }

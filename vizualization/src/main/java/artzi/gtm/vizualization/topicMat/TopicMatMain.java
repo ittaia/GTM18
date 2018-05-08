@@ -4,8 +4,6 @@ import java.io.File;
 import com.google.gson.Gson;
 
 import artzi.gtm.utils.config.Config;
-import artzi.gtm.utils.sortProb.IndxProb;
-
 
 public class TopicMatMain {
 	
@@ -20,9 +18,11 @@ public class TopicMatMain {
 		gson = new Gson () ; 
 		config = Config.getInstance(path) ; 
 		System.out.println ("Work on Dir :"+ config.getMainPath()) ; 
-		String path = config.getPath("Model") ; 
-		String modelPath = new File (path , "trainedModel").getAbsolutePath() ; 
-		topicMat = new TopicMat (modelPath) ; 			 
-		topicMat.printCloseTopics () ; 	
+		String modelPath = config.getPath("Model") ; 
+		String trainedModelPath = new File (modelPath , "trainedModel").getAbsolutePath() ; 
+		topicMat = new TopicMat (trainedModelPath) ; 
+		String treePath = new File (modelPath , "tree.json").getAbsolutePath() ; 
+		topicMat.writeHierarchy(treePath); 	
+		topicMat.printTopicClusters();
 	}
 }	

@@ -57,6 +57,7 @@ public class LDADoc implements Serializable{
 	public int [] getWordArray () { 		
 		return this.wordArray ; 
 	}
+	
 	public void print(TermList activeTerms) { 
 		EL.W ("DOC Name " + name) ; 
 		String s = "" ;   
@@ -67,5 +68,8 @@ public class LDADoc implements Serializable{
 	}
 	public boolean isEmpty () { 
 		return (numOfWords == 0) ; 					
+	}
+	public int getNumOfWorsd () { 
+		return numOfWords ; 
 	}
 } 

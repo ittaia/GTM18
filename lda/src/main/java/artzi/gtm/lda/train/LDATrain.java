@@ -42,13 +42,18 @@ public class LDATrain {
 		activeTerms = terms.initActive(parms.minWordCount, parms.maxDf) ; 
 		EL.W( " Number of active terms: "+ activeTerms.getSize());
 		ArrayList <LDADoc> activeDocs = new ArrayList <> () ; 
+		int totTokens = 0 ; 
 		for (LDADoc doc : docList ) { 
 			doc.initWordVector(terms) ; 
 			if (doc.isEmpty()) { 
 				EL.W(   "Empty doc "  + doc.getName()     ) ; 
 			}
-			else activeDocs.add(doc) ; 
-		}	
+			else { 
+				activeDocs.add(doc) ; 
+				totTokens += doc.getNumOfWorsd() ; 
+			}
+		}
+		EL.W(" number of token: " + totTokens ); 
 		docList = activeDocs ; 
 		mAlphabet = new Malphabet() ; 
 		mAlphabet.init (activeTerms) ; 
