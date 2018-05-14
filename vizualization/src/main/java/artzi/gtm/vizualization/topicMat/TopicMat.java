@@ -14,6 +14,7 @@ import artzi.gtm.utils.aMath.KLDivergence;
 import artzi.gtm.utils.clustering.PAM;
 import artzi.gtm.utils.clustering.PAMResult;
 import artzi.gtm.utils.elog.EL;
+import artzi.gtm.utils.sortProb.CompareProb;
 import artzi.gtm.utils.sortProb.IndxProb;
 import artzi.gtm.vizualization.d3Objects.Link;
 import artzi.gtm.vizualization.d3Objects.Node;
@@ -25,22 +26,27 @@ public class TopicMat {
 	
 	int numOfTopics ; 
 	int numOfTerms ; 
+	double [][] topicTermProb ; 
 	double [][] topicMat ; 
-	double[][] mdsMat ; 
-	PAMResult pamResult	; 
+	double[][] mdsMat ;
+	static int numOfClusters = 10 ; 
+	static int numOfTopTerms = 50 ; 
+	PAMResult pamResult ; 
+	ArrayList <TopicCluster> topicClusters ; 
+	
 	
 	public TopicMat (String modelPath) throws IOException { 
 		tmodel = TrainedMLModel.getInstance(modelPath) ; 
 		System.out.println ( "Init Mat ")  ; 
 		initMat (modelPath) ; 
 		initMDS () ; 
-		PAM pam = new PAM (topicMat , 20) ; 
-		pamResult = pam.getClusters() ; 
-		pamResult.print () ; 
+		initClusters () ; 
+		 
 	}
+	
 	private void initMat(String modelPath) throws IOException {
 		tmodel = TrainedMLModel.getInstance(modelPath) ; 
-		double [][] topicTermProb = tmodel.getMultinomials().get(tmodel.getLevels()-1) ; 
+		topicTermProb = tmodel.getMultinomials().get(tmodel.getLevels()-1) ; 
 		numOfTopics = topicTermProb.length ; 
 		numOfTerms = topicTermProb[0].length ; 
 		topicMat = new double[numOfTopics][numOfTopics] ; 
@@ -55,11 +61,40 @@ public class TopicMat {
 	private void initMDS () { 
 		mdsMat=MDSJ.classicalScaling(topicMat);		
 	}
+	
+	private void initClusters() {
+		PAM pam = new PAM (topicMat , numOfClusters) ; 
+		pamResult = pam.getClusterAssignment() ; 
+		topicClusters = new ArrayList <>() ; 
+		for (int clusterId = 0 ; clusterId < numOfClusters ; clusterId ++) { 
+			ArrayList <Integer> topicList = pamResult.getCluster(clusterId) ; 
+			
+			int [] topics = new int [topicList.size()]  ; 
+			for (int i = 0 ; i < topics.length ; i ++ ) topics [i] = topicList.get(i) ; 
+			IndxProb [] termProbArray  = new IndxProb [numOfTerms] ;
+			for (int termIndx = 0 ; termIndx < numOfTerms ; termIndx ++ ) { 
+				double prob = 0 ; 
+				for (int topicId: topics) prob += topicTermProb[topicId] [termIndx] ;
+				prob = prob / topics.length ; 
+				termProbArray [termIndx] = new IndxProb (termIndx , prob) ; 
+			}
+			Arrays.sort ( termProbArray  ,  new CompareProb()) ; 
+			String [] topTerms = new String [numOfTopTerms] ; 
+			for (int i = 0 ; i < numOfTopTerms ; i ++) topTerms [i] = tmodel.getTerm(termProbArray[i].getIndx()) ; 
+			topicClusters.add(new TopicCluster (clusterId , topics , topTerms)) ; 
+			
+		}
+		
+	}
 	public void printTopicClusters() {
-		for (int cluster = 0 ; cluster < pamResult.getNumOfClusters() ; cluster ++ ) { 			
-			EL.W(" ******* Topic cluster: " + cluster + " Med: " + pamResult.getMed(cluster) + "*********" );
-			for (int topicId : pamResult.getCluster(cluster)) { 
-				EL.W("print topic - cluster: " + cluster + "Med: " + pamResult.getMed(cluster) );
+		for (int clusterId = 0 ; clusterId <numOfClusters ; clusterId ++ ) { 			
+			EL.W(" ******* Topic cluster: " + clusterId   );			
+			TopicCluster cluster = topicClusters.get(clusterId) ; 
+			for (String term : cluster.getTopTerms()) { 
+				EL.W("--- "+ term);
+			}
+			for (int topicId : cluster.getTopicIds()) { 
+				EL.W("print topic - cluster: " + clusterId );
 				tmodel.printTopic(topicId , 50);
 			}
 		}	
@@ -139,13 +174,14 @@ public class TopicMat {
 		String []  noterms = {""} ; 
 		int id = 0 ; 
 		TopicTreeNode root = new TopicTreeNode  (id ,-1 , -1 , " root " , noterms , 100) ; 		 
-		for (int cluster = 0 ; cluster < pamResult.getNumOfClusters() ; cluster ++ ) { 
+		for (TopicCluster cluster : topicClusters) { 
 			id += 1 ; 			 
-			TopicTreeNode topicGroup = new TopicTreeNode  (id ,-1 , cluster , " group;"+cluster ,noterms , 100) ;
+			TopicTreeNode topicGroup = new TopicTreeNode  (id ,-1 , cluster.getClusterId() , " group;"+cluster.getClusterId() ,
+			 cluster.getTopTerms() , 100) ;
 			root.addChild(topicGroup);
-			for (int topicId : pamResult.getCluster(cluster) ) { 
+			for (int topicId : cluster.getTopicIds() ) { 
 				id += 1 ; 			 
-				TopicTreeNode topic = new TopicTreeNode  (id ,topicId , cluster , tmodel.getHeader1(topicId) , 
+				TopicTreeNode topic = new TopicTreeNode  (id ,topicId , cluster.getClusterId() , tmodel.getHeader1(topicId) , 
 						tmodel.getTopTerms(topicId) , 100) ;
 				topicGroup.addChild(topic);
 			}

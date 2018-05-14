@@ -264,4 +264,7 @@ public class TrainedMLModel {
 		if (topicTopTerms == null) initTopTerms () ; 
 		return topicHeaders1 [topicId] ; 
 	}
+	public String getTerm (int termIndx) { 
+		return termList.getTerm(termIndx) ; 
+	}
 }

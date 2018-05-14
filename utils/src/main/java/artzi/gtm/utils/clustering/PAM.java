@@ -7,7 +7,7 @@ public class PAM {
 	int numOfClusters ;  
 	int numOfObjects ; 
 	boolean [] ismed ; 
-	int [] clusters ; 
+	int [] clusterAssignment ; 
 	int [] saveClusters ; 
 	int [] meds ; 
 	
@@ -16,20 +16,20 @@ public class PAM {
 		numOfObjects = dismat[0].length ; 
 		this.numOfClusters = numOfClusters ; 
 	}
-	public PAMResult getClusters () { 
+	public PAMResult getClusterAssignment () { 
 		ismed = new boolean [numOfObjects] ; 
-		clusters = new int [numOfObjects] ; 
+		clusterAssignment = new int [numOfObjects] ; 
 		saveClusters = new int [numOfObjects] ; 
 		meds = new int [numOfClusters] ; 
 		for (int i = 0 ; i < numOfObjects ; i ++)  {
 			if (i < numOfClusters) { 
 				ismed  [i] = true ; 
 				meds [i] = i ; 
-				clusters [i] = i ; 
+				clusterAssignment [i] = i ; 
 			}
 			else {
 				ismed  [i] = false ; 
-				clusters [i] = getBestCluster (i) ; 
+				clusterAssignment [i] = getBestCluster (i) ; 
 			}
 		}
 		boolean change = true ; 
@@ -43,7 +43,7 @@ public class PAM {
 				}
 			}		
 		}
-		return new PAMResult (clusters , meds) ; 		
+		return new PAMResult (clusterAssignment , meds) ; 		
 	}
 	
 	private int getBestCluster(int i) {
@@ -62,7 +62,7 @@ public class PAM {
 	private double getCost () {
 		double cost = 0 ; 
 		for  (int i = 0 ; i < numOfObjects ; i ++)  {
-			cost += dismat[i][meds[clusters[i]]] ; 
+			cost += dismat[i][meds[clusterAssignment[i]]] ; 
 		}
 		return cost ; 		
 	}
@@ -72,19 +72,19 @@ public class PAM {
 		double oldCost = getCost() ; 
 		
 		for (int i = 0 ; i < numOfObjects ; i ++) { 
-			saveClusters [i] = clusters [i] ; 
+			saveClusters [i] = clusterAssignment [i] ; 
 		}
 		 
 		int swapMed = meds [cluster] ;
 		meds [cluster] = swapi ; 
 		ismed[swapi] = true ; 
-		clusters[swapi] = cluster ; 
+		clusterAssignment[swapi] = cluster ; 
 		ismed[swapMed] = false ; 
 		
 		
 		for (int i = 0 ; i < numOfObjects ; i ++) { 
 			if (!ismed[i]) { 
-				clusters [i] = getBestCluster (i) ; 		
+				clusterAssignment [i] = getBestCluster (i) ; 		
 			}
 		}	
 		double newCost = getCost () ; 
@@ -97,7 +97,7 @@ public class PAM {
 			meds [cluster] = swapMed ; 
 			ismed [swapMed] = true ; 
 			for (int i = 0 ; i < numOfObjects ; i ++) { 
-				clusters [i] = saveClusters [i] ; 
+				clusterAssignment [i] = saveClusters [i] ; 
 			}			
 		}		
 		return change ; 

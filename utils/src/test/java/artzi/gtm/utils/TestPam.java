@@ -13,7 +13,7 @@ public class TestPam {
 				 			{ 2 , 2 , 2 , 1 , 0 } } ; 
 		
 		PAM p = new PAM (dis , 2)  ; 
-		PAMResult r = p.getClusters() ; 
+		PAMResult r = p.getClusterAssignment() ; 
 		r.print () ; 
 	}
 }
