@@ -9,6 +9,7 @@ import java.util.Arrays;
 
 import com.google.gson.Gson;
 
+import artzi.gtm.topicModelInfra.trainedModel.TermProb;
 import artzi.gtm.topicModelInfra.trainedModel.TrainedMLModel;
 import artzi.gtm.utils.aMath.KLDivergence;
 import artzi.gtm.utils.clustering.PAM;
@@ -79,19 +80,21 @@ public class TopicMat {
 				termProbArray [termIndx] = new IndxProb (termIndx , prob) ; 
 			}
 			Arrays.sort ( termProbArray  ,  new CompareProb()) ; 
-			String [] topTerms = new String [numOfTopTerms] ; 
-			for (int i = 0 ; i < numOfTopTerms ; i ++) topTerms [i] = tmodel.getTerm(termProbArray[i].getIndx()) ; 
-			topicClusters.add(new TopicCluster (clusterId , topics , topTerms)) ; 
-			
-		}
-		
+			TermProb[] topTerms = new TermProb [numOfTopTerms] ; 
+			for (int i = 0 ; i < numOfTopTerms ; i ++)  {
+				topTerms [i] = new TermProb  (termProbArray[i].getIndx() , 
+						tmodel.getTerm(termProbArray[i].getIndx()) , termProbArray[i].getProb()) ; 
+				}
+	
+			topicClusters.add(new TopicCluster (clusterId , topics , topTerms)) ; 			
+		}		
 	}
 	public void printTopicClusters() {
 		for (int clusterId = 0 ; clusterId <numOfClusters ; clusterId ++ ) { 			
 			EL.W(" ******* Topic cluster: " + clusterId   );			
 			TopicCluster cluster = topicClusters.get(clusterId) ; 
-			for (String term : cluster.getTopTerms()) { 
-				EL.W("--- "+ term);
+			for (TermProb termProb : cluster.getTopTerms()) { 
+				EL.W("--- "+ termProb.getTermId() + "- "+ termProb.getTerm() + "- " + termProb.getProb ());
 			}
 			for (int topicId : cluster.getTopicIds()) { 
 				EL.W("print topic - cluster: " + clusterId );
@@ -171,7 +174,7 @@ public class TopicMat {
 		System.out.println("Save "+ path);
 	}
 	public void writeHierarchy (String path) throws IOException { 	
-		String []  noterms = {""} ; 
+		TermProb []  noterms = null ; 
 		int id = 0 ; 
 		TopicTreeNode root = new TopicTreeNode  (id ,-1 , -1 , " root " , noterms , 100) ; 		 
 		for (TopicCluster cluster : topicClusters) { 

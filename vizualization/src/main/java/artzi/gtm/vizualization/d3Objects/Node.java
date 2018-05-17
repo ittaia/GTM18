@@ -1,16 +1,18 @@
 package artzi.gtm.vizualization.d3Objects;
 
+import artzi.gtm.topicModelInfra.trainedModel.TermProb;
+
 public class Node {
 	
 	int id ; 
 	String header ; 
 	Double x ; 
 	Double  y ; 
-	String [] terms ; 
+	TermProb [] terms ; 
 	Double fx = null ; 
 	Double fy = null ; 
 	int group ; 
-	public Node (int id , double x , double y  , String header , String [] terms , int group) { 
+	public Node (int id , double x , double y  , String header , TermProb [] terms , int group) { 
 		this.id = id ; 
 		this.x = x ; 
 		this.y = y ; 

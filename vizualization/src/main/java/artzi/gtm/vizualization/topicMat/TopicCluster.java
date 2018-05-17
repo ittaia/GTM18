@@ -1,11 +1,13 @@
 package artzi.gtm.vizualization.topicMat;
 
+import artzi.gtm.topicModelInfra.trainedModel.TermProb;
+
 public class TopicCluster {
 	
 	int clusterId ; 
 	int [] topicIds ; 
-	String [] topTerms ;
-	public TopicCluster(int clusterId, int[] topicIds, String[] topTerms) {
+	TermProb [] topTerms ;
+	public TopicCluster(int clusterId, int[] topicIds,TermProb[] topTerms) {
 		super();
 		this.clusterId = clusterId;
 		this.topicIds = topicIds;
@@ -17,7 +19,7 @@ public class TopicCluster {
 	public int[] getTopicIds() {
 		return topicIds;
 	}
-	public String[] getTopTerms() {
+	public TermProb[] getTopTerms() {
 		return topTerms;
 	} 	
 }

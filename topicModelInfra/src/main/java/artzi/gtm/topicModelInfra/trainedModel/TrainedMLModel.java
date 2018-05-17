@@ -64,7 +64,7 @@ public class TrainedMLModel {
 	 */
 	ArrayList <double []> mixWeights ; 
 	static int numOfTopTerms = 50 ; 
-	String [][] topicTopTerms = null ; 
+	TermProb [][] topicTopTerms = null ; 
 	
 	String [] topicHeaders = null ;
 	String [] topicHeaders1 = null ; 
@@ -228,7 +228,7 @@ public class TrainedMLModel {
 		int numOfTopics = numOfMixs[levels-1] ;		
 		double [][] topicTermProb = multinomials.get(levels-1) ; 
 		int numOfTerms = topicTermProb[0].length ;	
-		topicTopTerms = new String [numOfTopics][numOfTopTerms] ; 
+		topicTopTerms = new TermProb [numOfTopics][numOfTopTerms] ; 
 		topicHeaders = new String [numOfTopics] ; 
 		topicHeaders1 = new String [numOfTopics] ; 
 		IndxProb [] termProbArray  = new IndxProb [numOfTerms] ; 
@@ -240,8 +240,9 @@ public class TrainedMLModel {
 			String topTerms = "" ; 	
 			String topTerms1 = "" ;
 			for (int i = 0 ; i < Math.min (numOfTerms,numOfTopTerms) ; i ++ ) {
-				int termIndx = termProbArray[i].getIndx() ; 	
-				topicTopTerms [topicIndx][i] = termList.getTerm(termProbArray[i].getIndx()) ; 	
+				int termIndx = termProbArray[i].getIndx() ; 								
+				topicTopTerms [topicIndx][i] = new TermProb 
+						(termIndx , termList.getTerm(termProbArray[i].getIndx()) , termProbArray[i].getProb() ) ; 	
 				if (i < 10) { 
 					topTerms += " "+ termIndx+"-"+  termList.getTerm(termIndx) ; 
 					if (topTerms1.length() < 15)
@@ -252,7 +253,7 @@ public class TrainedMLModel {
 			topicHeaders1 [topicIndx] = topTerms1 ; 
 		}		
 	}
-	public String [] getTopTerms (int topicId) { 
+	public TermProb [] getTopTerms (int topicId) { 
 		return topicTopTerms [topicId] ; 
 	}
 

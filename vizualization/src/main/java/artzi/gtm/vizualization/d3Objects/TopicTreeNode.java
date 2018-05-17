@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 import com.google.gson.Gson;
 
+import artzi.gtm.topicModelInfra.trainedModel.TermProb;
+
 public class TopicTreeNode {
 	TopicData topicData ; 
 	ArrayList <TopicTreeNode> children ; 
-	public TopicTreeNode (int id , int topicId , int group , String header , String [] terms ,int  size ) { 
+	public TopicTreeNode (int id , int topicId , int group , String header , TermProb [] terms ,int  size ) { 
 		this.topicData = new TopicData (id ,topicId ,  group ,  header ,terms,  size  ) ; 
 		children = new ArrayList <>() ; 
 	}	
@@ -27,7 +29,8 @@ public class TopicTreeNode {
 			return js ; 	
 		}
 		else { 
-			s=s.replace ("}" , ",") ; 
+			int p = s.lastIndexOf('}') ; 
+			s=s.substring(0,p) + ","; 
 			js.add(s) ; 
 			s = indent + "\"children\":[" ; 
 			js.add(s) ; 
