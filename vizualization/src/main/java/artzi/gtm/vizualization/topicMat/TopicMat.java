@@ -17,6 +17,7 @@ import artzi.gtm.utils.clustering.PAMResult;
 import artzi.gtm.utils.elog.EL;
 import artzi.gtm.utils.sortProb.CompareProb;
 import artzi.gtm.utils.sortProb.IndxProb;
+import artzi.gtm.vizualization.VParms;
 import artzi.gtm.vizualization.d3Objects.Link;
 import artzi.gtm.vizualization.d3Objects.Node;
 import artzi.gtm.vizualization.d3Objects.TopicTreeNode;
@@ -30,8 +31,6 @@ public class TopicMat {
 	double [][] topicTermProb ; 
 	double [][] topicMat ; 
 	double[][] mdsMat ;
-	static int numOfClusters = 10 ; 
-	static int numOfTopTerms = 50 ; 
 	PAMResult pamResult ; 
 	ArrayList <TopicCluster> topicClusters ; 
 	
@@ -47,6 +46,7 @@ public class TopicMat {
 	
 	private void initMat(String modelPath) throws IOException {
 		tmodel = TrainedMLModel.getInstance(modelPath) ; 
+		tmodel.setNumOfTopTerms(VParms.numOfTopTerms);
 		topicTermProb = tmodel.getMultinomials().get(tmodel.getLevels()-1) ; 
 		numOfTopics = topicTermProb.length ; 
 		numOfTerms = topicTermProb[0].length ; 
@@ -64,10 +64,10 @@ public class TopicMat {
 	}
 	
 	private void initClusters() {
-		PAM pam = new PAM (topicMat , numOfClusters) ; 
+		PAM pam = new PAM (topicMat , VParms.numOfClusters) ; 
 		pamResult = pam.getClusterAssignment() ; 
 		topicClusters = new ArrayList <>() ; 
-		for (int clusterId = 0 ; clusterId < numOfClusters ; clusterId ++) { 
+		for (int clusterId = 0 ; clusterId < VParms.numOfClusters ; clusterId ++) { 
 			ArrayList <Integer> topicList = pamResult.getCluster(clusterId) ; 
 			
 			int [] topics = new int [topicList.size()]  ; 
@@ -80,8 +80,8 @@ public class TopicMat {
 				termProbArray [termIndx] = new IndxProb (termIndx , prob) ; 
 			}
 			Arrays.sort ( termProbArray  ,  new CompareProb()) ; 
-			TermProb[] topTerms = new TermProb [numOfTopTerms] ; 
-			for (int i = 0 ; i < numOfTopTerms ; i ++)  {
+			TermProb[] topTerms = new TermProb [VParms.numOfTopTerms] ; 
+			for (int i = 0 ; i < VParms.numOfTopTerms ; i ++)  {
 				topTerms [i] = new TermProb  (termProbArray[i].getIndx() , 
 						tmodel.getTerm(termProbArray[i].getIndx()) , termProbArray[i].getProb()) ; 
 				}
@@ -90,7 +90,7 @@ public class TopicMat {
 		}		
 	}
 	public void printTopicClusters() {
-		for (int clusterId = 0 ; clusterId <numOfClusters ; clusterId ++ ) { 			
+		for (int clusterId = 0 ; clusterId <VParms.numOfClusters ; clusterId ++ ) { 			
 			EL.W(" ******* Topic cluster: " + clusterId   );			
 			TopicCluster cluster = topicClusters.get(clusterId) ; 
 			for (TermProb termProb : cluster.getTopTerms()) { 

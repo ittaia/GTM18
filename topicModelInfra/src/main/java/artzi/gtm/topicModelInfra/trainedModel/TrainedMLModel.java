@@ -63,7 +63,7 @@ public class TrainedMLModel {
 	 * 
 	 */
 	ArrayList <double []> mixWeights ; 
-	static int numOfTopTerms = 50 ; 
+	int numOfTopTerms = 50 ; 
 	TermProb [][] topicTopTerms = null ; 
 	
 	String [] topicHeaders = null ;
@@ -169,6 +169,9 @@ public class TrainedMLModel {
 
 	public ArrayList<int[]> getMixVTermSum() {
 		return mixVTermSum;
+	}
+	public void setNumOfTopTerms (int numOfTopTerms) { 
+		this.numOfTopTerms = numOfTopTerms ; 
 	}
 	public void printTopics  () {
 		int numOfTopics = numOfMixs[levels-1] ;		
