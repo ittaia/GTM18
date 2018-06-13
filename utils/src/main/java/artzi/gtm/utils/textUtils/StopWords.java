@@ -37,7 +37,8 @@ public class StopWords {
 			"no,nor,not,of,off,often,on,only,or,other,our,own,rather,said,say," +
 			"says,she,should,since,so,some,than,that,the,their,them,then,there," +
 			"these,they,this,tis,to,too,twas,us,wants,was,we,were,what,when,where," +
-			"which,while,who,whom,why,will,with,would,yet,you,your"; //,cell,cells,nanoparticles,particles" ; 
+			"which,while,who,whom,why,will,with,would,yet,you,your,"+
+			"one,system,first,second,third,fourth,present,invention,method,methods,includes,relates,each,disclosure"; //,cell,cells,nanoparticles,particles" ; 
 	
 	private static Hashtable <Object, Integer> stopHash = null ; 
 	

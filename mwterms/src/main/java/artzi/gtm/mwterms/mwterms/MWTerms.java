@@ -3,8 +3,11 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
+
+import com.google.gson.Gson;
 
 public class MWTerms {	 
 
@@ -24,6 +27,16 @@ public class MWTerms {
 		}
 		candidateTermList = new ArrayList <Integer> () ; 
 	}
+	public void addWordList (ArrayList <String> wordList) { 
+		String [] words = new String [wordList.size()] ; 
+		for (int i= 0 ; i < words.length ; i ++  ) words[i] = wordList.get(i) ; 
+		ArrayList <String []> subTerms = MWTerms.getSubStrings(words, MWParms.minTermLen) ; 
+		if (words.length < MWParms.maxTermLen) 	addMWTerm(words , null) ;
+		for (String [] subTerm: subTerms) { 
+			addMWTerm(subTerm , null) ;			
+		}	
+	}
+	
 	
 	public int addMWTerm (String [] termTokens ,  String [] tags) { 
 		int termKey ; 
@@ -59,8 +72,10 @@ public class MWTerms {
 				}			 
 			}
 		}
+		candidateTermList.sort ((Integer i1, Integer i2) -> 
+								(int) Math.signum(mwTermList.get(i2).getCVal() - mwTermList.get(i1).getCVal() ) ) ; 
 	}
-
+		
 	private void reviseSubStrings(MWTerm mwTerm) {
 		ArrayList <String []> subStrings = getSubStrings (mwTerm.getTerms () , MWParms.minTermLen) ; 
 		for (String [] termTokens : subStrings) { 
@@ -77,7 +92,7 @@ public class MWTerms {
 
 	public static ArrayList<String[]> getSubStrings( String [] terms,  int minLen) {
 		ArrayList <String [] > rList = new ArrayList <String [] > () ; 		
-		for (int len = minLen ; len  < terms.length  ; len ++) { 
+		for (int len = minLen ; len  < Math.min (terms.length , MWParms.maxTermLen)  ; len ++) { 
 			addSubStrings (rList , terms ,     len) ;
 		}
 		return rList ; 
@@ -95,14 +110,16 @@ public class MWTerms {
 	public ArrayList <Integer> getTerms () { 
 		return candidateTermList ; 		
 	}
-	public void print (String file) {
+	public void toJson (String file) {
+		Gson gson = new Gson () ; 
 		FileWriter fstream ; 
 		BufferedWriter out ;
 		try {
 			fstream = new FileWriter(file);
 			out = new BufferedWriter(fstream); 
+			
 			for (int termKey : candidateTermList) { 
-				String s  = mwTermList.get(termKey).getCsv () ; 
+				String s  = gson.toJson(mwTermList.get(termKey)) ;  
 				out.write(s) ; 
 				out.newLine() ; 
 			}

@@ -1,13 +1,19 @@
 package artzi.gtm.mwterms.mwterms;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import artzi.gtm.utils.config.Config;
 import artzi.gtm.utils.elog.EL;
 
 public class Test1 {
+	
+	static String path = "C:\\TestDir\\MWTerms" ;  
 
 	static MWTerms mwTerms ; 
-	public static void main(String[] args) {
+	static Config config ;
+	public static void main(String[] args) throws IOException {
+		config = Config.getInstance(path) ; 
 		mwTerms = new MWTerms() ; 
 		EL.W("Start") ; 
 		 
@@ -20,7 +26,9 @@ public class Test1 {
 			add(s3) ;
 		}
 		mwTerms.initCandidateTerms() ; 
-		//mwTerms.print () ;
+		
+		String jsonPath = config.getPath("Json") ; 
+		mwTerms.toJson (jsonPath) ;
 		EL.ELClose() ; 
 	}		 
 
@@ -29,7 +37,6 @@ public class Test1 {
 		mwTerms.addMWTerm(s1 , null) ;
 		for (String [] subTerm: subTerms) { 
 			mwTerms.addMWTerm(subTerm , null) ;			
-		}
-		
+		}		
 	}
 }

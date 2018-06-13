@@ -1,4 +1,4 @@
-package artzi.gtm.lda.train;
+package artzi.gtm.mwterms.mwterms;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,39 +12,42 @@ import artzi.gtm.utils.config.Config;
 import artzi.gtm.utils.elog.EL;
 import artzi.gtm.utils.gen.DocData;
 import artzi.gtm.utils.io.Dirs;
+import artzi.gtm.utils.textUtils.Sentence;
+import artzi.gtm.utils.textUtils.Split;
 
-public class LDATrainMain {
+public class MWTrainMain {
 	
-	static String path = "C:\\TestDir\\LDA" ;  
+	static String path = "C:\\TestDir\\MWTerms" ;  
 		
 	static Config config ; 
 	static Gson gson ; 
 	static int totFiles = 0 ; 
-	static LDATrain ldaTrain ; 
-		
+	static MWTerms mwTerms ; 
+			
 	public static void main(String[] args) throws Exception {
 		gson = new Gson () ; 
 		config = Config.getInstance(path) ; 
 		System.out.println ("Work on Dir :"+ config.getMainPath()) ; 	
 		EL.W(" ****** Start - DIR "+ config.getMainPath());
-		String parmsPath = config.getPath("LDAParms") ; 
-		ldaTrain = new LDATrain (parmsPath) ; 
+		mwTerms = new MWTerms() ; 
 		loadData () ; 
-		ldaTrain.trainModel();
-		String modelPath = config.getPath("Model") ; 
-		ldaTrain.save (modelPath) ; 
-		 
+		mwTerms.initCandidateTerms() ; 
+		String jsonPath= config.getPath("Json") ; 
+		mwTerms.toJson (jsonPath) ;
 	}
+	
 	private static void loadData () throws JsonSyntaxException, IOException, Exception { 
-		String dataPath =  config.getPath ("Data") ;
+		String dataPath =  config.getValue ("Data") ;
 		System.out.println ("Load data " + dataPath);
 		String [] filter = {"json"} ; 
 		ArrayList <File> datafiles = Dirs.FilesInDir(dataPath , filter) ; 
 		for (File file : datafiles) { 			
 			int cnt = loadDocs (file) ;
 			totFiles += cnt ; 
+			if (totFiles > 500000 ) break ; 
 		}
 	}
+	
 	private static int loadDocs (File file) throws JsonSyntaxException, IOException, Exception { 
 		int cnt = 0 ; 
 		System.out.println ("Load docs - json " + file.getAbsolutePath());
@@ -53,12 +56,24 @@ public class LDATrainMain {
 		while ((line = in.readLine()) != null) { 
 			DocData docData = gson.fromJson(line, DocData.class) ; 
 			docData.toLow();
-			String text = docData.getTitle() + " "+ docData.getText() ; 
-			ldaTrain.addDoc(docData.getFile_id() ,  docData.getTitle(),text ) ;
-			cnt ++ ; 
+			if (docData.getText() != null ) {
+				String [] text = Sentence.TextIntoLines(docData.getText()) ; 				
+				for (String t : text) addTerms (t) ;
+			}
+			if (docData.getTitle() != null) { 
+				String [] text = Sentence.TextIntoLines(docData.getTitle()) ; 
+				if (text.length > 1) System.out.println(docData.getTitle())  ; 
+				for (String t : text) addTerms (t) ;
+			}
+			cnt ++ ; 			
 		}
 		in.close(); 
 		System.out.println (file.getAbsolutePath() + "cnt " + cnt  ) ; 	
 		return cnt ; 
+	}
+
+	private static void addTerms(String text) {
+		ArrayList <String> wordList = Split.Str2WordList(text) ; 
+		mwTerms.addWordList(wordList);
 	}	
 }

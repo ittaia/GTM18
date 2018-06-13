@@ -1,7 +1,5 @@
 package artzi.gtm.mwterms.mwterms;
 
-import java.util.ArrayList;
-
 import artzi.gtm.utils.elog.EL;
 
 public class MWTerm {
@@ -9,7 +7,6 @@ public class MWTerm {
 	String [] terms ; 
 	int len ; 
 	double cVal = -1 ; 
-	ArrayList <Integer> depList ; 
 	int totCount ;         /** f(a) ***/
 	int nestedCount ;      /** t(a) ***/ 
 	int upperTermsCount ;  /** c(b) ***/
@@ -19,7 +16,6 @@ public class MWTerm {
 		totCount = 0 ; 
 		nestedCount = 0 ; 
 		upperTermsCount = 0 ; 
-		depList = new ArrayList <Integer> () ; 
 	}
 	public void addCount () { 
 		this.totCount ++ ; 
@@ -35,7 +31,6 @@ public class MWTerm {
 		else { 
 			cVal = (Math.log(len)/log2) * (totCount - (nestedCount/upperTermsCount))    ; 			
 		}
-		cVal -= (depList.size()-1 ) * MWParms.multiDepPenalty ; 
 		return cVal ; 
 	}
 	public void updateNestedCount (int delta) { 
@@ -69,5 +64,5 @@ public class MWTerm {
 		s+= "," + getCVal()+ "," +  totCount + "," + nestedCount + "," + upperTermsCount ; 
 		return (s) ; 
 		 
-	}	
+	}		 
 }
