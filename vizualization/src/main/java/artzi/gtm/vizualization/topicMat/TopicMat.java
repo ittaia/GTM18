@@ -69,7 +69,8 @@ public class TopicMat {
 		topicClusters = new ArrayList <>() ; 
 		for (int clusterId = 0 ; clusterId < VParms.numOfClusters ; clusterId ++) { 
 			ArrayList <Integer> topicList = pamResult.getCluster(clusterId) ; 
-			
+			int med = pamResult.getMed(clusterId) ; 
+
 			int [] topics = new int [topicList.size()]  ; 
 			for (int i = 0 ; i < topics.length ; i ++ ) topics [i] = topicList.get(i) ; 
 			IndxProb [] termProbArray  = new IndxProb [numOfTerms] ;
@@ -84,12 +85,14 @@ public class TopicMat {
 			for (int i = 0 ; i < VParms.numOfTopTerms ; i ++)  {
 				topTerms [i] = new TermProb  (termProbArray[i].getIndx() , 
 						tmodel.getTerm(termProbArray[i].getIndx()) , termProbArray[i].getProb()) ; 
-				}
-	
-			topicClusters.add(new TopicCluster (clusterId , topics , topTerms)) ; 			
+			}
+			topicClusters.add(new TopicCluster (clusterId , med ,  topics , topTerms)) ; 			
 		}		
 	}
 	public void printTopicClusters() {
+		for (int clusterId = 0 ; clusterId <VParms.numOfClusters ; clusterId ++ ) { 
+			EL.W(" ******* Topic cluster: " + clusterId  + "med: " + pamResult.getMed(clusterId) );		
+		}
 		for (int clusterId = 0 ; clusterId <VParms.numOfClusters ; clusterId ++ ) { 			
 			EL.W(" ******* Topic cluster: " + clusterId   );			
 			TopicCluster cluster = topicClusters.get(clusterId) ; 
@@ -97,12 +100,12 @@ public class TopicMat {
 				EL.W("--- "+ termProb.getTermId() + "- "+ termProb.getTerm() + "- " + termProb.getProb ());
 			}
 			for (int topicId : cluster.getTopicIds()) { 
-				EL.W("print topic - cluster: " + clusterId );
+				EL.W("print topic - cluster: " + clusterId + " med:" + cluster.getMed());
 				tmodel.printTopic(topicId , 50);
 			}
 		}	
 	}
- 
+
 	public void printCloseTopics() {
 		for (int topicId = 0 ; topicId < numOfTopics ; topicId ++ ) { 
 			IndxProb [] closeTopics = getCloseTopics (topicId) ; 
@@ -117,7 +120,7 @@ public class TopicMat {
 			}
 		}		
 	}
-	
+
 	public IndxProb [] getCloseTopics (int topicId) { 
 		IndxProb [] topics = new IndxProb [numOfTopics] ; 
 		for (int topic2 = 0 ; topic2 < numOfTopics ; topic2 ++ ) { 
@@ -132,7 +135,7 @@ public class TopicMat {
 		for (int topicId = 0 ; topicId < numOfTopics ; topicId ++ ) { 
 			Node node = new Node (topicId , mdsMat [0][topicId], mdsMat[1][topicId] , tmodel.getHeader1(topicId) , 
 					tmodel.getTopTerms(topicId) , pamResult.getClusters()[topicId]) ; 
-			
+
 			node.setFxy();
 			nodes.add(node) ; 
 			for (int topic2 = topicId +1 ; topic2 < numOfTopics ; topic2++) { 
@@ -160,7 +163,7 @@ public class TopicMat {
 		s = "\"links\":[" ; 
 		out.write(s);
 		out.newLine();
-		 
+
 		for (int i = 0 ; i < links.size() ; i ++) { 
 			Link link = links.get(i) ; 
 			String json = gson.toJson(link ,Link.class) ; 
@@ -180,7 +183,7 @@ public class TopicMat {
 		for (TopicCluster cluster : topicClusters) { 
 			id += 1 ; 			 
 			TopicTreeNode topicGroup = new TopicTreeNode  (id ,-1 , cluster.getClusterId() , " group;"+cluster.getClusterId() ,
-			 cluster.getTopTerms() , 100) ;
+					cluster.getTopTerms() , 100) ;
 			root.addChild(topicGroup);
 			for (int topicId : cluster.getTopicIds() ) { 
 				id += 1 ; 			 
@@ -193,6 +196,50 @@ public class TopicMat {
 		for (String s : root.getJson()) { 			 
 			out.write(s);
 			out.newLine();
+		}		
+		out.close(); 
+		System.out.println("Save "+ path);
+	}
+	public void writeTrees (String path) throws IOException { 	
+		TermProb []  noterms = null ; 
+		int id = 0 ; 
+		ArrayList <TopicTreeNode> roots = new ArrayList <> () ; 
+		TopicTreeNode root = new TopicTreeNode  (id ,-1 , -1 , " root " , noterms , 100) ; 	
+		roots.add(root) ; 
+		for (TopicCluster cluster : topicClusters) { 
+			id += 1 ; 			 
+			TopicTreeNode topicGroup = new TopicTreeNode  (id ,-1 , cluster.getClusterId() , " group;"+cluster.getClusterId() ,
+					cluster.getTopTerms() , 100) ;
+			root.addChild(topicGroup);			
+		}
+		for (TopicCluster cluster : topicClusters) {
+			id = 0 ; 
+			root = new TopicTreeNode  (id ,-1 , cluster.getClusterId() , " group;"+cluster.getClusterId() ,
+					cluster.getTopTerms() , 100) ;
+			roots.add(root) ; 
+			for (int topicId : cluster.getTopicIds() ) { 
+				id += 1 ; 			 
+				TopicTreeNode topic = new TopicTreeNode  (id ,topicId , cluster.getClusterId() , tmodel.getHeader1(topicId) , 
+						tmodel.getTopTerms(topicId) , 100) ;
+				root.addChild(topic);
+			}
+		}
+
+
+		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)));	
+		String sr = "[" ; 
+		out.write (sr) ;
+		out.newLine();
+		for (int r = 0 ; r < roots.size(); r ++ ) { 		 
+			TopicTreeNode root1 = roots.get(r)  ; 
+			for (String s1 : root1.getJson()) {			
+				out.write(s1);
+				out.newLine();
+			}
+			if (r < roots.size()-1 )  sr = "," ; 
+			else sr = "]" ; 
+			out.write(sr);
+			out.newLine();			 
 		}		
 		out.close(); 
 		System.out.println("Save "+ path);

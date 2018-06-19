@@ -27,6 +27,16 @@ public class LDADoc implements Serializable{
 			termIds.add(termId) ; 
 		}		 
 	}
+	public LDADoc (int docID , String name , String header ,  ArrayList <String> tokens , TermList terms)   { 
+		this.docID= docID ; 
+		this.name = name ; 
+		this.header = header ; 
+		termIds = new ArrayList <> () ; 
+		for (String w:tokens) {
+			int termId = terms.addTerm (w ,docID ) ; 
+			termIds.add(termId) ; 
+		}		 
+	}
 	public void initWordVector (TermList termList) { 
 		int [] wordVecTemp = new int [termIds.size()]  ; 
 		numOfWords = 0 ; 

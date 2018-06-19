@@ -19,7 +19,6 @@ import artzi.gtm.utils.termList.TermList;
 public class LDATrain {
 
 	ArrayList <LDADoc> docList ; 
-	ArrayList <String> textList ; 
 	LDAModel ldaModel ; 
 	TrainedMLModel trainedModel ; 
 	LDADocs ldaDocs ; 
@@ -30,13 +29,16 @@ public class LDATrain {
 		parms = LDAParms.getInstance(parmsPath) ; 
 		terms = TermList.GetInstance() ; 
 		docList = new ArrayList <LDADoc> () ; 
-		textList = new ArrayList <String> () ; 
 	}
 	public void addDoc (String name , String header , String text) throws Exception { 
 		int docID = docList.size() ; 
 		LDADoc ldaDoc = new LDADoc (docID , name  , header , text , terms) ; 
 		docList.add(ldaDoc) ; 
-		textList.add(text) ; 
+	}
+	public void addDoc (String name , String header , ArrayList <String>  tokens) throws Exception { 
+		int docID = docList.size() ; 
+		LDADoc ldaDoc = new LDADoc (docID , name  , header , tokens , terms) ; 
+		docList.add(ldaDoc) ; 
 	}
 	public void trainModel () throws Exception  { 
 		activeTerms = terms.initActive(parms.minWordCount, parms.maxDf) ; 

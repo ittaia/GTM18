@@ -22,7 +22,8 @@ public class TopicMatMain {
 		String trainedModelPath = new File (modelPath , "trainedModel").getAbsolutePath() ; 
 		topicMat = new TopicMat (trainedModelPath) ; 
 		String treePath = new File (modelPath , "tree.json").getAbsolutePath() ; 
-		topicMat.writeHierarchy(treePath); 	
+		topicMat.writeTrees(treePath); 	
 		topicMat.printTopicClusters();
+		topicMat.printCloseTopics();
 	}
 }	

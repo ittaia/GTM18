@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import artzi.gtm.utils.elog.EL;
+
 public class  MWTermDictionary{
 	ArrayList <String [] > termDic ; 
 	Hashtable <String , HashSet <Integer> > tokenKeyHash ; 
@@ -32,16 +34,18 @@ public class  MWTermDictionary{
 		String r = i + string ; 
 		return r ; 
 	}
-	public int findMaxLengthMatch (String [] termTokens) { 
-		int tokenIndx = 0 ; 
-		String tokenKey = getKey (0, termTokens [0]) ; 
+	public int findMaxLengthMatch (ArrayList <String>  tokens , int startToken) { 
+		int tokenIndx = startToken ; 
+		int offset = 0 ; 
+		String tokenKey = getKey (offset, tokens.get(tokenIndx)) ; 
 		HashSet<Integer> hash = tokenKeyHash.get(tokenKey) ;
 		ArrayList < HashSet<Integer> > matchSets= new ArrayList <HashSet<Integer>> () ; 
 		if (hash != null ) {
 			HashSet<Integer> match = (HashSet<Integer>) hash.clone () ; 
 			matchSets .add (match) ; 
-			for (tokenIndx = 1 ; tokenIndx <  termTokens.length ; tokenIndx ++ ) { 
-				tokenKey = getKey (tokenIndx, termTokens [tokenIndx]) ; 
+			for (tokenIndx = startToken+1 ; tokenIndx <  tokens.size() ; tokenIndx ++ ) { 
+				offset += 1 ; 
+				tokenKey = getKey (offset, tokens.get (tokenIndx)) ; 
 				hash = tokenKeyHash.get(tokenKey) ;
 				if (hash == null) break ; 
 				HashSet<Integer> match1 = (HashSet<Integer>)matchSets.get(matchSets.size()-1).clone () ; 
@@ -73,9 +77,9 @@ public class  MWTermDictionary{
 		for (String [] s  : termDic) { 
 			String p = "" ; 
 			for (String a:s) {
-				p += a ;
+				p += a + " "  ;
 			}
-			System.out.println(p) ; 
+			EL.W(p) ; 
 		}		
 	}
 }

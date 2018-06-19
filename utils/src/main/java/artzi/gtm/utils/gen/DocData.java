@@ -9,7 +9,9 @@ public class DocData {
 		super();
 		this.file_id = file_id;
 		this.title = title;
+		if (this.title == null) this.title = "" ;  
 		this.text = text;
+		if (this.text == null) this.text = "" ; 
 	}
 	public void toLow () { 
 		if (title != null) title = title.toLowerCase() ; 
