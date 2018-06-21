@@ -6,7 +6,6 @@
     <p>
 
     </p>
-
 </body>
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -40,12 +39,10 @@
     }
 
     new_window()
-    update("q1",0)
-    update("q2",0)
-    // update the element
-    function update(val,p) {
+    for (var t = 0 ; t < qr.length ; t ++) update (qr[t] , 50) ; 
+   
 
-        // adjust the text on the range slider
+    function update(val,p) {        
         d3.select("#"+val+"v").text(p);
         d3.select("#"+val).property("value", p);
     }
