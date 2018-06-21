@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Input test</title>
+
+<body>
+    <p>
+
+    </p>
+
+</body>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+    var qr = ["q1","q2","rrrrr"] ; 
+    function new_window() {
+        var body = d3.select(document.body)
+        var w1 = body.selectAll (".query")
+        .data(qr)
+            .enter()
+            .append("label")
+            .attr("for", function (d) { return d ; })
+            .style("display", "inline-block")
+            .style("width", 240)
+            .style("text-align", "left")
+            .text(function (d) {return d + "--> "; })
+        var w11 = w1
+            .append("span")
+            .attr("id",function (d) { return d+"v" ; })
+            .style("color","blue")
+            .text(" **")
+
+        var w12 = w1.append("input")
+            .attr("type", "range")
+            .attr("id",function (d) { return d ; })
+            .attr("min", 0)
+            .attr("max", 100)
+            .on("input", function (d) {
+                update(d,+this.value);
+            })
+    }
+
+    new_window()
+    update("q1",0)
+    update("q2",0)
+    // update the element
+    function update(val,p) {
+
+        // adjust the text on the range slider
+        d3.select("#"+val+"v").text(p);
+        d3.select("#"+val).property("value", p);
+    }
+
+
+</script>

@@ -91,6 +91,7 @@
         if (error) throw error;  trees = roots ; display_pack (svg , roots[0]) ; } )
 
     function display_pack (svg,tree) { 
+        var tree_group = tree.group ; 
         var diameter = +svg.attr("width") ; 
         var g = svg.append("g").attr("transform", "translate(2,2)") ; 
         var pack = d3.pack()
