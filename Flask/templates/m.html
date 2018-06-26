@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+   <script src="/static/t1.js" type='text/javascript'></script>  
+<body>
+    <div id="viz"></div>
+    <script type="text/javascript">
+
+    var sampleSVG = d3.select("#viz")
+        .append("svg")
+        .attr("width", 200)
+        .attr("height", 200);
+
+    var count = '{"cnt":16}'; 
+    d3.json('/load', function (error, count) {
+        if (error) throw error;   alert ("count" + JSON.stringify(count)) ;dc (sampleSVG , count) ;  } ) ;   // update ddddd   
+    
+    function dc (svg,count) { 
+        var ccc = count.cnt ; 
+        alert ("ccc-"+ ccc )
+        var wn ; 
+        svg.append("circle")
+        .style("stroke", "gray")
+        .style("fill", "white")
+        .attr("r", t1())
+        .attr("cx", 100)
+        .attr("cy", 100)
+        .attr('text-align' ,  'center')
+        
+        .on("mouseover", function(){d3.select(this).style("fill", "aliceblue");})
+        .on("mouseout", function(){d3.select(this).style("fill", "white");})         
+        .on ("click", function(){nw() }) ;  
+    svg.append  ("title")      
+        .text ( 'lll') ; 
+    }
+    function nw () {
+        var w1 = window.open("", "_blank", 
+        "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400"); 
+        var wsvg  = d3.select(w1.document.body)
+        .append("svg")
+        .attr("width", 200)
+        .attr("height", 200);
+        dc (wsvg) ; 
+    }
+     
+   
+    
+    
+    </script>
+</body>
+</html>

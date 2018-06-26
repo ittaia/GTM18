@@ -22,21 +22,19 @@
 </style>
 <svg width="700" height="700"></svg>
 <script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="{{ url_for('static', filename='terms2circle.js') }}"></script>  
+<script src='/static/terms2circle.js' type='text/javascript'></script>  
 <script>
 
     var svg = d3.select("svg");
-    var  format = d3.format(",d"); 
-        
-       
-    var color = d3.scaleOrdinal(d3.schemeCategory20);    
-
+    var  format = d3.format(",d");       
+    var color = d3.scaleOrdinal(d3.schemeCategory20);  
+    var qwindow = null ; 
+    var queries = []
     var trees ; 
     d3.json('/load', function (error, roots) {
         if (error) throw error;  trees = roots ; display_pack (svg , roots[0]) ; } )
 
     function display_pack (svg,tree) { 
-        var tree_group = tree.group ; 
         var diameter = +svg.attr("width") ; 
         var g = svg.append("g").attr("transform", "translate(2,2)") ; 
         var pack = d3.pack()
@@ -65,7 +63,16 @@
             .style("fill", function (d) { return color(d.data.group); })
             .style("stroke", "black")
             .style("stroke-width" , "1px")
-            .on ("click", function(d){new_window(d.data.group) }) ; 
+            .on ("click", function(d){
+                if (d.data.topicId < 0) new_window(d.data.group) ; 
+                else {
+                    query = new Object () ; 
+                    query.Id = d.data.topicId ; 
+                    query.header = d.data.header ; 
+                    queries.push (query)
+                    query_window (queries) ; 
+                }
+            }) ; 
 
 
         node.selectAll("text")
@@ -81,6 +88,7 @@
             .attr('transform', function (d) { return "translate(" + [d.x, -d.y] + ")"; })
             .text(function (d) { return d.term; })
     } 
+
     function new_window (group) {
         var w1 = window.open("", "_blank", 
         "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=700,height=700"); 
@@ -90,4 +98,41 @@
         .attr("height", 700);
         display_pack (wsvg , trees[group+1]) ; 
     } 
+    function query_window(queries) {
+        if (qwindow == null) { 
+            qwindow = window.open("", "_blank", 
+            "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=700,height=700"); 
+        }      
+        var body = d3.select(qwindow.document.body)
+        var w1 = body.selectAll (".query")
+        .data(queries)
+            .enter()
+            .append('div')
+            .append('label')
+            .attr("for", function (d) { return "x"+ d.Id ; })
+            .style("display", "inline-block")
+            .style("width", 500)
+            .style("text-align", "left")
+            .text(function (d) {return "x"+ d.Id + " - "+ d.header + "   : "; }) ; 
+        var w11 = w1
+            .append("span")
+            .attr("id",function (d) { return "x" + d.Id+"v" ; })
+            .style("color","blue")
+            .text(" **") ; 
+
+        var w12 = w1.append("input")
+            .attr("type", "range")
+            .attr("id",function (d) { return "x"+ d.Id ; })
+            .attr("min", 0)
+            .attr("max", 100)
+            .on("input", function (d) {
+                update (body , d.Id ,+this.value ) ;                         
+            })  ;  
+        for (var t = 0 ; t < queries.length ; t ++) update (body , queries[t].Id , 50) ; 
+    }
+    function update (body , val , p)  {
+        body.select( "#x"+val+"v").text(p);
+        body.select("#x"+val).property("value",p);      
+         
+    }     
 </script>

@@ -46,18 +46,18 @@ left:0;
             .attr("min", 0)
             .attr("max", 100)
             .on("input", function (d) {
-                update(d,+this.value);
+                update(body , d,+this.value);
             })
-        var i = 1 ; 
+        return body ; 
     }
 
-    new_window()
-    for (var t = 0 ; t < qr.length ; t ++) update (qr[t] , 50) ; 
+    var b = new_window() ; 
+    for (var t = 0 ; t < qr.length ; t ++) update (b , qr[t] , 50) ; 
    
 
-    function update(val,p) {        
-        d3.select("#"+val+"v").text(p);
-        d3.select("#"+val).property("value", p);
+    function update(body , val,p) {        
+        body.select("#"+val+"v").text(p);
+        body.select("#"+val).property("value", p);
     }
 
 

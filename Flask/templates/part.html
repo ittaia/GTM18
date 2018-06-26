@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    .node rect {
+        fill: #ddd;
+    }
+
+    .node text {
+        font: 10px sans-serif;
+    }
+
+    .node tspan:last-child {
+        font-size: 9px;
+        fill-opacity: 0.8;
+    }
+
+    .node--internal text {
+        font-weight: bold;
+    }
+
+    .node--leaf rect {
+        fill-opacity: 0.6;
+    }
+</style>
+<svg width="960" height="4980"></svg>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+    d3.json('/load', function (error, root) {
+        if (error) throw error;
+
+
+
+
+        var svg = d3.select("svg"),
+            width = +svg.attr("width"),
+            height = +svg.attr("height");
+
+        var format = d3.format(",d");
+
+        var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+        function terms2rect(terms, width, height) {
+            console.log('Width ' + width);
+            if (terms.length < 1) return ([])
+            const start_y = 0.80;
+            const start_font = 0.4;
+            const delta_start = 0;
+            const large_font_base = 300;
+            const min_font = 15;
+            const font_len = 0.6;
+            const font_line = 0.8;
+            const min_prob = 0.008;
+            var large_font = large_font_base;
+            for (var t = 0; t < terms.length; t++) {
+                var p = terms[t].prob
+                var font = 0;
+                if (p > min_prob) {
+                    font = large_font * p;
+                    if (font < min_font) font = min_font;
+                }
+                terms[t].font = font;
+                terms[t].len = terms[t].term.length * font * font_len
+                if (font > 0) terms[t].inrect = true;
+                else terms[t].inrect = false;
+            }
+            var line_font = terms[0].font;
+            var line = 0;
+            var dy = start_y + line_font * font_line;
+            var x = 0;
+
+
+            var x = x + delta_start + start_font * line_font;
+
+            for (var t = 0; t < terms.length; t++) {
+                if (terms[t].font > 0) {
+                    var next_x = x + terms[t].len
+                    if (next_x > width) {
+                        console.log('break line:' + line + ' - ' + t + ' - ' + terms[t].term +
+                            ' - ' + ' X- ' + x + ' Next- ' + next_x);
+                        line += 1;
+                        x = 0;
+                        dy = dy + line_font * font_line;
+                        if (dy > height) {
+                            terms[t].inrect = false;
+                        }
+                        line_font = terms[t].font;
+                        x = x + delta_start + start_font * line_font;
+                        // console.log ('Start line:' + line + ' - '+  t + ' - '+ terms[t].term + 
+                        //' - ' + ' - '+ x + ' - ' + dy ) ;  
+                    }
+                }
+                terms[t].y = dy;
+                terms[t].x = x;
+                x = x + terms[t].len
+            }
+        }
+
+        var partition = d3.partition()
+            .size([height, width])
+            .padding(1)
+            .round(true);
+
+
+        root = d3.hierarchy(root)
+            .sum(function (d) { return d.size; })
+        // .sort(function(a, b) { return b.height - a.height || b.value - a.value; });
+
+        partition(root);
+        var cell = svg
+            .selectAll(".node")
+            .data(root.descendants())
+            //    .filter(function(d) { return d.data.terms; })
+            .enter().append("g")
+
+            .attr("class", function (d) { return "node" + (d.children ? " node--internal" : " node--leaf"); })
+            .attr("transform", function (d) { return "translate(" + d.y0 + "," + d.x0 + ")"; });
+
+        cell.append("rect")
+            .attr("width", function (d) { return d.y1 - d.y0; })
+            .attr("height", function (d) { return d.x1 - d.x0; })
+            .filter(function (d) { return !d.children; })
+            .style("fill", function (d) { while (d.depth > 1) d = d.parent; return color(d.id); });
+
+        cell.selectAll("text")
+
+            .data(function (d) { terms2rect(d.data.terms, d.x1 - d.x0, d.y1 - d.y0); return d.data.terms; })
+            .enter().append("text")
+            .filter(function (d) { return d.inrect; })
+            .style("font-size", function (d) { return d.font + "px"; })
+            .style("font-family", "ariel")
+            .style("font-style", "oblique")
+            .style("fill", 'black')
+            .style("text-anchor", "start")
+            .attr('transform', function (d) { return "translate(" + [d.x, d.y] + ")"; })
+            .text(function (d) { return d.term; })
+    });
+</script>
