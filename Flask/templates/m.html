@@ -12,13 +12,15 @@
         .attr("width", 200)
         .attr("height", 200);
 
-    var count = '{"cnt":16}'; 
-    d3.json('/load', function (error, count) {
-        if (error) throw error;   alert ("count" + JSON.stringify(count)) ;dc (sampleSVG , count) ;  } ) ;   // update ddddd   
-    
-    function dc (svg,count) { 
-        var ccc = count.cnt ; 
-        alert ("ccc-"+ ccc )
+    var count_external = '{"cnt":16}'; 
+    d3.json('/load?A1=1&A2=2', function (error, count1) {
+        if (error) throw error;   
+        alert ("count1" + JSON.stringify(count1)) ;       
+        dc (sampleSVG , count1) ;  } ) ;   
+    function dc (svg,countp) { 
+        count_external = countp ; 
+        var ccc = countp.cnt ; 
+        alert ("count p -"+ ccc )
         var wn ; 
         svg.append("circle")
         .style("stroke", "gray")
@@ -35,13 +37,15 @@
         .text ( 'lll') ; 
     }
     function nw () {
+        var ccc = count_external.cnt ;  
+        alert ("count external in nw  -"+ ccc )
         var w1 = window.open("", "_blank", 
         "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400"); 
         var wsvg  = d3.select(w1.document.body)
         .append("svg")
         .attr("width", 200)
         .attr("height", 200);
-        dc (wsvg) ; 
+        dc (wsvg,count) ; 
     }
      
    

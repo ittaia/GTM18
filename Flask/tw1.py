@@ -18,6 +18,10 @@ def index():
 @app.route('/load')
 def load():
     cnt.add()
+    i = request.args.get('A1') 
+    print (i) 
+    j =  request.args.get('A2')   
+    print (j) 
     s = '{"cnt":'+str(cnt.count)+'}'
     print (s)
     return s
