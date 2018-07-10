@@ -22,14 +22,17 @@
 </style>
 <svg width="700" height="700"></svg>
 <script src="https://d3js.org/d3.v4.min.js"></script>
+<script src='/static/display_answers.js' type='text/javascript'></script>
 <script src='/static/terms2circle.js' type='text/javascript'></script>
+<script src='/static/query_window.js' type='text/javascript'></script>
+
 <script>
 
     var svg = d3.select("svg");
     var format = d3.format(",d");
     var color = d3.scaleOrdinal(d3.schemeCategory20);
     var qwindow = null;
-    var queries = []
+    var queries = [] ; 
     var trees;
     d3.json('/load', function (error, roots) {
         if (error) throw error; trees = roots; display_pack(svg, roots[0]);
@@ -65,13 +68,24 @@
             .style("stroke", "black")
             .style("stroke-width", "1px")
             .on("click", function (d) {
+                var dup = false ; 
                 if (d.data.topicId < 0) new_window(d.data.group);
                 else {
-                    query = new Object();
-                    query.Id = d.data.topicId;
-                    query.header = d.data.header;
-                    query.prob = 50;
-                    queries.push(query)
+                    for (var i = 0 ; i < queries.length ; i ++ ) { 
+                        if (queries [i].Id == d.data.topicId ) { 
+                            dup = true 
+                            break ; 
+                        }
+                    }
+                    if (!dup) { 
+                        query = new Object();
+                        query.Id = d.data.topicId;
+                        query.header = d.data.header;
+                        query.terms = d.data.terms ; 
+                        query.color = color(d.data.group);
+                        query.prob = 50;
+                        queries.push(query) ; 
+                    }
                     query_window(queries);
                 }
             });
@@ -101,155 +115,5 @@
             .attr("width", 700)
             .attr("height", 700);
         display_pack(wsvg, trees[group + 1]);
-    }
-    function query_window(queries) {
-        if (qwindow == null) {
-            qwindow = window.open("", "_blank",
-                "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=700,height=700");
-        }
-        var body = d3.select(qwindow.document.body);
-        body.select('#totdiv').remove();
-        var query_line = body.selectAll(".query")
-            .data(queries)
-            .enter()
-            .append('div')
-            .attr('class', 'query')
-        var label = query_line
-            .append('label')
-            .attr("for", function (d) { return "x" + d.Id; })
-            .style("display", "inline-block")
-            .style("width", 240)
-            .style("text-align", "left")
-            .text(function (d) { return d.Id + " - " + d.header + "   : "; });
-        var span = label
-            .append("span")
-            .attr("id", function (d) { return "x" + d.Id + "v"; })
-            .style("color", "blue")
-            .text(" **");
-
-        var input = query_line
-            .append("input")
-            .attr("type", "range")
-            .attr("id", function (d) { return "x" + d.Id; })
-            .attr("min", 0)
-            .attr("max", 100)
-            .on("input", function (d) {
-                update(body, d.Id, +this.value);
-                clear_answers(body, d.Id);
-                clear_tot(body);
-            })
-            .on("mouseup", function (d) {
-                update(body, d.Id, +this.value);
-                update_answers(body, d.Id, +this.value);
-            });
-        var h_answers = query_line
-            .append("span")
-            .style("color", "red")
-            .text("   documents:");
-        var answers = query_line
-            .append("span")
-            .attr("id", function (d) { return "x" + d.Id + "an"; })
-            .style("color", "blue")
-            .text(" **");
-        var tot_answers = body
-            .append('div')
-            .attr("id", "totdiv")
-            .append("span")
-            .style("color", "red")
-            .text("tot   documents:")
-            .append("span")
-            .attr("id", "xtot")
-            .style("color", "blue")
-            .text("--");
-        var dsply = body
-            .append('div')
-            .append('button')
-            .text('Display documents -->')
-            .on('click', function () { display_answers(body); });
-
-        for (var t = 0; t < queries.length; t++) {
-            update(body, queries[t].Id, queries[t].prob);
-            update_answers(body, queries[t].Id, queries[t].prob);
-        }
-        update_tot(body);
-        qwindow.focus();
-    }
-    function update(body, val, p) {
-        body.select("#x" + val + "v").text(p);
-        body.select("#x" + val).property("value", p);
-    }
-    function clear_answers(body, val) {
-        body.select("#x" + val + "an").text('**');
-    }
-    function update_answers(body, val, p) {
-        url = '/getnum' + '?topicid=' + val + '&prob=' + p
-        d3.json(url, function (error, numj) {
-            if (error) throw error;
-            //alert ("  j1  "+numj  + "  j2  "+JSON.stringify(numj)) ; 
-            num_of_docs = numj.ndocs;
-            body.select("#x" + val + "an").text(num_of_docs);
-        });
-        for (var t = 0; t < queries.length; t++) {
-            if (queries[t].Id == val) queries[t].prob = p;
-        }
-        update_tot(body);
-    }
-    function update_tot(body) {
-        query = '[';
-        for (var t = 0; t < queries.length; t++) {
-            query += '(' + queries[t].Id + ',' + queries[t].prob + ')'
-            if (t < queries.length - 1) query += ',';
-        }
-        query += ']'
-        url = '/gettot' + '?query=' + query;
-        d3.json(url, function (error, numj) {
-            if (error) throw error;
-            //alert ("  j1  "+numj  + "  j2  "+JSON.stringify(numj)) ; 
-            num_of_docs = numj.ndocs;
-            body.select("#xtot").text(num_of_docs);
-        });
-    }
-    function clear_tot(body) {
-        body.select("#xtot").text('**');
-    }
-    function display_answers(body) {
-        awindow = window.open("", "_blank",
-                "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=900,width=700,height=700");
-        body = d3.select(awindow.document.body);
-        query = '[';
-        for (var t = 0; t < queries.length; t++) {
-            query += '(' + queries[t].Id + ',' + queries[t].prob + ')'
-            if (t < queries.length - 1) query += ',';
-        }
-        query += ']'
-        url = '/getdocs' + '?query=' + query;
-        d3.json(url, function (error, doc_list) {
-            if (error) throw error;
-            //alert ("  j1  "+numj  + "  j2  "+JSON.stringify(numj)) ; 
-           tabulate (body , doc_list) ; 
-           awindow.focus() ; 
-        });
-    }
-    function tabulate(body, doc_list) {
-        columns = ['name' , 'prob' , 'text']
-        var table = body
-            .append('table')
-        var thead = table.append('thead')
-        var tbody = table.append('tbody');  
-        thead.append('tr')
-            .selectAll('th')
-            .data(columns).enter()
-            .append('th')
-            .text(function (column) { return column; });  
-        var rows = tbody.selectAll('tr').data(doc_list).enter().append('tr');           
-        var cells = rows.selectAll('td')
-            .data (function (row) 
-            { return columns.map(function
-                    (column) { return { column: column, value: row[column] }; });
-            })
-            .enter().append('td').text(function (d) {
-                return d.value;
-            });
-        return table;
-    }    
+    }   
 </script>

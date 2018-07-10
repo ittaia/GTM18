@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
-    div{
-display:block;
-position:relative;
-padding-left:120px; /* adjust if necessary */
-}
-label > span {
-position:relative;
-left:0;
-}
+    div {
+        display: block;
+        position: relative;
+        padding-left: 120px;
+        /* adjust if necessary */
+    }
+
+    label>span {
+        position: relative;
+        left: 0;
+    }
 </style>
 <title>Input test</title>
 
@@ -21,43 +23,54 @@ left:0;
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
-    var qr = ["q1","q2","rrrrr"] ; 
+    var qr = ["q1", "q2", "q1234"];
+
     function new_window() {
         var body = d3.select(document.body)
-        var w1 = body.selectAll (".query")
-        .data(qr)
+        var div = body.selectAll(".query")
+            .data(qr)
             .enter()
             .append('div')
+            .style("width", 400)
+        var label = div
             .append('label')
-            .attr("for", function (d) { return d ; })
-            .style("display", "inline-block")
-            .style("width", 240)
+            .attr("for", function (d) { return d; })
+            .style("display", "inline-block")            
             .style("text-align", "left")
-            .text(function (d) {return d + "   : "; })
-        var w11 = w1
+            .text(function (d) {
+                var fill = "";
+                for (var i = 0; i < 6 - d.length; i++) fill += "-";
+                return d + fill + "   : ";
+            })
+        var span = div
             .append("span")
-            .attr("id",function (d) { return d+"v" ; })
-            .style("color","blue")
+            .attr("id", function (d) { return d + "v"; })
+            .style("position", "absolute")
+            .style("left", "180px")
+            .style("color", "blue")
             .text(" **")
 
-        var w12 = w1.append("input")
+        var range = div
+            .append("input")
             .attr("type", "range")
-            .attr("id",function (d) { return d ; })
+            .attr("id", function (d) { return d; })
             .attr("min", 0)
             .attr("max", 100)
+            .style("position", "absolute")
+            .style("left", "200px")
             .on("input", function (d) {
-                update(body , d,+this.value);
+                update(body, d, +this.value);
             })
-        return body ; 
+        return body;
     }
 
-    var b = new_window() ; 
-    for (var t = 0 ; t < qr.length ; t ++) update (b , qr[t] , 50) ; 
-   
+    var b = new_window();
+    for (var t = 0; t < qr.length; t++) update(b, qr[t], 50);
 
-    function update(body , val,p) {        
-        body.select("#"+val+"v").text(p);
-        body.select("#"+val).property("value", p);
+
+    function update(body, val, p) {
+        body.select("#" + val + "v").text(p);
+        body.select("#" + val).property("value", p);
     }
 
 

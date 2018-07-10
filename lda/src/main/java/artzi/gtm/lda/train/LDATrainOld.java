@@ -57,7 +57,7 @@ public class LDATrainOld {
 		mAlphabet.init (activeTerms) ; 
 		MInstanceList mInstanceList = new MInstanceList (mAlphabet) ; 
 		for (LDADoc doc : docList) { 
-			DocHeader docHeader = new DocHeader (doc.getDocID() , doc.getName() , doc.getHeader ())  ; 
+			DocHeader docHeader = new DocHeader (doc.getDocId() , doc.getName() , doc.getHeader ())  ; 
 			mInstanceList.add (docHeader , doc.getWordArray()) ; 
 		}
 		ldaModel = new LDAModel (mInstanceList ,parms.numOfLDATopics , parms.alpha , parms.beta ) ; 

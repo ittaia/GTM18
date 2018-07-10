@@ -10,25 +10,25 @@ import artzi.gtm.utils.textUtils.Split;
 public class LDADoc implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
-	int docID ; 
+	int docId ; 
 	String header ; 
 	int numOfWords ; 
 	int [] wordArray ; 
 	ArrayList <Integer> termIds ; 
 	String name ; 
-	public LDADoc (int docID , String name , String header ,  String words , TermList terms)   { 
-		this.docID= docID ; 
+	public LDADoc (int docId , String name , String header ,  String words , TermList terms)   { 
+		this.docId= docId ; 
 		this.name = name ; 
 		this.header = header ; 
 		ArrayList <String> textWords = Split.Str2WordList (words) ; 
 		termIds = new ArrayList <> () ; 
 		for (String w:textWords) {
-			int termId = terms.addTerm (w ,docID ) ; 
+			int termId = terms.addTerm (w ,docId ) ; 
 			termIds.add(termId) ; 
 		}		 
 	}
 	public LDADoc (int docID , String name , String header ,  ArrayList <String> tokens , TermList terms)   { 
-		this.docID= docID ; 
+		this.docId= docID ; 
 		this.name = name ; 
 		this.header = header ; 
 		termIds = new ArrayList <> () ; 
@@ -54,6 +54,9 @@ public class LDADoc implements Serializable{
 			}
 		}
 	}
+	public void setDocId (int docId ) { 
+		this.docId = docId ; 
+	}
 	
 	public String getHeader () { 
 		return this.header ; 
@@ -61,8 +64,8 @@ public class LDADoc implements Serializable{
 	public String getName() {
 		return name;
 	}
-	public int getDocID() {
-		return docID ; 
+	public int getDocId() {
+		return docId ; 
 	}
 	public int [] getWordArray () { 		
 		return this.wordArray ; 

@@ -43,7 +43,7 @@ public class MLTMTrain {
 				EL.WE( 777 ,  "Empty doc "  + ldaDoc.getName()     ) ; 
 			}
 			else { 
-				DocWords docWords = new DocWords (ldaDoc.getDocID() , ldaDoc.getWordArray()) ; 
+				DocWords docWords = new DocWords (ldaDoc.getDocId() , ldaDoc.getWordArray()) ; 
 				docWordsList.add(docWords) ; 
 			}
 		}		

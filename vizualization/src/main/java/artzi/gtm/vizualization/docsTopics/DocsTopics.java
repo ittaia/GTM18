@@ -46,6 +46,12 @@ public class DocsTopics {
 			}
 			topicDocs.sort( (t2,t1) ->   Double.compare(t1.getProb(), t2.getProb()));
 			topicsDocs.add(topicDocs) ; 
+			if (topicId == 79) { 
+				for (IndxProb   d : topicDocs) {
+					if (d.getProb() > 0.5) System.out.println (d.getIndx() + " - "+ d.getProb()) ; 
+				}
+					
+			}
 		}		
 	}
 

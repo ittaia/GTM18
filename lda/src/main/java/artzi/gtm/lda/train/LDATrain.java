@@ -31,7 +31,7 @@ public class LDATrain {
 		docList = new ArrayList <LDADoc> () ; 
 	}
 	public void addDoc (String name , String header , String text) throws Exception { 
-		int docID = docList.size() ; 
+		int docID = docList.size() ;  
 		LDADoc ldaDoc = new LDADoc (docID , name  , header , text , terms) ; 
 		docList.add(ldaDoc) ; 
 	}
@@ -51,6 +51,8 @@ public class LDATrain {
 				EL.W(   "Empty doc "  + doc.getName()     ) ; 
 			}
 			else { 
+				int docId = activeDocs.size() ; 
+				doc.setDocId (docId) ; 
 				activeDocs.add(doc) ; 
 				totTokens += doc.getNumOfWorsd() ; 
 			}
@@ -61,7 +63,7 @@ public class LDATrain {
 		mAlphabet.init (activeTerms) ; 
 		MInstanceList mInstanceList = new MInstanceList (mAlphabet) ; 
 		for (LDADoc doc : docList) { 
-			DocHeader docHeader = new DocHeader (doc.getDocID() , doc.getName() , doc.getHeader ())  ; 
+			DocHeader docHeader = new DocHeader (doc.getDocId() , doc.getName() , doc.getHeader ())  ; 
 			mInstanceList.add (docHeader , doc.getWordArray()) ; 
 		}
 		ldaModel = new LDAModel (mInstanceList ,parms.numOfLDATopics , parms.alpha , parms.beta ) ; 
