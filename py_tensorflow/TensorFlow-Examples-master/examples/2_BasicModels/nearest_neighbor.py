@@ -7,7 +7,7 @@ Author: Aymeric Damien
 Project: https://github.com/aymericdamien/TensorFlow-Examples/
 '''
 
-from __future__ import print_function
+# from __future__ import print_function
 
 import numpy as np
 import tensorflow as tf
@@ -53,3 +53,4 @@ with tf.Session() as sess:
             accuracy += 1./len(Xte)
     print("Done!")
     print("Accuracy:", accuracy)
+    print ('end ')

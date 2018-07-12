@@ -132,6 +132,7 @@ with tf.Session() as sess:
                 g[j].reshape([28, 28])
 
     print("Original Images")
+   
     plt.figure(figsize=(n, n))
     plt.imshow(canvas_orig, origin="upper", cmap="gray")
     plt.show()
@@ -140,3 +141,4 @@ with tf.Session() as sess:
     plt.figure(figsize=(n, n))
     plt.imshow(canvas_recon, origin="upper", cmap="gray")
     plt.show()
+ 
