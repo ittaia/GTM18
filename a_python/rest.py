@@ -87,7 +87,8 @@ with open (file_path , 'r', encoding='utf-8') as f:
             rest_dic[review.rest_key].add_review (review)  
 logger.info ('num of rows: ' + str (c))   
 logger.info ('num of rest:' + str (len (rest_dic)))
-out_path = PurePath (path , 'rest.json')
+data_path = PurePath (path , 'Data')
+out_path = PurePath (data_path , 'rest.json')
 out_docs = 0 
 with open(out_path , 'w') as out:
     for rest in rest_dic.values():
