@@ -1,0 +1,5 @@
+patents = 'C:\Corpuses\Patents'
+testDir = 'C:\TestDir\MLTM'
+patents_data = testDir + '\data'
+patents_download = patents+ '\download'
+pathLog = patents+'\log'
