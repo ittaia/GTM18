@@ -6,7 +6,7 @@ app = Flask(__name__)
 @app.route('/load')
 def load():
     print ('kuku') 
-    path = 'C:\\TestDir\\LDA\\model\\tree.json'
+    path = 'C:\\TestDir\\LDARest\\model\\treeh.json'
     f = open(path, 'r')
     s = f.read()
     return s 

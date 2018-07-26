@@ -13,7 +13,7 @@ docs = Docs ()
 
 @app.route('/load')
 def load():
-    path = 'C:\\TestDir\\LDA\\model\\tree.json'
+    path = 'C:\\TestDir\\LDARest\\model\\tree.json'
     f = open(path, 'r')
     s = f.read()
     return s 

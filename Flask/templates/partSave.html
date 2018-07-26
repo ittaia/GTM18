@@ -37,22 +37,7 @@
     var color = d3.scaleOrdinal(d3.schemeCategory20);
     var qwindow = null;
     var queries = [] ; 
-    var trees; 
-    var vwidth = [0.1 , 0.6 ,1.5]  
-    function dy0 (d) {
-        var start = 0 ;  
-        p = d.parent ;  
-        while (p) {
-            start += (p.y1-p.y0) * vwidth [p.depth] 
-            p = p.parent  ;            
-        }
-        return start ; 
-    }
-    function dy1 (d) {
-        var start = dy0 (d) ;  
-        var end = start + (d.y1 - d.y0) * vwidth [d.depth]
-        return end ; 
-    }
+    var trees;   
     d3.json('/load', function (error, roots) {
         if (error) throw error; trees = roots; display_part(svg, roots);
     }) ; 
@@ -65,8 +50,6 @@
 
         root = d3.hierarchy(tree)
             .sum(function (d) { return d.size }) ; 
-        partition (root) 
-
         // .sort(function(a, b) { return b.height - a.height || b.value - a.value; });        
         var cell = svg
             .selectAll(".node")
@@ -74,10 +57,10 @@
             //    .filter(function(d) { return d.data.terms; })
             .enter().append("g")
             .attr("class", function (d) { return "node" + (d.children ? " node--internal" : " node--leaf"); })
-            .attr("transform", function (d) { return "translate(" + dy0(d) + "," + d.x0 + ")"; });
+            .attr("transform", function (d) { return "translate(" + d.y0 + "," + d.x0 + ")"; });
 
         cell.append("rect")
-            .attr("width", function (d) { return dy1(d) - dy0(d); })
+            .attr("width", function (d) { return d.y1 - d.y0; })
             .attr("height", function (d) { return d.x1 - d.x0; })
            // .filter(function (d) { return !d.children; })
             .style("fill", function (d) {return color(d.data.group); });
@@ -85,7 +68,7 @@
         cell.selectAll("text")
             .data(function (d) {
                 if (d.depth == 0) return [];
-                else {  terms2rect(d.data.terms, d.x1 - d.x0, dy1(d) - dy0(d)); return d.data.terms; }
+                else {  terms2rect(d.data.terms, d.x1 - d.x0, d.y1 - d.y0); return d.data.terms; }
             })
             .enter().append("text")
             .filter(function (d) { return d.inrect; })
@@ -96,7 +79,5 @@
             .style("text-anchor", "start")
             .attr('transform', function (d) { return "translate(" + [d.x, d.y] + ")"; })
             .text(function (d) { return d.term; })
-        
-        
     } 
 </script>

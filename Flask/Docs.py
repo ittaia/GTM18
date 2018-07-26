@@ -3,8 +3,8 @@ import os
 import pathlib 
  
 
-path_headers = 'C:\\TestDir\\LDA\\model\\docheaders.json'
-path_docs = 'C:\\TestDir\\LDA\\data'
+path_headers = 'C:\\TestDir\\LDARest\\model\\docheaders.json'
+path_docs = 'C:\\Corpuses\\Rest\\data'
 
 class Doc: 
     def __init__(self,dic):

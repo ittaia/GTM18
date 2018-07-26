@@ -2,7 +2,7 @@ import json
 import copy 
 from DocProb import DocProb 
 
-path = 'C:\\TestDir\\LDA\\model\\docsTopics.json'
+path = 'C:\\TestDir\\LDARest\\model\\docsTopics.json'
 
 class TopicsDocs:    
     def __init__(self):
@@ -14,7 +14,7 @@ class TopicsDocs:
             self.topics_docs = dic['topicsDocs']
             self.num_of_docs = len(self.docs_topics)
             self.num_of_topics = len(self.topics_docs)
-            print (f'load Topics Docs. Topics: {self.num_of_docs} . Docs {self.num_of_docs}')
+            print (f'load Topics Docs. Topics: {self.num_of_topics} . Docs {self.num_of_docs}')
 
     def get_topic_docs(self, topic, prob):
         docs = self.topics_docs[topic]
