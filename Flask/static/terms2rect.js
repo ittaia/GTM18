@@ -35,8 +35,8 @@ function terms2rect(terms, height, width) {
         if (terms[t].font > 0) {
             var next_x = x + terms[t].len
             if (next_x > width) {
-                console.log('break line:' + line + ' - ' + t + ' - ' + terms[t].term +
-                    ' - ' + ' X- ' + x + ' Next- ' + next_x);
+                //console.log('break line:' + line + ' - ' + t + ' - ' + terms[t].term +
+                //   ' - ' + ' X- ' + x + ' Next- ' + next_x);
                 line += 1;
                 x = 0;
                 dy = dy + line_font * font_line;

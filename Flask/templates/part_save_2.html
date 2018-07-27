@@ -23,9 +23,8 @@
     }
 </style>
 
-<svg width="960" height="2000"></svg>
+<svg width="960" height="10980"></svg>
 <script src="https://d3js.org/d3.v4.min.js"></script>
-<script src='/static/topics_partition.js' type='text/javascript'></script>
 <script src='/static/display_answers.js' type='text/javascript'></script>
 <script src='/static/terms2rect.js' type='text/javascript'></script>
 <script src='/static/query_window.js' type='text/javascript'></script>
@@ -38,32 +37,47 @@
     var color = d3.scaleOrdinal(d3.schemeCategory20);
     var qwindow = null;
     var queries = [] ; 
-    d3.json('/load', function (error, tree) {
-        if (error) throw error;  display_part(svg, tree);
-    }) ;     
+    var trees; 
+    var vwidth = [0.1 , 0.6 ,1.5]  
+    function dy0 (d) {
+        var start = 0 ;  
+        p = d.parent ;  
+        while (p) {
+            start += (p.y1-p.y0) * vwidth [p.depth] 
+            p = p.parent  ;            
+        }
+        return start ; 
+    }
+    function dy1 (d) {
+        var start = dy0 (d) ;  
+        var end = start + (d.y1 - d.y0) * vwidth [d.depth]
+        return end ; 
+    }
+    d3.json('/load', function (error, roots) {
+        if (error) throw error; trees = roots; display_part(svg, roots);
+    }) ; 
 
     function display_part (svg , tree) {        
-        tree = d3.hierarchy(tree)
-            .sum(function (d) { return d.size }) ; 
-        for (var d of tree.descendants()) { 
-            if (d.depth <= 2)    d.active = true ; 
-            else                 d.active = false;               
-        }
-        var display_height = topics_partition (tree,width,height) ; 
-        for (d of tree.descendants()) { 
-            console.log (d.depth + '-'+ d.x0 + '-'+ d.x1+ '-'+d.y0+'-'+d.y1 ) ; 
-        }
+        var partition = d3.partition()
+            .size([height, width])
+            .padding(1)
+            .round(true);
 
+        root = d3.hierarchy(tree)
+            .sum(function (d) { return d.size }) ; 
+        partition (root) 
+
+        // .sort(function(a, b) { return b.height - a.height || b.value - a.value; });        
         var cell = svg
             .selectAll(".node")
-            .data( tree.descendants())
+            .data( partition(root).descendants())
             //    .filter(function(d) { return d.data.terms; })
             .enter().append("g")
             .attr("class", function (d) { return "node" + (d.children ? " node--internal" : " node--leaf"); })
-            .attr("transform", function (d) { return "translate(" + d.y0 + "," + d.x0 + ")"; });
+            .attr("transform", function (d) { return "translate(" + dy0(d) + "," + d.x0 + ")"; });
 
         cell.append("rect")
-            .attr("width", function (d) { return d.y1 - d.y0; })
+            .attr("width", function (d) { return dy1(d) - dy0(d); })
             .attr("height", function (d) { return d.x1 - d.x0; })
            // .filter(function (d) { return !d.children; })
             .style("fill", function (d) {return color(d.data.group); });
@@ -71,7 +85,7 @@
         cell.selectAll("text")
             .data(function (d) {
                 if (d.depth == 0) return [];
-                else {  terms2rect(d.data.terms, d.x1 - d.x0, d.y1 - d.y0); return d.data.terms; }
+                else {  terms2rect(d.data.terms, d.x1 - d.x0, dy1(d) - dy0(d)); return d.data.terms; }
             })
             .enter().append("text")
             .filter(function (d) { return d.inrect; })
