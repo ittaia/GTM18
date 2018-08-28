@@ -141,4 +141,3 @@ with tf.Session() as sess:
     plt.figure(figsize=(n, n))
     plt.imshow(canvas_recon, origin="upper", cmap="gray")
     plt.show()
- 
