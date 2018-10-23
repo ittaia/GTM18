@@ -32,7 +32,7 @@ def stop_word(token):
 
 def clean(token):
     if len(token) == 0:
-        rt = '' 
+        rt = ''
     elif token[-1] in stop_chars:
         rt = token[:-1]
     else:
