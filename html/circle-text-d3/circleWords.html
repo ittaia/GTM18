@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<style>
+svg {
+    width: 500px;
+    height:500px;
+    background-color: green;
+}
+.circle {
+    fill: yellow;
+    height: 100%;
+    border-radius: 100%;
+    text-align: center;
+    line-height: 200px;
+    font-size: 30px;
+}
+
+</style>
+<head>
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<body>
+    <div id="viz"></div>
+    <script type="text/javascript">  
+ var width = 400,
+    height =400,
+    radius = 200,
+    side = 2 * radius * Math.cos(Math.PI / 4),
+    dx = radius - side / 2;
+
+var svg = d3.select('#viz')
+    .append('svg')
+    .attr('background-color' , 'yellow')
+ svg.append('circle')
+.attr("class", "circle")
+   .attr('cx', width / 2)
+   .attr('cy', height / 2)
+   .attr('r', radius)
+   .attr('fill', 'red')
+   .attr('text-align' ,  'center')
+   .on("mouseover", function(){d3.select(this).style('fill', 'brown');})
+   .on("mouseout", function(){d3.select(this).style('fill', 'steelblue');}) 
+             
+ var words = [{'key':'I' , 'x' : 1 , 'y' : 2 , 'value' : 5} , 
+                   {'key':'AM' , 'x' : 60 , 'y' : 2 , 'value' : 5}] ; 
+      
+   var g = svg.append('g')
+   .attr('transform', 'translate(' + [dx, dx] + ')');
+
+   g.append("foreignObject")
+     .attr("width", side)
+     .attr("height", side)  
+  .attr('display' , 'inline-block')
+     .attr('line-height' , 'normal')
+     .attr('vertical-align' ,'middle')
+   .style("font", "20px 'Helvetica Neue'")
+    .text(" I am a boy you are a girl  I am a boy you are a girl I am a boy you are a girl  I am a boy you are a girl I am a boy you are a girl  I am a boy you are a girl  ")
+    function draw(words) {
+            var width = 200 , height = 200 ; 
+          d3.select("#viz").append("svg")
+              .attr("width", 200)
+              .attr("height", 200)
+            .append("g")
+              .attr("transform", "translate(" + [width >> 1, height >> 1] + ")")
+            .selectAll("text")
+              .data(words)
+            .enter().append("text")
+              .style("font-size", function(d) { return 40 + "px"; })
+              .style("font-family", "Impact")
+              .style("fill", 'red')
+              .attr("text-anchor", "middle")
+              .attr("transform", function(d) {
+                return "translate(" + [d.x, d.y] + ")";
+              })
+              .text(function(d) { return d.key; });
+        }
+        draw (words) ; 
+        
+   </script>
+</body>
+</html>

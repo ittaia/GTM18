@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<body>
+    <div id="viz"></div>
+    <script type="text/javascript">
+
+    var sampleSVG = d3.select("#viz")
+        .append("svg")
+        .attr("width", 200)
+        .attr("height", 200)
+        .attr('background-color' , 'yellow');            
+
+    sampleSVG.append("circle")
+        .style("stroke", "gray")
+        .style("fill", "white")
+        .attr("r", 70)
+        .attr("cx", 100)
+        .attr("cy", 100)
+        .on("mouseover", function(){d3.select(this).style("fill", "aliceblue");})
+        .on("mouseout", function(){d3.select(this).style("fill", "white");});
+     
+    
+    </script>
+</body>
+</html>

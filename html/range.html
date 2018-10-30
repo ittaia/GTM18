@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Input test</title>
+  
+<p>
+  <label for="nAngle" 
+     style="display: inline-block; width: 240px; text-align: right">
+     angle = <span id="nAngle-value">…</span>
+  </label>
+  <input type="range" min="0" max="360" id="nAngle">
+</p>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+d3.select("#nAngle")
+.on("input", function() {  update(+this.value);} ) 
+.on("mouseup" , function () { console.log("mouse up") ; } ) ; 
+update(0);
+
+// update the element
+function update(nAngle) {
+
+  // adjust the text on the range slider
+  d3.select("#nAngle-value").text(nAngle);
+  d3.select("#nAngle").property("value", nAngle);  
+}
+
+</script>

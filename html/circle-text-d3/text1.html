@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<style>
+svg {
+    width: 1000px;
+    height: 2000px;
+    background-color: green;
+}
+.circle {
+    fill: blue;
+    height: 100%;
+    border-radius: 100%;
+    text-align: center;
+    line-height: 200px;
+    font-size: 30px;
+}
+.circle span {
+    line-height: normal;
+    display:inline-block;
+    vertical-align: middle;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+</style>
+<head>
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<body>
+    <div id="viz"></div>
+    <script type="text/javascript">  
+ var width = 400,
+    height =400,
+    radius = 200,
+    side = 2 * radius * Math.cos(Math.PI / 4),
+    dx = radius - side / 2;
+
+var svg = d3.select('#viz')
+    .append('svg')
+    .attr('background-color' , 'yellow')
+  //  .attr('width', width)
+  //  .attr('height', height);
+
+
+    
+  
+var terms = [
+{"termId":450,"term":"communication","prob":0.048458295454311025},
+{"termId":1448,"term":"mobile","prob":0.03415087371308719},
+{"termId":1102,"term":"wireless","prob":0.030891027235264136},
+{"termId":770,"term":"signal","prob":0.026527780921132345},
+{"termId":4145,"term":"terminal","prob":0.02471719795182788},
+{"termId":3363,"term":"transmission","prob":0.02119234582448572},
+{"termId":1454,"term":"frequency","prob":0.01803312348859788},
+{"termId":1137,"term":"network","prob":0.013817798371476895},
+{"termId":775,"term":"receiving","prob":0.01356190865424536},
+{"termId":1453,"term":"radio","prob":0.011238107609744995},
+{"termId":841,"term":"base","prob":0.010881171225688288},
+{"termId":3838,"term":"transmitting","prob":0.010669865107425834},
+{"termId":991,"term":"remote","prob":0.009806390303513645},
+{"termId":219,"term":"channel","prob":0.00909721153534561},
+{"termId":1163,"term":"signals","prob":0.008661697757641357},
+{"termId":1001,"term":"devices","prob":0.008610379168666454},
+{"termId":994,"term":"station","prob":0.008515357763381864},
+{"termId":779,"term":"received","prob":0.008366468093101397},
+{"termId":3842,"term":"antenna","prob":0.008292431826587069},
+{"termId":1871,"term":"interface","prob":0.007984913672084693},
+{"termId":2432,"term":"access","prob":0.0076278968577100795},
+{"termId":6,"term":"via","prob":0.007517781244907966},
+{"termId":6375,"term":"communications","prob":0.007502065176180672},
+{"termId":887,"term":"external","prob":0.007115727958677978},
+{"termId":218,"term":"receiver","prob":0.00659125712958065},
+{"termId":3331,"term":"transmit","prob":0.006351567062455312},
+{"termId":2444,"term":"equipment","prob":0.006142352902303905},
+{"termId":1105,"term":"smart","prob":0.005818577953160469},
+{"termId":4416,"term":"rf","prob":0.005721620248833868},
+{"termId":3343,"term":"transmitted","prob":0.005594438420820145},
+{"termId":3263,"term":"local","prob":0.005211614126662108},
+{"termId":1440,"term":"according","prob":0.00520819981527461},
+{"termId":39,"term":"connection","prob":0.0051116894780690375},
+{"termId":3093,"term":"reception","prob":0.0050114720214896645},
+{"termId":354,"term":"receive","prob":0.004968122451406606},
+{"termId":1920,"term":"band","prob":0.004779476379112476},
+{"termId":3677,"term":"transmitter","prob":0.004380563072529949},
+{"termId":12442,"term":"ue","prob":0.004347851181352473},
+{"termId":13322,"term":"uplink","prob":0.003700087040898164},
+{"termId":1030,"term":"cell","prob":0.0036255042496313103},
+{"termId":995,"term":"receives","prob":0.0033452658739493908},
+{"termId":1004,"term":"transmits","prob":0.003329742800424371},
+{"termId":265,"term":"over","prob":0.003275393053839122},
+{"termId":6051,"term":"electromagnetic","prob":0.0032654998978352686},
+{"termId":6263,"term":"master","prob":0.0031961403657298007},
+{"termId":6173,"term":"resource","prob":0.003145285312818354},
+{"termId":2302,"term":"interference","prob":0.003120087090646546},
+{"termId":1443,"term":"corresponding","prob":0.00303656092746598},
+{"termId":3192,"term":"link","prob":0.0030268818580778947},
+{"termId":298,"term":"coupled","prob":0.0029445164518425004}]
+svg.append('circle')
+.attr("class", "circle")
+   .attr('cx', width / 2)
+   .attr('cy', height / 2)
+   .attr('r', radius)
+   .attr('fill', 'red')
+   .on("mouseover", function(){d3.select(this).style('fill', 'brown');})
+   .on("mouseout", function(){d3.select(this).style('fill', 'steelblue');})
+   
+      //.text(function(d) { var s = "" ;  for (t of  terms)   {s += t.term+";" ;  } return s ;  } )  
+        
+
+   var g = svg.append('g')
+   .attr('transform', 'translate(' + [dx, dx] + ')');
+
+   g.append("foreignObject")
+     .attr("width", side)
+     .attr("height", side)
+     .append('div')
+     .attr('class' , 'circle')
+     .append('span')
+  .append("body")
+       .html(function() { var s = "" ;  for (t of  terms)   {s += t.term+"  " ;  } return s ;  } )
+   var x ; 
+   x = g ; 
+   </script>
+</body>
+</html>

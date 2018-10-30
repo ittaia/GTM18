@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<body>
+    <div id="viz"></div>
+    <script type="text/javascript">
+
+   
+     var words = [{'key':'I' , 'x' : 1 , 'y' : 2 , 'value' : 5} , 
+                   {'key':'AM' , 'x' : 60 , 'y' : 2 , 'value' : 5}] ; 
+      
+    
+   
+
+
+
+function draw(words) {
+            var width = 200 , height = 200 ; 
+          d3.select("#viz").append("svg")
+              .attr("width", 200)
+              .attr("height", 200)
+            .append("g")
+              .attr("transform", "translate(" + [width >> 1, height >> 1] + ")")
+            .selectAll("text")
+              .data(words)
+            .enter().append("text")
+              .style("font-size", function(d) { return 40 + "px"; })
+              .style("font-family", "Impact")
+              .style("fill", 'red')
+              .attr("text-anchor", "middle")
+              .attr("transform", function(d) {
+                return "translate(" + [d.x, d.y] + ")";
+              })
+              .text(function(d) { return d.key; });
+        }
+        draw (words) ; 
+        
+ </script>
+</body>
+</html>

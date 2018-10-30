@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+rect {
+  stroke: #fff;
+}
+
+</style>
+<body>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var width = 960,
+    height = 500;
+
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var rect = svg.selectAll("rect");
+
+
+ 
+
+  rect = rect
+      .data([100,200,300])
+    .enter().append("rect")
+      .attr("x", 10)
+      .attr("y", function(d) { return d ; })
+      .attr("width", 20 )
+      .attr("height", 10)
+      .style("fill" , "red")
+      .on("click", clicked);
+ 
+
+function clicked(d) {
+
+  svg.transition() 
+    .duration(750)
+    .attr("height", 1000);
+    
+  
+  rect.transition()
+      .duration(750)
+      .attr("x", function(d) { 20 })
+      .attr("y", function(d) { return  d*2; })
+      .attr("width", 30)
+      .attr("height",50);
+}
+
+</script>
+</body>

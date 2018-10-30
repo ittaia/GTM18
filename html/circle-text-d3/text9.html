@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<style>
+.circle-text {
+    display: table-cell;
+    height: 200px;
+ /*change this and the width for the size of your initial circle*/
+    width: 200px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 50%;
+  /*make it pretty*/
+    background: #000;
+    color: #fff;
+    font: 18px "josefin sans", arial;
+  /*change this for font-size and font-family*/
+}
+</style>
+
+<head>
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<body>
+    <div id="viz"></div>
+    <script type="text/javascript">  
+ var width = 400,
+    height =400,
+    radius = 200,
+    side = 2 * radius * Math.cos(Math.PI / 4),
+    dx = radius - side / 2;
+
+var svg = d3.select('#viz')
+    .append('svg')
+    .attr('width' , width)
+    .attr('height' , height)
+    .attr('background-color' , 'yellow')
+    
+ svg.append('div')
+.attr("class", "circle-text")
+   .attr('cx', width / 2)
+   .attr('cy', height / 2)
+   .attr('r', radius)  
+     
+     
+ // .append("xhtml:body")
+ //     .html(" I am a boy you are a girl  I am a boy you are a girl I am a boy you are a girl  I am a boy you are a girl I am a boy you are a girl  I am a boy you are a girl  ")
+   </script>
+</body>
+</html>

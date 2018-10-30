@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<style>
+circle  {
+    display: table-cell;
+    height: 200px;
+ /*change this and the width for the size of your initial circle*/
+    width: 200px;
+    stroke:red
+    fill:brown
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 50%;
+  /*make it pretty*/
+    background: #000;
+    color: #fff;
+    font: 18px "josefin sans", arial;
+  /*change this for font-size and font-family*/
+}
+</style>
+<head>
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<body>
+    <div id="viz"></div>
+    <script type="text/javascript">
+
+    var svg = d3.select("#viz")
+        .append("svg")
+        .attr("width", 200)
+        .attr("height", 200);            
+
+    svg.append("circle")
+        .attr("class", "circle-text")
+        .style("stroke", "gray")
+        .style("fill", "white")
+        .attr("r", 70)
+        .attr("cx", 100)
+        .attr("cy", 100)
+        .on("mouseover", function(){d3.select(this).style("fill", "aliceblue");})
+        .on("mouseout", function(){d3.select(this).style("fill", "white");});
+     
+    
+    </script>
+</body>
+</html>

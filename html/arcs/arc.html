@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+
+    var vis = d3.select("body").append("svg")
+var pi = Math.PI;
+    
+var arc = d3.arc()
+    .innerRadius(50)
+    .outerRadius(70)
+    .startAngle(45 * (pi/180)) //converting from degs to radians
+    .endAngle(4) //just radians
+    
+vis.attr("width", "400").attr("height", "400") // Added height and width so arc is visible
+    .append("path")
+    .attr("d", arc)
+    .attr("fill", "red")
+   .attr("transform", "translate(200,200)")
+   ;
+ document.write (arc) ;     
+    
+    </script>
+</body>
+</html>
