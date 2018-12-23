@@ -1,18 +1,10 @@
 package artzi.gtm.utils;
 
-import com.google.gson.Gson;
-
-import artzi.gtm.utils.format.FormatJson;
+import artzi.gtm.utils.format.FormatNum;
 
 public class T1 {
 	public static void main(String[] args) throws Exception {
-		String s = "{\"minWordCount\":8,\"maxDF\":0.3}" ; 
-		System.out.println (s) ; 
-		System.out.println (FormatJson.setNewLines(s)) ;
-		Gson gson = new Gson () ; 
-		Tj tj = new Tj () ;
-		System.out.println (gson.toJson(tj , Tj.class)) ; 
-				 
+		double d = 0.129 ; 
+		System.out.println (FormatNum.format0(d)) ; 
 	}
-
 }

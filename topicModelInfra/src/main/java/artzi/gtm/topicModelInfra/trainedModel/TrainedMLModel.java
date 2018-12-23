@@ -146,7 +146,11 @@ public class TrainedMLModel {
 	public int getLevels() {
 		return levels;
 	}
-
+	
+	public int getNumOfTopics () { 
+		return numOfMixs[levels-1];
+	}
+	
 	public int[] getNumOfMixs() {
 		return numOfMixs;
 	}
@@ -257,6 +261,7 @@ public class TrainedMLModel {
 		}		
 	}
 	public TermProb [] getTopTerms (int topicId) { 
+		if (topicTopTerms == null) initTopTerms () ; 
 		return topicTopTerms [topicId] ; 
 	}
 
