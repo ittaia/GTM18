@@ -141,9 +141,10 @@ public class ExWriteTable {
 		}		
 	}
 	
-	public Row ExGetRow (String SheetName , int rowIndex) {
-		Sheet s = wb.getSheet(SheetName ) ; 
-		return s.getRow(rowIndex) ;  
+	public ExRow ExGetRow (String SheetName , int rowIndex) {
+		Sheet sheet = getSheet(SheetName ) ; 
+		Row r = sheet.getRow( rowIndex ) ; 
+		return new ExRow(wb,r) ;   
 	}
 	public void writeTable (String fileName) { 
 		try {

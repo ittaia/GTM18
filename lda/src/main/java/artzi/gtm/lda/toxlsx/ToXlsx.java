@@ -26,7 +26,7 @@ public class ToXlsx {
 			for (TermProb  termProb : topTerms) { 
 				str += termProb.getTermId()+"-"+termProb.getTerm()+"-"+FormatNum.format0(termProb.getProb())+ " " ; 
 			}
-			ExRow row = xlsTopics.addNewRowToSheet(null) ;
+			ExRow row = xlsTopics.addNewRowToSheet(null) ;			
 			row.setCell (0, topicId) ;
 			row.setCell (1, trainedModel.getHeader(topicId));
 			row.setCellWrap (2, str);

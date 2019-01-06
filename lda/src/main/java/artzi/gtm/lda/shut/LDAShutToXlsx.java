@@ -1,7 +1,9 @@
-package artzi.gtm.lda.train;
+package artzi.gtm.lda.shut;
 
  
 import artzi.gtm.lda.toxlsx.ToXlsx;
+import artzi.gtm.lda.train.LDATrain;
+
 import com.google.gson.Gson;
 import artzi.gtm.utils.config.Config; 
 import artzi.gtm.topicModelInfra.trainedModel.TrainedMLModel;

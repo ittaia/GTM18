@@ -1,10 +1,10 @@
-package artzi.gtm.lda.train;
+package artzi.gtm.lda.main;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-
+import artzi.gtm.lda.train.LDATrain;
 import artzi.gtm.utils.config.Config;
 import artzi.gtm.utils.elog.EL;
 import artzi.gtm.utils.io.Dirs;

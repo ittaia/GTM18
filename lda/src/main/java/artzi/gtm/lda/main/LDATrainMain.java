@@ -1,4 +1,4 @@
-package artzi.gtm.lda.train;
+package artzi.gtm.lda.main;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import artzi.gtm.lda.train.LDATrain;
 import artzi.gtm.utils.config.Config;
 import artzi.gtm.utils.elog.EL;
 import artzi.gtm.utils.gen.DocData;
