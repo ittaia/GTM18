@@ -276,4 +276,8 @@ public class TrainedMLModel {
 	public String getTerm (int termIndx) { 
 		return termList.getTerm(termIndx) ; 
 	}
+	
+	public TermList getTermList () { 
+		return termList ;		
+	}
 }

@@ -14,7 +14,6 @@ public class Hebrew {
 				int c1 = alef + char_indx ; 			 
 				char heb_char =(char)c1;
 				char c_char = chars.charAt(char_indx) ; 
-				System.out.println (Character.toString(c_char) + "-" + Character.toString(heb_char)) ; 
 				translate_tab.put(c_char, heb_char) ; 						
 			}
 		}
