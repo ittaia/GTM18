@@ -1,140 +1,177 @@
 package artzi.gtm.utils.clustering;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.Random;
+
+import artzi.gtm.utils.elog.EL;
 
 public class Kmean {
+	
+	ArrayList<double []> dotList ; 
 	int numCenters ; 
 	int dimention ; 
-	ArrayList<ArrayList<double []>> kmList ; 
-	ArrayList<double []> centerList ; 
+	ArrayList<double[]> centerList ; 
+	int numDots ; 
+	int[] dotCenter ; 
+	int[] centerDotCount ; 
+
+	int epochs = 0 ; 
+	static int maxEpoches = 1000 ; 
 	
-	public  HashMap<Integer, ArrayList<double[]>> kMean(ArrayList<double []> dotList, int numCenters){
-		dimention = dotList.get(0).length; 
-		
-		createCenters(numCenters, centerList);
-		initKmList(kmList, numCenters);
-		dotToCenter(dotList, centerList, kmList);
+	public  Kmean(ArrayList<double []> dotList, int dimention, int numCenters){
+		this.dotList = dotList ; 	
+		this.dimention = dimention ; 
+		this.numCenters = numCenters ; 
+		this.centerList = new ArrayList<>() ; 
+		this.numDots = dotList.size(); 
+		this.dotCenter = new int[this.numDots] ; 
+		this.centerDotCount = new int[this.numCenters] ; 
+		for (int i = 0; i < this.numCenters; i ++) this.centerDotCount[i] = 0 ; 
+		for (int j = 0; j < this.numDots; j ++) this.dotCenter[j] = -1 ; 
+		initKmean() ;
+		//printCenters() ; 
 		boolean change = true;
-		while (change) {
-			updateCenter(centerList, kmList);
-			change = updateDot(centerList, kmList);
-		}		
-		return kmList;		
-	}
-	private  void createCenters(int numCenters, HashMap<Integer, Xa> centerList){
-		double x;
-		double y;
-		for (int i = 0; i < numCenters; i++) {
-			x = Math.random()*100;
-			y = Math.random()*100;
-			centerList.put(i,new Xa(x,y));
+		while (change & (epochs < maxEpoches)) {
+			epochs += 1 ; 
+			//EL.W("Epoch" + epochs);
+			updateCenter();
+			//printCenters() ; 
+			change = assignDots();
 		}	
-		System.out.println(centerList);
-	}
-	
-	private void initKmList( HashMap<Integer, ArrayList<Xa>> kmList, int numCenters){
-		for (int i = 0; i < numCenters; i++) {
-			kmList.put(i, new ArrayList<Xa>());
+		if (change) {
+			EL.WE (999, " Kmean loop !!!!!!") ; 
 		}
-		System.out.println(kmList);
+		EL.W("end kmean. num Epochs: "+ epochs);
 	}
-	
-	public void dotToCenter(Xa[] dotList, HashMap<Integer, Xa> centerList, HashMap<Integer, ArrayList<Xa>> kmList){
-		Set<Integer> centerKeys = centerList.keySet();
-		double min = -1;
-		double dis;
-		int minKey = -1;
-		ArrayList<Xa> tempList;
-		for (Xa dot : dotList) {
-			for (Integer i : centerKeys) {
-				dis = distance(centerList.get(i), dot);
-				if (dis<min||min==-1){
-					min = dis;
-					minKey = i; 
-				}
-			}
-			min = -1;
-			tempList= kmList.get(minKey);
-			tempList.add(dot);
-			//kmList.replace(minKey, tempList);
-		}
-		System.out.println("dottocenter"+kmList);
-	}
-	public double distance (Xa center, Xa dot){
-		double xDif = center.getX()-dot.getX();
-		double yDif = center.getY()-dot.getY();
-		double power = Math.pow(xDif,2)+Math.pow(yDif, 2);
-		double rv = Math.sqrt(power);
-		return rv;
-	}
-	
-	public void updateCenter(HashMap<Integer, Xa> centerList, HashMap<Integer, ArrayList<Xa>> kmList){
-		Set<Integer> centerKeys =centerList.keySet();
-		double sumX=0;
-		double sumY=0;
-		Xa newCenter= new Xa(0,0);
-		ArrayList<Xa> tempList;
-		for (Integer i : centerKeys) {
-			tempList = kmList.get(i);
-			for (Xa dot : tempList){
-				sumX+=dot.getX();
-				sumY+=dot.getY();
-			}
-			newCenter.setX(sumX/kmList.get(i).size());
-			newCenter.setY(sumY/kmList.get(i).size());
-			//centerList.replace(i, newCenter);
-			sumX=0;
-			sumY=0;
-		}
-		System.out.println("updateCenter"+kmList);
-	}
-	
-	public boolean updateDot(HashMap<Integer, Xa> centerList, HashMap<Integer, ArrayList<Xa>> kmList){
-		boolean rv = false;
-		Set<Integer> centerKeys = centerList.keySet();
-		Set<Integer> kmKeys = kmList.keySet();
-		double dis;
-		double min = -1;
-		int minKey = -1;
-		HashMap<Integer, Xa> removeMap = new HashMap<>();
-		HashMap<Integer, Xa> addMap = new HashMap<>();
-		for (Integer dotInt : kmKeys) {			
-			for (Xa dot : kmList.get(dotInt)) {
-				for (Integer centerInt : centerKeys) {
-					dis = distance(centerList.get(centerInt), dot);
-					if (dis<min||min==-1) {
-						min = dis;
-						minKey = centerInt;
+	private  void initKmean(){
+		Random random = new Random();
+		int j = random.nextInt(numDots) ;
+		centerList.add(dotList.get(j).clone()) ; 
+		while (centerList.size() < numCenters) {
+			int maxIndx = -1;
+			double maxDistance = 0 ; 
+			for (int dotIndx = 0; dotIndx < numDots; dotIndx++) {
+				double minDistanceCandidate = -1 ; 
+				double [] candidateCenter = dotList.get(dotIndx) ; 
+				for (double [] selectedCenter: centerList) { 
+					double distance = getDistance(candidateCenter, selectedCenter) ; 
+					if (distance < minDistanceCandidate| minDistanceCandidate < 0) {
+						minDistanceCandidate = distance ; 						
 					}
 				}
-				min = -1;
-				if (minKey != dotInt ) {
-					removeMap.put(dotInt, dot);
-					addMap.put(minKey, dot);
-					rv = true;
-//					System.out.println(removeMap);
-//					System.out.println(addMap);
-				}
-				minKey = -1;
+				if (minDistanceCandidate > maxDistance) {
+					maxIndx = dotIndx ; 
+					maxDistance = minDistanceCandidate ; 
+				}				 		
 			}
-			
-		} 
-		ArrayList<Xa> tempList;
-		Xa tempDot;
-		for(Integer removeKey : removeMap.keySet()){
-			tempList = kmList.get(removeKey);
-			tempDot = removeMap.get(removeKey);
-			tempList.remove(tempDot);
-			//kmList.replace(removeKey, tempList);
+			centerList.add(dotList.get(maxIndx).clone()) ; 			 
 		}
-		for(Integer addKey : addMap.keySet()){
-			tempList = kmList.get(addKey);
-			tempDot = addMap.get(addKey);
-			tempList.add(tempDot);
-			//kmList.replace(addKey, tempList);
-		}			
-		return rv;
+		assignDots() ;	
+	}
+	public double getDistance (double[] center, double[] dot){
+		double distance2 = 0 ; 
+		for (int i = 0; i < this.dimention; i ++) { 
+			distance2 += Math.pow((center[i]-dot[i]),2) ; 
+		}
+		return Math.sqrt(distance2);
+	}
+	
+	public void updateCenter(){
+		ArrayList<double[]> dimSumList = new ArrayList<>(); 
+		for (int i = 0; i < numCenters; i++) {
+			double [] dimSum = new double[dimention] ; 
+			for (int j = 0 ; j < dimention ; j++) { 
+				dimSum[j] = 0 ; 			
+			}
+			dimSumList.add(dimSum) ; 
+		}	
+		for (int i = 0; i < numDots; i ++) {			
+			double [] dot = dotList.get(i) ; 
+			double [] dimSum =dimSumList.get(dotCenter[i]) ; 
+			for (int j = 0 ; j < dimention ; j++) { 
+				dimSum[j] += dot[j] ;   		
+			}  
+		}
+		for (int i = 0; i < numCenters; i++) {
+			if (epochs > maxEpoches-10)  
+				EL.W("dot count"+ i +"-" + centerDotCount[i]);
+			if (centerDotCount[i] > 0) {
+				double [] center = centerList.get(i) ; 
+				double [] dimSum =dimSumList.get(i) ; 
+				for (int j = 0 ; j < dimention ; j++) { 
+					center[j] = dimSum[j]/centerDotCount[i] ;  			
+				}
+			}			 
+		}		
+	}
+	
+	public boolean assignDots(){
+		boolean change = false;		 
+		double distance;
+		double minDistance ; 
+		int minCenter ; 
+		double [] dot ; 
+		for (int dotIndx = 0; dotIndx < numDots; dotIndx++){
+			dot = this.dotList.get(dotIndx) ; 
+		 	minCenter = -2 ;
+		 	minDistance = -1 ; 
+			for (int i = 0; i <numCenters; i++) {	
+				distance = getDistance(dot, centerList.get(i)) ; 			 
+				if (distance < minDistance | minDistance < 0) {
+						minDistance = distance;
+						minCenter = i;					 
+				}				
+			}
+			if (dotCenter[dotIndx] != minCenter) {
+				change = true ; 
+				if (dotCenter[dotIndx] >= 0) centerDotCount[dotCenter[dotIndx]] -=1 ; 
+				if (epochs > maxEpoches) { 
+					System.out.println (dotIndx + "- " + dotCenter[dotIndx] + " - "+ minCenter ) ; 
+					printDot(" change in dot:" + dotIndx, dot) ; 
+					printCenters() ; 
+				}
+				dotCenter[dotIndx] = minCenter ; 
+				centerDotCount[dotCenter[dotIndx]] +=1 ; 
+			}
+		} 
+		return change ; 		 
+	}
+	public void printCenters() {
+		
+		for (int i = 0; i < numCenters; i ++) { 
+			printDot ("center"+ i + " num dots: " + centerDotCount[i], centerList.get(i)) ;
+		}
+		
+	}
+	private void printDot(String header, double[] dot) {
+		String s = header + ": "; 
+		for (int j = 0; j < dimention; j++) { 
+			s += j + "-" + dot[j] ; 
+		}
+		EL.W(s);
+		
+	}
+	public ArrayList<double[]> getDotList() {
+		return dotList;
+	}
+	public int getNumCenters() {
+		return numCenters;
+	}
+	public int getDimention() {
+		return dimention;
+	}
+	public ArrayList<double[]> getCenterList() {
+		return centerList;
+	}
+	public int getNumDots() {
+		return numDots;
+	}
+	public int[] getDotCenter() {
+		return dotCenter;
+	}
+	public void printAllPoints() {
+		for (int i = 0; i < numDots; i ++) {
+			printDot(" Dot: "+ i, dotList.get(i)) ; 
+		}
 	}
 }
