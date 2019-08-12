@@ -1,6 +1,10 @@
 package artzi.gtm.utils.xlsx;
  
+import java.util.Date;
+
 import org.apache.poi.ss.usermodel.*;
+
+import artzi.gtm.utils.format.FormatDate;
 
 public class ExTabRow {
 	public static int maxFields = 20 ; 
@@ -9,7 +13,7 @@ public class ExTabRow {
 	int    [] rowIntValues ; 
 	int [] cellTypes ; 
 	double [] rowDoubleValues ;
-	
+	Date [] rowDateValues ; 
 	public int rowFieldNum =  0 ; 
 	
 	public ExTabRow (ExRead1 mainTable , String SheetName, int rowIndex ) {
@@ -18,6 +22,7 @@ public class ExTabRow {
 		
 		rowIntValues = new int [maxFields] ; 
 		rowDoubleValues = new double [maxFields] ; 
+		rowDateValues = new Date [maxFields]  ; 
 		cellTypes = new int [maxFields] ; 
 		Row r0 = mainTable.ExGetRow(SheetName, 0) ; 
 		rowFieldNum = r0.getLastCellNum () ; 
@@ -41,12 +46,21 @@ public class ExTabRow {
 						rowIntValues [i] = 0 ; 
 					}	
 					else if (c.getCellType() == Cell.CELL_TYPE_NUMERIC ) {
-						Double  d = c.getNumericCellValue()  ; 
+						if (DateUtil.isCellDateFormatted(c)) {
+							Date dated = c.getDateCellValue() ; 
+							rowDateValues[i] = dated ; 
+							rowFieldValues [i] = FormatDate.formatDate(dated) ; 
+							rowDoubleValues [i] = -1 ; 
+							rowIntValues [i] = -1 ; 
+						}
+						else {
+							Double  d = c.getNumericCellValue()  ; 
 						 
-						rowFieldValues [i] = Double.toString (d)  ; 
-						rowDoubleValues [i] = d ; 
-						long l = d.longValue () ;
-						rowIntValues [i] = (int)l ; 						 
+							rowFieldValues [i] = Double.toString (d)  ; 
+							rowDoubleValues [i] = d ; 
+							long l = d.longValue () ;
+							rowIntValues [i] = (int)l ;
+						}
 					}
 					else {  
 						rowFieldValues [i] = "";

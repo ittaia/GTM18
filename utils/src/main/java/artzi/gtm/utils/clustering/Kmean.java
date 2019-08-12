@@ -146,7 +146,7 @@ public class Kmean {
 	private void printDot(String header, double[] dot) {
 		String s = header + ": "; 
 		for (int j = 0; j < dimention; j++) { 
-			s += j + "-" + dot[j] ; 
+			s += "  " +j + "-" + dot[j] ; 
 		}
 		EL.W(s);
 		

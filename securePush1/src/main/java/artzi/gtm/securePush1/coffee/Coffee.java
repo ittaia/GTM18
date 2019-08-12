@@ -15,9 +15,9 @@ import artzi.gtm.utils.format.FormatNum;
 public class Coffee {
 	
 	static String path = "C:\\TestDir\\SecurePush" ;   
-	static String coffeeDir = "C:\\Partners\\securePush\\coffee"; 
-	static String dataPath = new File (coffeeDir , "SN_c8df8441fee7_GR2.csv").getAbsolutePath() ; 
-	static String outPath = new File (coffeeDir , "out1.csv").getAbsolutePath() ; 
+	static String coffeeDir = "C:\\Partners\\securePush\\cof1";  
+	static String dataPath = new File (coffeeDir , "f1_2.txt").getAbsolutePath() ; 
+	static String outPath = new File (coffeeDir , "out1_2.csv").getAbsolutePath() ; 
 	 
 	
 	public static void main(String[] args) throws Exception {
@@ -40,7 +40,6 @@ public class Coffee {
 				lines.add(line) ; 
 				double [] p = getData(line) ;
 				if (p == null) {
-					EL.W(" 0 duration " + line + "-" + lines.size());
 					lineDotIndx.add(null) ; 
 				}  
 				else {
@@ -52,26 +51,25 @@ public class Coffee {
 		}
 		in.close();
 		EL.W("num of recs: "+ cnt + " legal data: "+ dots.size()) ; 		 
-		Kmean kmean = new Kmean(dots,1,20) ; 
+		Kmean kmean = new Kmean(dots,1,4) ; 
 		kmean.printCenters();
 		ArrayList<double []> centers = kmean.getCenterList() ; 
 		int [] dotCenter = kmean.getDotCenter() ;
 		BufferedWriter out = new BufferedWriter(new FileWriter(outPath));
-		header += ",durationOk,speed,cluster,cluster center,diff" +"\n" ; 
+		header += ",cluster,cluster center,diff" +"\n" ; 
 		out.write(header);	
 		for (int lineIndx = 0; lineIndx < lines.size(); lineIndx ++) {
 			line = lines.get(lineIndx) ; 
 			Integer dotIndx = lineDotIndx.get(lineIndx) ; 
 			if (dotIndx == null) {
-				line+= ",no,-1,-1,-1,-1"+ "\n" ; 
+				line+= "-1,-1,-1"+ "\n" ; 
 			}
 			else {
-				double speed = dots.get(dotIndx)[0] ; 
+				double pulses = dots.get(dotIndx)[0] ; 
 				int cluster = dotCenter[dotIndx] ; 
 				double clusterCenter = centers.get(cluster)[0] ; 
-				double diff = Math.abs(speed-clusterCenter) ; 
-				line += ",yes," + FormatNum.format0(speed) + 
-						"," + cluster + 
+				double diff = Math.abs(pulses-clusterCenter) ; 
+				line += "," + cluster + 
 						"," + FormatNum.format0(clusterCenter) +
 						"," + FormatNum.format0(diff) + "\n" ; 
 			}
@@ -85,16 +83,18 @@ public class Coffee {
 	private static double [] getData(String str) {
 		String [] v = str.split(",") ;
 		
-		double  pulses = Double.parseDouble(v[5]) ; 
-		double  duration = Double.parseDouble(v[6]) ; 
+		double  pulses = Double.parseDouble(v[3]) ; 
+		if (pulses < 100) return null ;  
+		double  duration = Double.parseDouble(v[4]) ; 
 		if (duration <= 0) {
 			return null ; 
 		}
-		double speed = pulses/duration ; 
+		double speed = Double.parseDouble(v[5]) ; 
 		double [] dot = new double [3] ; 
-		dot[0] = speed ; 
+		dot[0] = pulses ; 		
 		dot[1] = duration ; 
-		dot[2] = pulses ; 
+		dot[2] = speed ; 
+		
 		return dot ; 	
 	}
 }
